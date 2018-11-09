@@ -1,0 +1,15 @@
+{
+  "__comment" : "0 - to text (defaut), 1 - macro, 2 - run program",
+  "g1": {
+    "command": 0,
+    "make": ""
+  },
+  "g2": {
+    "command": 2,
+    "make": "idea"
+  },
+  "g9": {
+    "command": 2,
+    "make": "/home/cleptes/.scripts/toggle-sound-sink.sh"
+  }
+}
