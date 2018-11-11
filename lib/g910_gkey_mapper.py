@@ -6,13 +6,9 @@ import time
 
 
 import uinput
-from lib.g910_macro.functionalities import gkey_functionality, media_static_keys_functionality
-from lib.g910_macro.data_mappers import command_bytearray, uinput_all_keys
-
-gkeys = command_bytearray.commands
-
-
-
+from lib.functionalities import gkey_functionality, media_static_keys_functionality
+from lib.data_mappers import command_bytearray
+from lib.keyboard_initialization import usb_and_keyboard_device_init
 
 
 def emitKeys(device, key):
@@ -45,30 +41,11 @@ def first_diff_index(ls1, ls2):
     l = min(len(ls1), len(ls2))
     return next((i for i in range(l) if ls1[i] != ls2[i]), l)
 
-def init():
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
 
-    USB_IF = 1  # Interface
-    USB_TIMEOUT = 5  # Timeout in MS
-
-    USB_VENDOR = 0x046d
-    USB_PRODUCT = 0xc335
-
-    dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT)
-    print(dev[0][(1, 0)])
-    endpoint = dev[0][(1, 0)][0]
-
-    if dev.is_kernel_driver_active(USB_IF) is True:
-        dev.detach_kernel_driver(USB_IF)
-
-    usb.util.claim_interface(dev, USB_IF)
-
-    return device, dev, endpoint, USB_TIMEOUT
 
 
 def main():
-    device, dev, endpoint, USB_TIMEOUT = init()
-
+    device, dev, endpoint, USB_TIMEOUT = usb_and_keyboard_device_init.init()
 
     while True:
         control = None
@@ -79,11 +56,11 @@ def main():
 
             if control:
                 b = bytearray(control)
-                if b in gkeys.values():
-                    if b == gkeys['dump']:
+                if b in command_bytearray.commands.values():
+                    if b == command_bytearray.commands['dump']:
                         pass
                     else:
-                        key = list(gkeys.keys())[list(gkeys.values()).index(b)]
+                        key = list(command_bytearray.commands.keys())[list(command_bytearray.commands.values()).index(b)]
                         print(key)
                         emitKeys(device, key)
                 else:
@@ -91,8 +68,6 @@ def main():
 
         except usb.core.USBError:
             pass
-
-
 
         time.sleep(0.01)  # Let CTRL+C actually exit```
 
