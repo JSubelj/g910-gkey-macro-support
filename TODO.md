@@ -4,6 +4,7 @@
 [✓] - pip requirements\
 [✓] - readme + requirements\
 [x] - <del>uinput.key dictionary translator</del> not needed because of pyautogui\
+[ ] - change command_bytearray so that keys are bytearrays\
 [ ] - dist level, devel level\
 [ ] - logging\
 [ ] - install script (to remove unneeded packages installed by pyautogui)\
