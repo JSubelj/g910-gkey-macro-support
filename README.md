@@ -21,10 +21,10 @@ To use this project you need:
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
  - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
- - (optionally create virtual environment: `pip install virtualenv && virtualenv venv`)
+ - (optionally create virtual environment: `pip install virtualenv && virtualenv venv && source venv/bin/activate`)
  - install pip requirements: `pip install -r requirements.txt` 
  - disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)
- - edit configuration in `config/config.json`
+ - edit configuration: `vim config/config.json`
  - start the program and you are ready to go: `python launcher.py`
  
 ## Configuration
@@ -39,7 +39,7 @@ Currently the mapper supports three types of hotkeys (also described in [hotkey_
 To add a hotkey add to `config.json` the following code:
 ```
 "g<no_of_gkey>": {
-    "hotkey_type": <type of command -1 or 0 or 1 or 2]>,
+    "hotkey_type": <type of command "nothing" or "typeout" or "shortcut" or "run">,
     "do": "<thing to do>"
   }
 ```
@@ -48,12 +48,12 @@ Depending on the hotkey command, the syntax for "do" is different (supported cha
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"typeout"` - Typeout syntax is same as you would type text out (ex. "tyPe Me Out!")
  * `"shortcut"` - Shortcuts are separated by a plus sign (ex. "ctrl+alt+f4")
- * `"run"` - Run has the same syntax as you would type a program in CLI (ex. "firefox")
+ * `"run"` - Run has the same syntax as you would type a program in command line (ex. "firefox")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  
 ## Contribution and requests
 I am developing this software for personal use (for now). If you have any recommendations, complaints, anything you want to see included,
-open an issue and I will gladly try to add it. To view state of current features you can checkout the [TODO](TODO.md) file.
+open an issue and I will gladly try to add it. To view the state of current features you can checkout the [TODO](TODO.md) file.
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
