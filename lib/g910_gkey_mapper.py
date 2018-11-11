@@ -36,7 +36,7 @@ def emitKeys(device, key):
 
 
 
-
+# TODO: is this needed?
 def first_diff_index(ls1, ls2):
     l = min(len(ls1), len(ls2))
     return next((i for i in range(l) if ls1[i] != ls2[i]), l)
@@ -60,6 +60,7 @@ def main():
                     if b == command_bytearray.commands['dump']:
                         pass
                     else:
+                        # TODO: speedup by using dict as it is meant to be used
                         key = list(command_bytearray.commands.keys())[list(command_bytearray.commands.values()).index(b)]
                         print(key)
                         emitKeys(device, key)
