@@ -29,7 +29,7 @@ To use this project you need:
  
 ## Configuration
 Configuration should be located in `/config/config.json` and should be syntactically correct. Example 
-configuration can be found in [docs folder](docs/ex_config/ex_config.json)
+configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json).
 Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
@@ -51,9 +51,9 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"run"` - Run has the same syntax as you would type a program in CLI (ex. "firefox")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  
-## Additional support
+## Contribution and requests
 I am developing this software for personal use (for now). If you have any recommendations, complaints, anything you want to see included,
-open an issue and I will gladly try to add it.
+open an issue and I will gladly try to add it. To view state of current features you can checkout the [TODO](TODO.md) file.
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

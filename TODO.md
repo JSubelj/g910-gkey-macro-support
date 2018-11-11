@@ -5,8 +5,8 @@
 [✓] - readme + requirements\
 [x] - <del>uinput.key dictionary translator</del> not needed because of pyautogui\
 [ ] - dist level, devel level\
-[ ] - logging
-[ ] - install script (to remove unneeded packages installed by pyautogui)
+[ ] - logging\
+[ ] - install script (to remove unneeded packages installed by pyautogui)\
 [ ] - testing
 ## v0.2:
 [ ] - arch pkg\
