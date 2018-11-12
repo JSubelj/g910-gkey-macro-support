@@ -12,6 +12,7 @@
 [ ] - add known bugs (fastpressing multiple gkeys dosent get recognized)
 [ ] - testing
 ## v0.2:
+[ ] - light g keys that are active
 [ ] - arch pkg\
 [ ] - on startup (systemd)
 ## v0.3:
