@@ -6,6 +6,9 @@ import subprocess
 import inspect
 import pyautogui
 from lib.data_mappers import hotkey_type, config_reader
+from lib.misc import logger
+
+log = logger.logger(__name__)
 
 
 def execute_writing(string_to_write: str, device):
@@ -25,7 +28,7 @@ def resolve_config(key):
     config = config_reader.read()
 
     if key not in config.keys():
-        print(key,"pressed, unbound in config, doing nothing!")
+        log.info(key+" pressed, unbound in config, doing nothing!")
         return lambda _: None
 
     key_config : dict = config[key]
@@ -33,16 +36,17 @@ def resolve_config(key):
     command = hotkey_type.type[command]
 
     if command == 0:
-        print(key,"pressed, typing out:",key_config["do"])
+
+        log.info(key+" pressed, typing out: "+repr(key_config["do"]))
         return lambda device: execute_writing(key_config["do"], device)
     if command == 1:
-        print(key,"pressed, pressing:",key_config["do"])
+        log.info(key+" pressed, pressing: "+key_config["do"])
         return lambda device: execute_hotkey(key_config["do"], device)
     if command == 2:
-        print(key,"pressed, running:",key_config["do"])
+        log.info(key+" pressed, running: "+key_config["do"])
         return lambda _: execute_command(key_config["do"])
     if command == -1:
-        print(key,"pressed, doing nothing!")
+        log.info(key+" pressed, doing nothing!")
         return lambda _: None
 
 
@@ -50,10 +54,10 @@ def resolve_config(key):
 
 
 def g1(device):
-    resolve_config("g1")(device)
+    resolve_config(inspect.stack()[0][3])(device)
 
 def g2(device):
-    resolve_config("g2")(device)
+    resolve_config(inspect.stack()[0][3])(device)
 
 
 def g3(device):

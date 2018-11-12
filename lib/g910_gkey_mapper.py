@@ -1,13 +1,16 @@
-# Taken from https://github.com/CReimer/g910-gkey-uinput/issues/3
+# Taken from https://github.com/CReimer/g910-gkey-uinput/issues/3 and expanded
 
 import usb.core
 import usb.util
 import time
-
 import uinput
 from lib.functionalities import gkey_functionality, media_static_keys_functionality
 from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
+from lib.misc import paths
+from lib.misc import logger
+
+log = logger.logger(__name__)
 
 def emitKeys(device, key):
     if key is 'g1':
@@ -36,7 +39,7 @@ def main():
 
     # To see if config exists
     config_reader.read()
-
+    print("Starting g910-gkeys, logging at:",paths.logs_path)
     device, dev, endpoint, USB_TIMEOUT = usb_and_keyboard_device_init.init()
 
     while True:
@@ -53,12 +56,12 @@ def main():
                         key = list(command_bytearray.commands.keys())[list(command_bytearray.commands.values()).index(b)]
                         emitKeys(device, key)
                 else:
-                    print(b, 'no match')
+                    log.warning(str(b) + ' no match')
 
         except usb.core.USBError:
             pass
 
-        time.sleep(0.01)  # Let CTRL+C actually exit```
+        time.sleep(0.01)
 
 if __name__ == "__main__":
     main()

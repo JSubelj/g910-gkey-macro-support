@@ -4,3 +4,4 @@ venv/
 dist/
 build/
 g910_gkey_macro*/
+log.txt

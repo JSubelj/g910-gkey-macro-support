@@ -16,7 +16,7 @@ def init():
     USB_PRODUCT = 0xc335
 
     dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT)
-    print(dev[0][(1, 0)])
+    #print(dev[0][(1, 0)])
     endpoint = dev[0][(1, 0)][0]
 
     if dev.is_kernel_driver_active(USB_IF) is True:
