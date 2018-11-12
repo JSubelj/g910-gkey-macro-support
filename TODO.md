@@ -9,7 +9,7 @@
 [✓] - logging\
 [✓] - <del>install script (to remove unneeded packages installed by pyautogui)</del> Even better created setup.py\
 [ ] - update README\
-[ ] - add known bugs (fastpressing multiple gkeys dosent get recognized)
+[ ] - add known bugs (fastpressing multiple gkeys dosent get recognized)\
 [ ] - testing
 ## v0.2:
 [ ] - light g keys that are active
