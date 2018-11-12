@@ -4,12 +4,10 @@ import usb.core
 import usb.util
 import time
 
-
 import uinput
 from lib.functionalities import gkey_functionality, media_static_keys_functionality
-from lib.data_mappers import command_bytearray
+from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
-
 
 def emitKeys(device, key):
     if key is 'g1':
@@ -34,22 +32,14 @@ def emitKeys(device, key):
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
-
-
-# TODO: is this needed?
-def first_diff_index(ls1, ls2):
-    l = min(len(ls1), len(ls2))
-    return next((i for i in range(l) if ls1[i] != ls2[i]), l)
-
-
-
-
 def main():
+
+    # To see if config exists
+    config_reader.read()
+
     device, dev, endpoint, USB_TIMEOUT = usb_and_keyboard_device_init.init()
 
     while True:
-        control = None
-
         try:
 
             control = dev.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize, USB_TIMEOUT)
@@ -60,9 +50,7 @@ def main():
                     if b == command_bytearray.commands['dump']:
                         pass
                     else:
-                        # TODO: speedup by using dict as it is meant to be used
                         key = list(command_bytearray.commands.keys())[list(command_bytearray.commands.values()).index(b)]
-                        print(key)
                         emitKeys(device, key)
                 else:
                     print(b, 'no match')

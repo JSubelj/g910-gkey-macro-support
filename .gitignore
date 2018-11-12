@@ -1,3 +1,6 @@
 __pycache__/
 venv/
 .idea/
+dist/
+build/
+g910_gkey_macro*/
