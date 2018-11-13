@@ -22,7 +22,6 @@ def init():
     if dev.is_kernel_driver_active(USB_IF) is True:
         dev.detach_kernel_driver(USB_IF)
 
-    usb.util.claim_interface(dev, USB_IF)
 
-    return device, dev, endpoint, USB_TIMEOUT
+    return device, dev, endpoint, USB_TIMEOUT, USB_IF
 

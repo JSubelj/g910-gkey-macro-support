@@ -8,6 +8,7 @@
 [✓] - dist level, devel level\
 [✓] - logging\
 [✓] - <del>install script (to remove unneeded packages installed by pyautogui)</del> Even better created setup.py\
+[✓] - added deamonization\
 [ ] - update README\
 [ ] - add known bugs (fastpressing multiple gkeys dosent get recognized)\
 [ ] - testing

@@ -19,4 +19,16 @@ else:
     config_dir = os.path.join(main_dir, "config")
     config_path = config_dir + "/config.json"
 
+
+pid_path = config_dir+"/g910-keys.pid"
 logs_path = config_dir+"/log.txt"
+
+def remove_pid():
+    os.remove(pid_path)
+
+def does_pid_exits():
+    return os.path.exists(pid_path)
+
+def read_pid():
+    with open(pid_path) as f:
+        return f.read()

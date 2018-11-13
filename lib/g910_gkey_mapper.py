@@ -9,6 +9,9 @@ from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
 from lib.misc import paths
 from lib.misc import logger
+import signal
+import sys
+import os
 
 log = logger.logger(__name__)
 
@@ -35,17 +38,31 @@ def emitKeys(device, key):
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
+
+
+def signal_handler(sig, frame):
+    log.warning("Got signal "+signal.Signals(sig).name+" terminating!")
+    print("Got signal",signal.Signals(sig).name,"terminating!")
+    paths.remove_pid()
+    sys.exit(0)
+
 def main():
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    log.info("------------------------------------------------------------------------------------")
+    log.info("----------------------STARTED g910-keys-pid:"+paths.read_pid()+"-----------------------------------")
+    log.info("------------------------------------------------------------------------------------")
 
     # To see if config exists
     config_reader.read()
-    print("Starting g910-gkeys, logging at:",paths.logs_path)
-    device, dev, endpoint, USB_TIMEOUT = usb_and_keyboard_device_init.init()
+    device, dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init()
 
     while True:
         try:
-
+            usb.util.claim_interface(dev, USB_IF)
             control = dev.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize, USB_TIMEOUT)
+            usb.util.release_interface(dev, USB_IF)
 
             if control:
                 b = bytearray(control)
@@ -61,7 +78,7 @@ def main():
         except usb.core.USBError:
             pass
 
-        time.sleep(0.01)
+        time.sleep(0.001)
 
 if __name__ == "__main__":
     main()

@@ -13,9 +13,12 @@ def initialize_config():
 
     return config
 
+def does_config_exists():
+    return os.path.exists(paths.config_path)
+
 # Creates config at home
 def create():
-    if os.path.exists(paths.config_path):
+    if does_config_exists():
         print("Backuping existing config to: "+paths.config_path+".bak")
         os.rename(paths.config_path, paths.config_path+".bak")
 
