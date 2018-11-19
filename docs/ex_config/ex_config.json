@@ -1,5 +1,6 @@
 {
-  "__comment" : "following hotkey types are supported: nothing, typeout, shortcut, run",
+  "__comment" : "following hotkey types are supported: nothing, typeout, shortcut; only en and si keyboard mappings are currently supported",
+  "keyboard_mapping": "si",
   "g1": {
     "hotkey_type": "typeout",
     "do": "Type Me Out!"
@@ -7,10 +8,6 @@
   "g2": {
     "hotkey_type": "shortcut",
     "do": "alt+f4"
-  },
-  "g9": {
-    "hotkey_type": "run",
-    "do": "firefox"
   },
   "g5": {
     "hotkey_type": "nothing"

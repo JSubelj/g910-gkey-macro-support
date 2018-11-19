@@ -1,0 +1,9 @@
+[Unit]
+Description=Support for Logitech g910 keyboard gkeys
+Documentation=https://github.com/JSubelj/g910-gkey-macro-support/blob/master/README.md
+
+[Service]
+ExecStart=/usr/bin/g910-gkeys
+
+[Install]
+WantedBy=multi-user.target

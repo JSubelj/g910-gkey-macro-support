@@ -17,7 +17,7 @@ VERSION = '0.1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    "python3-xlib==0.15", "PyAutoGUI==0.9.38", "python-uinput==0.11.2", "pyusb==1.0.2", "daemonize==2.4.7"
+    "python-uinput==0.11.2", "pyusb==1.0.2"
 ]
 
 
@@ -51,7 +51,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('tests',)),
+    packages=find_packages(exclude=('layout_config_helpers',)),
     # If your package is a single module, use this instead of 'packages':
     py_modules=['cli_entry_point'],
 

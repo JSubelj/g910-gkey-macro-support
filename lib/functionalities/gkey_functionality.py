@@ -1,23 +1,18 @@
-
-import json
-import uinput
-import os, sys
 import subprocess
 import inspect
-import pyautogui
 from lib.data_mappers import hotkey_type, config_reader
 from lib.misc import logger
+from lib.uinput_keyboard import keyboard
 
 log = logger.logger(__name__)
 
 
 def execute_writing(string_to_write: str, device):
-    # TODO: add support for slovenian layout
-    pyautogui.typewrite(string_to_write)
+    keyboard.writeout(string_to_write,config_reader.read()['keyboard_mapping'],device)
 
 def execute_hotkey(string_for_hotkey: str, device):
-    # TODO: add support for slovenian layout
-    pyautogui.hotkey(*string_for_hotkey.split("+"))
+    keyboard.shortcut(string_for_hotkey, config_reader.read()['keyboard_mapping'], device)
+
 
 def execute_command(command):
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

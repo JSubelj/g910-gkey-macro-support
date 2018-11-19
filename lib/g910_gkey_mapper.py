@@ -3,11 +3,9 @@
 import usb.core
 import usb.util
 import time
-import uinput
 from lib.functionalities import gkey_functionality, media_static_keys_functionality
 from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
-from lib.misc import paths
 from lib.misc import logger
 import signal
 import sys
@@ -43,15 +41,16 @@ def emitKeys(device, key):
 def signal_handler(sig, frame):
     log.warning("Got signal "+signal.Signals(sig).name+" terminating!")
     print("Got signal",signal.Signals(sig).name,"terminating!")
-    paths.remove_pid()
+    #pid_handler.remove_pid()
     sys.exit(0)
 
 def main():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGQUIT, signal_handler)
 
     log.info("------------------------------------------------------------------------------------")
-    log.info("----------------------STARTED g910-keys-pid:"+paths.read_pid()+"-----------------------------------")
+    log.info("----------------------STARTED g910-keys-pid:"+str(os.getpid())+"-----------------------------------")
     log.info("------------------------------------------------------------------------------------")
 
     # To see if config exists

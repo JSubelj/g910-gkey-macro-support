@@ -1,8 +1,4 @@
-import sys
-import os
 import json
-from pathlib import Path
-from lib.misc import is_installed
 from lib.misc import paths
 from lib.misc import logger
 

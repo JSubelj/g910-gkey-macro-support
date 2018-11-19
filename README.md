@@ -18,22 +18,28 @@ To use this project you need:
  
 ## Installation
  - install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))
+ - disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
  - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
- - (optionally create virtual environment: `pip install virtualenv && virtualenv venv && source venv/bin/activate`)
- - install pip requirements: `pip install -r requirements.txt` 
- - disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)
- - edit configuration: `vim config/config.json`
- - start the program and you are ready to go: `python launcher.py`
+ - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
+ - This will install the module and set a command `g910-gkeys`, add a service file to `/etc/systemd/system` and reload systemd daemon
+ - start the daemon: `systemctl start g910-gkeys`
+ - you can also add it to start on startup: `systemctl enable g910-gkeys`
+ 
+## Uninstalling
+ - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
+ - run command: `cat files.txt | sudo xargs rm -rf`
+ - it is also recommended to disable the service: `systemctl disable g910-gkeys`
+ - and remove it from system folder: `rm /etc/systemd/system/g910-gkeys.service`
+ - you can also delete the configuration: `rm /etc/g910-gkeys -rf`
  
 ## Configuration
-Configuration should be located in `/config/config.json` and should be syntactically correct. Example 
+Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example 
 configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json).
 Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
- * `"run"` - Starting a program (anything you can start from shell) (will terminate when mapper is terminated)
  * `"nothing"` - Do nothing (unbound key)
 
 To add a hotkey add to `config.json` the following code:
@@ -47,8 +53,7 @@ To add a hotkey add to `config.json` the following code:
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"typeout"` - Typeout syntax is same as you would type text out (ex. "tyPe Me Out!")
- * `"shortcut"` - Shortcuts are separated by a plus sign (ex. "ctrl+alt+f4")
- * `"run"` - Run has the same syntax as you would type a program in command line (ex. "firefox")
+ * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  
 ## Contribution and requests
