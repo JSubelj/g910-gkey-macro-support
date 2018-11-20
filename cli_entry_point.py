@@ -1,13 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from lib import g910_gkey_mapper
-import argparse
-from lib.misc import create_config
-from lib.misc import paths
+
 from lib.misc import logger
+import os
+from lib.misc import paths
 
 
 log = logger.logger("launcher")
+
+
+print("Starting g910-gkeys, logging at:", paths.logs_path)
+log.info("------------------------------------------------------------------------------------")
+log.info("----------------------STARTED g910-keys-pid:" + str(os.getpid()) + "-----------------------------------")
+log.info("------------------------------------------------------------------------------------")
+
+from lib import g910_gkey_mapper
+import argparse
+from lib.misc import create_config
 
 
 def main():
@@ -19,8 +28,6 @@ def main():
     else:
         #pid: ",os.getpid(),
         #pid_handler.kill_previous()
-        print("Starting g910-gkeys, logging at:", paths.logs_path)
-
         g910_gkey_mapper.main()
         #pid_handler.write_pid(os.getpid())
         #Daemonize(app="g910-keys", pid=paths.pid_path, action=g910_gkey_mapper.main, keep_fds=[logger.fh.stream.fileno()]).start()

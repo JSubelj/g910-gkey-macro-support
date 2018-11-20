@@ -36,12 +36,19 @@ def emitKeys(device, key):
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
+# uinput device
+log.debug("gathering uinput device")
+device = usb_and_keyboard_device_init.init_uinput_device()
 
 
 def signal_handler(sig, frame):
-    log.warning("Got signal "+signal.Signals(sig).name+" terminating!")
-    print("Got signal",signal.Signals(sig).name,"terminating!")
+    log.warning("Got signal, "+signal.Signals(sig).name+" terminating!")
+    print("Got signal,",signal.Signals(sig).name,"terminating!")
+    device.__exit__()
+    log.info("Removed uinput device")
+    print("Removed uinput device")
     #pid_handler.remove_pid()
+    log.info("----------------------EXITING-----------------------")
     sys.exit(0)
 
 def main():
@@ -49,17 +56,16 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGQUIT, signal_handler)
 
-    log.info("------------------------------------------------------------------------------------")
-    log.info("----------------------STARTED g910-keys-pid:"+str(os.getpid())+"-----------------------------------")
-    log.info("------------------------------------------------------------------------------------")
-
     # To see if config exists
     config_reader.read()
-    device, dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init()
+
+    log.debug("gathering usb device")
+    dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_usb_dev()
 
     while True:
         try:
             usb.util.claim_interface(dev, USB_IF)
+            #log.debug("reading control values")
             control = dev.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize, USB_TIMEOUT)
             usb.util.release_interface(dev, USB_IF)
 
@@ -74,8 +80,16 @@ def main():
                 else:
                     log.warning(str(b) + ' no match')
 
-        except usb.core.USBError:
-            pass
+        except Exception as e:
+            if e.args[0] == 110:
+                pass
+            elif e.args[0] == 19:
+                try:
+                    dev, endpoint, _, _ = usb_and_keyboard_device_init.init_usb_dev()
+                except:
+                    pass
+            else:
+                log.warning(str(e))
 
         time.sleep(0.001)
 
