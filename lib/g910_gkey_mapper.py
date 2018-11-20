@@ -54,6 +54,7 @@ def signal_handler(sig, frame):
 
 def config_changed_handler(sig,frame):
     log.info("config changed")
+    time.sleep(0.5)
     config_reader.update_config()
 
 def main():
@@ -101,7 +102,7 @@ def main():
                 except:
                     pass
             else:
-                log.warning(str(e))
+                log.error("ERROR:"+str(e))
 
         time.sleep(0.001)
 
