@@ -7,13 +7,15 @@ user friendly to add functionality to GKeys.
 
 The code is tested on Logitech G910 keyboard, OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3.
 
+Everything is also well described on [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
+
 ## Requirements
 
 To use this project you need:
  - Python 3.7
  - git
  - [g810-led controller](https://github.com/MatMoul/g810-led)
- - uinput kernel module (more on this [here](tjjr.fi/sw/python-uinput/#Usage))
+ - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
 ## Installation
