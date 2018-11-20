@@ -26,6 +26,7 @@ keys = {
         'pageup': click(uinput.KEY_PAGEUP),
         'pagedown': click(uinput.KEY_PAGEDOWN),
         "shift": click(uinput.KEY_LEFTSHIFT),
+        'esc': click(uinput.KEY_ESC),
 
         'F1': click(uinput.KEY_F1),
         'F2': click(uinput.KEY_F2),
@@ -268,6 +269,7 @@ keys = {
         '(': wrap_shift(click(uinput.KEY_9)),
 
         '-': click(uinput.KEY_MINUS),
+        '_': wrap_shift(click(uinput.KEY_MINUS)),
         '=': click(uinput.KEY_EQUAL),
 
         '\t': click(uinput.KEY_TAB),
@@ -277,6 +279,9 @@ keys = {
 
         ';': click(uinput.KEY_SEMICOLON),
         "'": click(uinput.KEY_APOSTROPHE),
+        ";": click(uinput.KEY_SEMICOLON),
+        ":": wrap_shift(click(uinput.KEY_SEMICOLON)),
+        '"': wrap_shift(click(uinput.KEY_APOSTROPHE)),
         '`': click(uinput.KEY_GRAVE),
         '\\': click(uinput.KEY_BACKSLASH),
         ',': click(uinput.KEY_COMMA),

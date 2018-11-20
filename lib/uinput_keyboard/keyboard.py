@@ -33,7 +33,6 @@ def shortcut(value, keymap, device):
                 uinput_combo.append(keys["control"][key_string][0][0])
 
         uinput_groups.append(uinput_combo)
-
     for group in uinput_groups:
         device.emit_combo(group)
 

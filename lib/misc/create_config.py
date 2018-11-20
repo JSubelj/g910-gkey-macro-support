@@ -10,8 +10,9 @@ def initialize_config():
     config = {}
     config["__comment"] = "following hotkey types are supported: nothing, typeout, shortcut; only en and si keyboard mappings are currently supported"
     config["keyboard_mapping"]= "si"
+    config["g1"] = {"hotkey_type": "typeout", "do": "Its WORKING!!!%%"}
 
-    for i in range(1, 10):
+    for i in range(2, 10):
         config["g" + str(i)] = {"hotkey_type": "nothing", "do": ""}
 
     return config
