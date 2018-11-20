@@ -8,7 +8,7 @@ from lib.misc import paths
 
 def initialize_config():
     config = {}
-    config["__comment"] = "following hotkey types are supported: nothing, typeout, shortcut; only en and si keyboard mappings are currently supported"
+    config["__comment"] = "following hotkey types are supported: nothing, typeout, shortcut and run; only en and si keyboard mappings are currently supported"
     config["keyboard_mapping"]= "si"
     config["g1"] = {"hotkey_type": "typeout", "do": "Its WORKING!!!%%"}
 
