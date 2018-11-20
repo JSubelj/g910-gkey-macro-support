@@ -6,10 +6,11 @@ import time
 from lib.functionalities import gkey_functionality, media_static_keys_functionality
 from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
-from lib.misc import logger
+from lib.misc import logger, paths
 import signal
 import sys
 import os
+import fcntl
 
 log = logger.logger(__name__)
 
@@ -51,13 +52,24 @@ def signal_handler(sig, frame):
     log.info("----------------------EXITING-----------------------")
     sys.exit(0)
 
+def config_changed_handler(sig,frame):
+    log.info("config changed")
+    config_reader.update_config()
+
 def main():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGQUIT, signal_handler)
+    signal.signal(signal.SIGIO, config_changed_handler)
 
+    # sends signal if config is changed (or really anything in the config directory)
+    fd = os.open(paths.config_dir, os.O_RDONLY)
+    fcntl.fcntl(fd, fcntl.F_SETSIG, 0)
+    fcntl.fcntl(fd, fcntl.F_NOTIFY,
+                fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
     # To see if config exists
     config_reader.read()
+
 
     log.debug("gathering usb device")
     dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_usb_dev()
