@@ -56,7 +56,7 @@ def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
 
 def validate_config(config_dic : dict):
     errors = {}
-    keyboard_mapping = config_dic.get("keyboard_mapping", supported_configs.default_hotkey_type)
+    keyboard_mapping = config_dic.get("keyboard_mapping", supported_configs.default_keyboard_mapping)
     return_config = {"keyboard_mapping": keyboard_mapping}
     if keyboard_mapping not in supported_configs.keyboard_mappings:
         return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
