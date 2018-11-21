@@ -7,7 +7,7 @@ user friendly to add functionality to GKeys.
 
 The code is tested on Logitech G910 keyboard, OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3.
 
-Everything is also well described on [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
+Everything is described in great depth on [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
 
 ## Requirements
 
