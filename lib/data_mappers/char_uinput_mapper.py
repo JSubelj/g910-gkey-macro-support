@@ -27,6 +27,7 @@ keys = {
         'pagedown': click(uinput.KEY_PAGEDOWN),
         "shift": click(uinput.KEY_LEFTSHIFT),
         'esc': click(uinput.KEY_ESC),
+        "enter": click(uinput.KEY_ENTER),
 
         'F1': click(uinput.KEY_F1),
         'F2': click(uinput.KEY_F2),

@@ -12,5 +12,6 @@ Supported keys for "en" layout:
  '_', '=', '\t', '[', ']', '\n', ';', "'", ':', '"', '`', '\\', ',', '.', '/', '*', ' ']
 
 Supported control keys:
-['ctrl', 'alt', 'altgr', 'win', 'home', 'delete', 'pageup', 'pagedown', 'shift', 'esc',
+['ctrl', 'alt', 'altgr', 'win', 'home', 'delete', 'pageup', 'pagedown', 'shift', 'esc', 'enter'
  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12']
+
