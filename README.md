@@ -1,4 +1,4 @@
-# Logitech G910 keyboard gkey support for Linux
+# Logitech G910 keyboard gkey support for Linux 0.1.0
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
@@ -7,7 +7,7 @@ user friendly to add functionality to GKeys.
 
 The code is tested on Logitech G910 keyboard, OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3.
 
-Everything is described in great depth on [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
+Everything is described in great depth (and actually much better) on [WIKI](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
 
 ## Requirements
 
@@ -42,7 +42,7 @@ configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.
 Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
- * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs.
+ * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
  * `"nothing"` - Do nothing (unbound key)
 
 To add a hotkey add to `config.json` the following code:
