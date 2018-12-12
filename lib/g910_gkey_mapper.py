@@ -96,7 +96,7 @@ def main():
         except Exception as e:
             if e.args[0] == 110:
                 pass
-            elif e.args[0] == 19:
+            elif e.args[0] == 19 or e.args[0] == 5:
                 try:
                     dev, endpoint, _, _ = usb_and_keyboard_device_init.init_usb_dev()
                 except:
