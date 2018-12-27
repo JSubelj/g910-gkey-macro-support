@@ -5,6 +5,8 @@ Documentation=https://github.com/JSubelj/g910-gkey-macro-support/wiki
 [Service]
 ExecStartPre=g910-led -gkm 1
 ExecStart=/usr/bin/g910-gkeys
+PIDFile=$MAINPID
+TimeoutStopSec=2
 
 [Install]
 WantedBy=multi-user.target
