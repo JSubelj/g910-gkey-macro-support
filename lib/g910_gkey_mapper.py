@@ -14,6 +14,7 @@ import fcntl
 
 log = logger.logger(__name__)
 
+
 def emitKeys(device, key):
     if key is 'g1':
         gkey_functionality.g1(device)
@@ -37,25 +38,28 @@ def emitKeys(device, key):
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
+
 # uinput device
 log.debug("gathering uinput device")
 device = usb_and_keyboard_device_init.init_uinput_device()
 
 
 def signal_handler(sig, frame):
-    log.warning("Got signal, "+signal.Signals(sig).name+" terminating!")
-    print("Got signal,",signal.Signals(sig).name,"terminating!")
+    log.warning("Got signal, " + signal.Signals(sig).name + " terminating!")
+    print("Got signal,", signal.Signals(sig).name, "terminating!")
     device.__exit__()
     log.info("Removed uinput device")
     print("Removed uinput device")
-    #pid_handler.remove_pid()
+    # pid_handler.remove_pid()
     log.info("----------------------EXITING-----------------------")
     sys.exit(0)
 
-def config_changed_handler(sig,frame):
+
+def config_changed_handler(sig, frame):
     log.info("config changed")
     time.sleep(0.5)
     config_reader.update_config()
+
 
 def main():
     signal.signal(signal.SIGINT, signal_handler)
@@ -71,14 +75,23 @@ def main():
     # To see if config exists
     config_reader.read()
 
-
+    dev = None
     log.debug("gathering usb device")
-    dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_usb_dev()
+    counter = 0
+    while not dev:
+        try:
+            dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_usb_dev()
+        except Exception as e:
+            if e.args[0] == 5:
+                counter += 1
+                if counter >= 1000:
+                    log.warning("USBError: Input/Output Error")
+                time.sleep(0.01)
 
     while True:
         try:
             usb.util.claim_interface(dev, USB_IF)
-            #log.debug("reading control values")
+            # log.debug("reading control values")
             control = dev.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize, USB_TIMEOUT)
             usb.util.release_interface(dev, USB_IF)
 
@@ -88,7 +101,8 @@ def main():
                     if b == command_bytearray.commands['dump']:
                         pass
                     else:
-                        key = list(command_bytearray.commands.keys())[list(command_bytearray.commands.values()).index(b)]
+                        key = list(command_bytearray.commands.keys())[
+                            list(command_bytearray.commands.values()).index(b)]
                         emitKeys(device, key)
                 else:
                     log.warning(str(b) + ' no match')
@@ -102,9 +116,10 @@ def main():
                 except:
                     pass
             else:
-                log.error("ERROR:"+str(e))
+                log.error("ERROR:" + str(e))
 
         time.sleep(0.001)
+
 
 if __name__ == "__main__":
     main()
