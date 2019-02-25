@@ -18,6 +18,15 @@ else:
     config_dir = os.path.join(main_dir, "config")
     config_path = config_dir + "/config.json"
 
+logs_path = "/var/log/g910-gkeys.log"
+
+try:
+    size = os.path.getsize(logs_path)
+    if size > 5000000: # More then 5MB
+        print("Moving "+logs_path+" (size "+str(size/1000000)+"MB) to "+logs_path+".old")
+        os.rename(logs_path, logs_path+".old")
+except:
+    pass
 
 pid_path = config_dir+"/g910-keys.pid"
-logs_path = "/var/log/g910-gkeys.log"
+

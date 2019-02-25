@@ -34,6 +34,8 @@ def emitKeys(device, key):
         gkey_functionality.g8(device)
     elif key is 'g9':
         gkey_functionality.g9(device)
+    elif key is "release":
+        gkey_functionality.release(device)
 
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
@@ -98,12 +100,9 @@ def main():
             if control:
                 b = bytearray(control)
                 if b in command_bytearray.commands.values():
-                    if b == command_bytearray.commands['dump']:
-                        pass
-                    else:
-                        key = list(command_bytearray.commands.keys())[
-                            list(command_bytearray.commands.values()).index(b)]
-                        emitKeys(device, key)
+                    key = list(command_bytearray.commands.keys())[
+                        list(command_bytearray.commands.values()).index(b)]
+                    emitKeys(device, key)
                 else:
                     log.warning(str(b) + ' no match')
 

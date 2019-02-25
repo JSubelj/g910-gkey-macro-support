@@ -7,7 +7,10 @@ time.sleep(1)
 layout="en"
 def shortcut(string):
     keyboard.shortcut(string, layout, device)
+    keyboard.release(device)
     time.sleep(0.5)
+    if len(keyboard.press_release_fifo):
+        print("PRESS_RELEASE_FIFO is not empty!")
 
 def writeout(string):
     keyboard.writeout(string, layout, device)

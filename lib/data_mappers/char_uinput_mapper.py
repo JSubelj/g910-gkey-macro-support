@@ -290,7 +290,6 @@ keys = {
         ']': click(uinput.KEY_RIGHTBRACE),
         '\n': click(uinput.KEY_ENTER),
 
-        ';': click(uinput.KEY_SEMICOLON),
         "'": click(uinput.KEY_APOSTROPHE),
         ";": click(uinput.KEY_SEMICOLON),
         ":": wrap_shift(click(uinput.KEY_SEMICOLON)),
@@ -308,7 +307,12 @@ keys = {
     }
 }
 
+key_names = [i for i in dir(uinput) if i.isupper() and not i.startswith("_")]
+reverse_keys = {getattr(uinput, j): j for j in key_names}
+
 if __name__=="__main__":
+    print(reverse_keys)
     print(keys["si"].keys())
     print(keys["en"].keys())
     print(keys["control"].keys())
+

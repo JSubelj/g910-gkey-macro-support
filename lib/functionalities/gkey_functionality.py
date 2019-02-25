@@ -13,6 +13,8 @@ def execute_writing(string_to_write: str, device):
 def execute_hotkey(string_for_hotkey: str, device):
     keyboard.shortcut(string_for_hotkey, config_reader.read()['keyboard_mapping'], device)
 
+def execute_release(device):
+    keyboard.release(device)
 
 def execute_command(command):
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -48,7 +50,8 @@ def resolve_config(key):
 
 
 
-
+def release(device):
+    execute_release(device)
 
 def g1(device):
     resolve_config(inspect.stack()[0][3])(device)
