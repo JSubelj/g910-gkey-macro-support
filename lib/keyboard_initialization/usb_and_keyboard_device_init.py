@@ -15,15 +15,18 @@ def init_uinput_device():
 
 def init_usb_dev():
     USB_VENDOR = 0x046d
-    USB_PRODUCT = 0xc335
+    USB_PRODUCT = (0x0c32b, 0xc335)
     USB_IF = 1  # Interface
     USB_TIMEOUT = 5  # Timeout in MS
 
-    dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT)
+
+    select_product = 0
+    dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT[select_product])
     while not dev:
-        log.debug("usb dev: not found. retrying")
-        dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT)
-        time.sleep(1)
+        select_product = abs(select_product-1)
+        log.debug("usb dev: not found. retrying with other product id")
+        dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT[select_product])
+        time.sleep(0.1)
 
     log.debug("usb dev: " + str(dev[0][(1, 0)]))
     endpoint = dev[0][(1, 0)][0]
