@@ -17,18 +17,23 @@ def execute_events(events, device):
 
 def writeout(string, charset, device):
     for c in string:
-        execute_events(keys[charset][c],device)
+        execute_events(keys[charset][c], device)
+
 
 press_release_fifo = []
 
+
 def release(device):
+    if not len(press_release_fifo):
+        return
     keys_to_release = press_release_fifo.pop(0)
     to_log = ""
     for key in keys_to_release:
         device.emit(key, 0)
-        to_log+=" "+reverse_keys[key]+","
+        to_log += " " + reverse_keys[key] + ","
 
-    log.info("Released keys:"+to_log[:-1]+" Shortcuts to release: "+str(len(press_release_fifo))+" (Should always be 0)")
+    log.info("Released keys:" + to_log[:-1] + " Shortcuts to release: " + str(
+        len(press_release_fifo)) + " (Should always be 0)")
 
 
 def shortcut(value, keymap, device):
@@ -57,16 +62,16 @@ def shortcut(value, keymap, device):
             keys_to_fifo.insert(0, uinput_key)
             device.emit(uinput_key, 1)
             time.sleep(0.02)
-        press_release_fifo.insert(0,keys_to_fifo)
-
+        press_release_fifo.insert(0, keys_to_fifo)
     else:
         for group in uinput_groups:
-            print(group)
             device.emit_combo(group)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import uinput, time
     from lib.data_mappers.uinput_all_keys import uinput_all_keys
+
     dev = uinput.Device(uinput_all_keys)
     time.sleep(4)
-    shortcut("ctrl+c,f,d,s,a,f,ctrl+v","si",dev)
+    shortcut("ctrl+c,f,d,s,a,f,ctrl+v", "si", dev)

@@ -26,9 +26,17 @@ shortcut("ctrl+alt+t")
 writeout("rm " + path + "\n")
 writeout("vim " + path + "\n")
 writeout("i" + string)
+shortcut("capslock+a,a,capslock+a,a")
+print("pressing esc")
+time.sleep(5)
 shortcut("esc")
-writeout(":wq\n")
+print("pressing :wq entr")
+time.sleep(5)
+shortcut("shift+.,w,q,enter")
+print("typing exit")
+time.sleep(5)
 writeout("exit\n")
+string+="AAAa"
 
 print("testing", layout, "layout")
 
