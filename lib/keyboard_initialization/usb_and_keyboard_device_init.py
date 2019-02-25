@@ -6,10 +6,12 @@ from lib.misc import logger
 log = logger.logger(__name__)
 import time
 
+
 def init_uinput_device():
     device = uinput.Device(uinput_all_keys.uinput_all_keys)
     log.debug("got uinput device: " + str(device))
     return device
+
 
 def init_usb_dev():
     USB_VENDOR = 0x046d
@@ -32,3 +34,32 @@ def init_usb_dev():
 
     return dev, endpoint, USB_TIMEOUT, USB_IF
 
+
+def disable_fkey_to_gkey_binding(dev, endpoint, USB_TIMEOUT, USB_IF):
+    usb.util.claim_interface(dev, USB_IF)
+    log.info("Trying to disable mapping")
+    log.debug("Sending disable")
+    packet = [0x11, 0xff, 0x08, 0x2e, 0x2]
+    for _ in range(len(packet), 20):
+        packet.append(0)
+    disable_return = dev.ctrl_transfer(0x21, 0x09, 0x0212, 1, packet, 2000)  # write(1,packet,USB_TIMEOUT))
+    log.debug("Got: " + str(disable_return))
+    time.sleep(0.001)
+
+    buffer = []
+    for _ in range(64):
+        buffer.append(0)
+
+    # Don't really know why this has to be send but its included in the original g810-leds
+    ret = dev.write(0x82, buffer, 2000)
+    log.debug("Got: " + str(ret))
+
+    operation_successful = [17, 255, 8, 46, 2]
+    while 1:
+        time.sleep(0.001)
+        confirmation_bytes = dev.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize, USB_TIMEOUT)
+        if list(confirmation_bytes[:5]) == operation_successful:
+            log.info("Mapping disabled successfully")
+            break
+    usb.util.release_interface(dev, USB_IF)
+    return True
