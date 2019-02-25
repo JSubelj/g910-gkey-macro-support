@@ -41,6 +41,18 @@ keys = {
         'F10': click(uinput.KEY_F10),
         'F11': click(uinput.KEY_F11),
         'F12': click(uinput.KEY_F12),
+        'F13': click(uinput.KEY_F13),
+        'F14': click(uinput.KEY_F14),
+        'F15': click(uinput.KEY_F15),
+        'F16': click(uinput.KEY_F16),
+        'F17': click(uinput.KEY_F17),
+        'F18': click(uinput.KEY_F18),
+        'PLUSMINUS': click(uinput.KEY_KPPLUSMINUS),
+        'STOP': click(uinput.KEY_STOP),
+        'AGAIN': click(uinput.KEY_AGAIN),
+        'PROPS': click(uinput.KEY_PROPS),
+        'FRONT': click(uinput.KEY_FRONT),
+        'UNDO': click(uinput.KEY_UNDO),
     },
     "si": {
 
@@ -292,6 +304,7 @@ keys = {
         '*': click(uinput.KEY_KPASTERISK),
 
         ' ': click(uinput.KEY_SPACE),
+        '±': click(uinput.KEY_KPPLUSMINUS),
     }
 }
 
