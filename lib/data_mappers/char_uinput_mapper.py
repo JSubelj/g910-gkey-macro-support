@@ -1,14 +1,16 @@
 import uinput
 
+
 def click(uinput_key):
     return [(uinput_key, 3)]
 
+
 def wrap_shift(key_array):
-    return [(uinput.KEY_LEFTSHIFT, 1)]+key_array+[(uinput.KEY_LEFTSHIFT, 0)]
+    return [(uinput.KEY_LEFTSHIFT, 1)] + key_array + [(uinput.KEY_LEFTSHIFT, 0)]
 
 
 def wrap_altgr(key_array):
-    return [(uinput.KEY_RIGHTALT, 1)]+key_array+[(uinput.KEY_RIGHTALT, 0)]
+    return [(uinput.KEY_RIGHTALT, 1)] + key_array + [(uinput.KEY_RIGHTALT, 0)]
 
 
 # types of return events: list(touple(uinputkey, [0,1,3])) ex: [((1,12),0),((1,12),1), ((1,12),3)]
@@ -29,6 +31,26 @@ keys = {
         'esc': click(uinput.KEY_ESC),
         "enter": click(uinput.KEY_ENTER),
         "capslock": click(uinput.KEY_CAPSLOCK),
+
+        # keypad
+        "NUM0": click(uinput.KEY_KP0),
+        "NUM1": click(uinput.KEY_KP1),
+        "NUM2": click(uinput.KEY_KP2),
+        "NUM3": click(uinput.KEY_KP3),
+        "NUM4": click(uinput.KEY_KP4),
+        "NUM5": click(uinput.KEY_KP5),
+        "NUM6": click(uinput.KEY_KP6),
+        "NUM7": click(uinput.KEY_KP7),
+        "NUM8": click(uinput.KEY_KP8),
+        "NUM9": click(uinput.KEY_KP9),
+        "NUM-": click(uinput.KEY_KPMINUS),
+        "NUMPLUS": click(uinput.KEY_KPPLUS),
+        "NUM/": click(uinput.KEY_KPSLASH),
+        "NUM*": click(uinput.KEY_KPASTERISK),
+        "NUMCOMMA": click(uinput.KEY_KPCOMMA),
+        "NUM.": click(uinput.KEY_KPDOT),
+        "NUMENTER": click(uinput.KEY_KPENTER),
+        "NUMLOCK": click(uinput.KEY_NUMLOCK),
 
         'F1': click(uinput.KEY_F1),
         'F2': click(uinput.KEY_F2),
@@ -311,9 +333,8 @@ keys = {
 key_names = [i for i in dir(uinput) if i.isupper() and not i.startswith("_")]
 reverse_keys = {getattr(uinput, j): j for j in key_names}
 
-if __name__=="__main__":
+if __name__ == "__main__":
     print(reverse_keys)
     print(keys["si"].keys())
     print(keys["en"].keys())
     print(keys["control"].keys())
-
