@@ -1,0 +1,8 @@
+
+post_install() {
+	echo "You can now enable the service by:"
+	echo "# systemctl enable g910-gkeys.service"
+	echo "And run it with:"
+	echo "# systemctl start g910-gkeys.service"
+	echo "Log file is stored in /var/log/g910-gkeys.log"
+}
