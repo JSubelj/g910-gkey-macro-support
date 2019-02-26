@@ -5,15 +5,16 @@ import io
 import os
 
 from setuptools import find_packages, setup
+import lib.PROJECT_INFO as PROJECT_INFO
 
 # Package meta-data.
-NAME = 'g910-gkey-macro-support'
-DESCRIPTION = 'Support for Logitech G910 GKeys on Linux'
-URL = 'https://github.com/JSubelj/g910-gkey-macro-support'
-EMAIL = 'jan.subelj010@gmail.com'
-AUTHOR = 'Jan Šubelj'
-REQUIRES_PYTHON = '>=3.7.0'
-VERSION = '0.1.0'
+NAME = PROJECT_INFO.NAME
+DESCRIPTION = PROJECT_INFO.DESCRIPTION
+URL = PROJECT_INFO.URL
+EMAIL = PROJECT_INFO.EMAIL
+AUTHOR = PROJECT_INFO.AUTHOR
+REQUIRES_PYTHON = PROJECT_INFO.REQUIRES_PYTHON
+VERSION = PROJECT_INFO.VERSION
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -61,7 +62,7 @@ setup(
     install_requires=REQUIRED,
     #extras_require=EXTRAS,
     include_package_data=True,
-    license='GPL',
+    license='GPL3',
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers

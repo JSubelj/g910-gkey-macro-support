@@ -1,4 +1,4 @@
-# Logitech G910 keyboard gkey support for Linux 0.1.0
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.1)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
@@ -9,18 +9,20 @@ The code is tested on Logitech G910 keyboard, OS: Manjaro, 4.19.1 Linux kernel, 
 
 Everything is described in great depth (and actually much better) on [WIKI](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
 
+Note: From version 0.2.0 onwards the g810-led controller is no longer required because Gkey to Fkey mapping is disabled inside the driver.
+
 ## Requirements
 
 To use this project you need:
  - Python 3.7
  - git
- - [g810-led controller](https://github.com/MatMoul/g810-led)
+ - ~~[g810-led controller](https://github.com/MatMoul/g810-led)~~
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
 ## Installation
- - install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))
- - disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)
+ - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
+ - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
  - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
@@ -32,6 +34,8 @@ To use this project you need:
 ## Uninstalling
  - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
  - run command: `cat files.txt | sudo xargs rm -rf`
+ - list pip packages that include g910: `pip list | grep g910`
+ - remove the ones that concern this driver: `pip uninstall ${pkgs to uninstall}`
  - it is also recommended to disable the service: `systemctl disable g910-gkeys`
  - and remove it from system folder: `rm /etc/systemd/system/g910-gkeys.service`
  - you can also delete the configuration: `rm /etc/g910-gkeys -rf`
@@ -62,7 +66,7 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  
 ## Contribution and requests
 I am developing this software for personal use (for now). If you have any recommendations, complaints, anything you want to see included,
-open an issue and I will gladly try to add it. To view the state of current features you can checkout the [TODO](TODO.md) file.
+open an [issue](https://github.com/JSubelj/g910-gkey-macro-support/issues) and I will gladly try to add/fix it.
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

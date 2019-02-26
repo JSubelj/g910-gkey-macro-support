@@ -1,3 +1,6 @@
+# Author: Jan Subelj
+# Contribution: Jez Mckinley (https://github.com/tabashir/g910-gkey-macro-support)
+
 import uinput
 
 

@@ -1,9 +1,9 @@
 pkgname=g910-gkeys-git
 _appname=g910-gkeys
 _gitname=g910-gkey-macro-support
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
-pkgdesc='GKey support for Logitech G910 Keyboard on Linux'
+pkgdesc='GKey support for Logitech G910 Keyboard on GNU/Linux'
 url='https://github.com/JSubelj/g910-gkey-macro-support'
 arch=('any')
 license=('GPL3')
@@ -14,8 +14,13 @@ install=${pkgname}.install
 backup=("etc/${_appname}/config.json")
 md5sums=('SKIP')
 
+build() {
+    cd ${srcdir}/${_gitname}
+    python setup.py build
+}
+
 package() {
   cd ${srcdir}/${_gitname}
-  python setup.py install --root="${pkgdir}"
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
   install -Dm 644 -t $pkgdir/usr/lib/systemd/system g910-gkeys.service
 }

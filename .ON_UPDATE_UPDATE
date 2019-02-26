@@ -1,0 +1,16 @@
+If you are not me, you can ignore this file.
+
+Raise the version number in:
+    - README.md
+    - wiki/HOME.md
+    - PROJECT_INFO.py
+    - PKGBUILD
+
+Update:
+    - Documentation on wiki/readme + changelog
+    - PKGBUILD md5 hash
+
+Before release:
+    - Check documentation for correct version numbers
+    - Check PKG-INFO (generated with python setup.py build) for correct version numbers
+    - Check pacman for correct version numbers

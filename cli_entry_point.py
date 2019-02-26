@@ -1,31 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from lib.misc import logger
 import os
-from lib.misc import paths
 
-
-log = logger.logger("launcher")
-
-
-print("Starting g910-gkeys, logging at:", paths.logs_path)
-log.info("------------------------------------------------------------------------------------")
-log.info("----------------------STARTED g910-keys-pid:" + str(os.getpid()) + "-----------------------------------")
-log.info("------------------------------------------------------------------------------------")
-
-from lib import g910_gkey_mapper
 import argparse
-from lib.misc import create_config
-
+import lib.PROJECT_INFO as PROJECT_INFO
 
 def main():
     parser = argparse.ArgumentParser(description="Support for Logitech G910 GKeys on Linux")
-    parser.add_argument("--create-config", help="Creates config in "+paths.config_path, action='store_true', default=False)
+    parser.add_argument("--create-config", help="Creates config in /etc/g910-gkeys", action='store_true', default=False)
+    parser.add_argument("-v","--version", help="Displays the information about the driver", action='store_true', default=False)
     args = parser.parse_args()
     if args.create_config:
+        from lib.misc import create_config
+
         create_config.create()
+    elif args.version:
+        print(PROJECT_INFO.NAME)
+        print()
+        print(PROJECT_INFO.DESCRIPTION)
+        print()
+        print("Created by", PROJECT_INFO.AUTHOR)
+        print("Version", PROJECT_INFO.VERSION)
     else:
+        from lib.misc import logger
+        from lib import g910_gkey_mapper
+        from lib.misc import paths
+
+        log = logger.logger("launcher")
+
+        print("Starting g910-gkeys, logging at:", paths.logs_path)
+        log.info("------------------------------------------------------------------------------------")
+        log.info(
+            "----------------------STARTED g910-keys-pid:" + str(os.getpid()) + "-----------------------------------")
+        log.info("------------------------------------------------------------------------------------")
         #pid: ",os.getpid(),
         #pid_handler.kill_previous()
         g910_gkey_mapper.main()
