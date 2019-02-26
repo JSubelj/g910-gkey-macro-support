@@ -20,7 +20,7 @@ To use this project you need:
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
-## Installation
+## Installation [AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)
  - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
  - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
@@ -63,10 +63,7 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
- 
-## Contribution and requests
-I am developing this software for personal use (for now). If you have any recommendations, complaints, anything you want to see included,
-open an [issue](https://github.com/JSubelj/g910-gkey-macro-support/issues) and I will gladly try to add/fix it.
+
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
