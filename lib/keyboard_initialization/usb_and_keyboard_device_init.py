@@ -19,11 +19,10 @@ def init_usb_dev():
     USB_IF = 1  # Interface
     USB_TIMEOUT = 5  # Timeout in MS
 
-
     select_product = 0
     dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT[select_product])
     while not dev:
-        select_product = abs(select_product-1)
+        select_product = abs(select_product - 1)
         log.debug("usb dev: not found. retrying with other product id")
         dev = usb.core.find(idVendor=USB_VENDOR, idProduct=USB_PRODUCT[select_product])
         time.sleep(0.1)
@@ -66,3 +65,42 @@ def disable_fkey_to_gkey_binding(dev, endpoint, USB_TIMEOUT, USB_IF):
             break
     usb.util.release_interface(dev, USB_IF)
     return True
+
+
+def init_g910_keyboard():
+    dev = endpoint = USB_TIMEOUT = USB_IF = None
+    counter = 0
+    log.debug("gathering usb device")
+    while not dev:
+        try:
+            dev, endpoint, USB_TIMEOUT, USB_IF = init_usb_dev()
+        except Exception as e:
+            if e.args[0] == 5:
+                counter += 1
+                if counter >= 1000:
+                    log.warning("USBError: Input/Output Error")
+                    counter = 0
+                time.sleep(0.01)
+            else:
+                log.warning("Getting keyboard error: " + str(e))
+
+    successfully_disabled_mapping = False
+    counter = 0
+    while not successfully_disabled_mapping:
+        try:
+            successfully_disabled_mapping = disable_fkey_to_gkey_binding(dev, endpoint, USB_TIMEOUT, USB_IF)
+        except Exception as e:
+            if e.args[0] == 110:
+                counter += 1
+                if counter >= 5:
+                    log.warning("Can't disable mapping")
+                    counter = 0
+                time.sleep(0.01)
+            else:
+                log.warning("Disable mapping error: " + str(e))
+                try:
+                    dev, endpoint, USB_TIMEOUT, USB_IF = init_usb_dev()
+                except:
+                    pass
+
+    return dev, endpoint, USB_TIMEOUT, USB_IF

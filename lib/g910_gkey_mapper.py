@@ -77,39 +77,7 @@ def main():
     # To see if config exists
     config_reader.read()
 
-    dev = None
-    log.debug("gathering usb device")
-    counter = 0
-    while not dev:
-        try:
-            dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_usb_dev()
-        except Exception as e:
-            if e.args[0] == 5:
-                counter += 1
-                if counter >= 1000:
-                    log.warning("USBError: Input/Output Error")
-                    counter = 0
-                time.sleep(0.01)
-            else:
-                log.warning(str(e))
-
-    successfully_disabled_mapping = False
-    counter = 0
-    while not successfully_disabled_mapping:
-        try:
-            successfully_disabled_mapping = usb_and_keyboard_device_init.disable_fkey_to_gkey_binding(dev,
-                                                                                                      endpoint,
-                                                                                                      USB_TIMEOUT,
-                                                                                                      USB_IF)
-        except Exception as e:
-            if e.args[0] == 110:
-                counter += 1
-                if counter >= 5:
-                    log.warning("Can't disable mapping")
-                    counter = 0
-                time.sleep(0.01)
-            else:
-                log.warning(str(e))
+    dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
 
     while True:
         try:
@@ -132,7 +100,7 @@ def main():
                 pass
             elif e.args[0] == 19 or e.args[0] == 5:
                 try:
-                    dev, endpoint, _, _ = usb_and_keyboard_device_init.init_usb_dev()
+                    dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
                 except:
                     pass
             else:
