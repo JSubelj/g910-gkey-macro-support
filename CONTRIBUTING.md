@@ -3,7 +3,9 @@ First read the [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki)! 
 There are many ways you can contribute to this project. But first of all I would like to thank you for using my software, trying to enhance it and giving me the energy to improve it.
 
 # Adding your code
-If you like to improve the driver, fork it (if you fork my code just to have it on your GitHub page you should be ashamed), do your magic and then issue a pull request. I will review your code and if I have any questions I will ask them in the pull request. If you don't answer in a few days I will probably decline the pull request.
+If you like to improve the driver first check if anyone is already working on that. If not post an Issue and/or assign yourself to it so we can know that you are working on it. If you can also post a deadline when you will probably finish. Then just fork the project (if you fork my code just to have it on your GitHub page you should be ashamed), do your magic and then issue a pull request. I will review your code and if I have any questions I will ask them in the pull request. If you don't answer in a few days I will probably decline the pull request.
+
+If you have any questions on the issue you are currently working on, send me an email or post it in the Issue you are working on and I will be glad to help.
 
 If you think you can greatly enhance the project contact me on my email (at the bottom of this page), we will talk and if I see you are interested and qualified I will add you to the team.
 
