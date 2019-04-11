@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
@@ -29,7 +29,7 @@ def main():
 
         log = logger.logger("launcher")
 
-        print("Starting g910-gkeys, logging at:", paths.logs_path)
+        print(f"Starting g910-gkeys, PID: {os.getpid()}, logging at:", paths.logs_path)
         log.info("------------------------------------------------------------------------------------")
         log.info(
             "----------------------STARTED g910-keys-pid:" + str(os.getpid()) + "-----------------------------------")

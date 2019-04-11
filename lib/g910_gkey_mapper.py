@@ -44,16 +44,26 @@ def emitKeys(device, key):
 # uinput device
 log.debug("gathering uinput device")
 device = usb_and_keyboard_device_init.init_uinput_device()
-
+program_running=True
 
 def signal_handler(sig, frame):
+    global program_running
     log.warning("Got signal, " + signal.Signals(sig).name + " terminating!")
     print("Got signal,", signal.Signals(sig).name, "terminating!")
-    device.__exit__()
-    log.info("Removed uinput device")
-    print("Removed uinput device")
+    try:
+        device.__exit__()
+        log.info("Removed uinput device")
+        print("Removed uinput device")
+    except SystemExit:
+        sys.exit(0)
+    except Exception as e:
+        print("Could not remove uinput device:",e)
+        log.info("Could not remove uinput device:",e)
+
     # pid_handler.remove_pid()
     log.info("----------------------EXITING-----------------------")
+    print("Exiting")
+    program_running = False
     sys.exit(0)
 
 
@@ -79,7 +89,7 @@ def main():
 
     dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
 
-    while True:
+    while program_running:
         try:
             usb.util.claim_interface(dev, USB_IF)
             # log.debug("reading control values")
@@ -94,7 +104,8 @@ def main():
                     emitKeys(device, key)
                 else:
                     log.warning(str(b) + ' no match')
-
+        except SystemExit:
+            sys.exit(0)
         except Exception as e:
             if e.args[0] == 110:
                 pass
