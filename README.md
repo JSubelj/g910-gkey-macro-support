@@ -27,7 +27,7 @@ To use this project you need:
  - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
  - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
- - This will install the module and set a command `g910-gkeys`, add a service file to `/etc/systemd/system` and reload systemd daemon
+ - This will install the module and set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` and reload systemd daemon
  - start the daemon: `systemctl start g910-gkeys`
  - you can also add it to start on startup: `systemctl enable g910-gkeys`
  
@@ -37,7 +37,7 @@ To use this project you need:
  - list pip packages that include g910: `pip list | grep g910`
  - remove the ones that concern this driver: `pip uninstall ${pkgs to uninstall}`
  - it is also recommended to disable the service: `systemctl disable g910-gkeys`
- - and remove it from system folder: `rm /etc/systemd/system/g910-gkeys.service`
+ - and remove it from system folder: `rm /usr/lib/systemd/system/g910-gkeys.service`
  - you can also delete the configuration: `rm /etc/g910-gkeys -rf`
  
 ## Configuration
