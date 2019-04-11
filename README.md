@@ -20,7 +20,7 @@ To use this project you need:
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
-## Installation [AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)
+## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
  - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
  - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
