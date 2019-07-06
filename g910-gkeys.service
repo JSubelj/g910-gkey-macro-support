@@ -3,7 +3,7 @@ Description=Support for Logitech g910 keyboard gkeys
 Documentation=https://github.com/JSubelj/g910-gkey-macro-support/wiki
 
 [Service]
-ExecStart=/usr/bin/g910-gkeys
+ExecStart=/usr/local/bin/g910-gkeys
 TimeoutStopSec=3
 
 
