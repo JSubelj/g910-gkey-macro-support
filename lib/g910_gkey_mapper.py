@@ -16,25 +16,25 @@ log = logger.logger(__name__)
 
 
 def emitKeys(device, key):
-    if key is 'g1':
+    if key == 'g1':
         gkey_functionality.g1(device)
-    elif key is 'g2':
+    elif key == 'g2':
         gkey_functionality.g2(device)
-    elif key is 'g3':
+    elif key == 'g3':
         gkey_functionality.g3(device)
-    elif key is 'g4':
+    elif key == 'g4':
         gkey_functionality.g4(device)
-    elif key is 'g5':
+    elif key == 'g5':
         gkey_functionality.g5(device)
-    elif key is 'g6':
+    elif key == 'g6':
         gkey_functionality.g6(device)
-    elif key is 'g7':
+    elif key == 'g7':
         gkey_functionality.g7(device)
-    elif key is 'g8':
+    elif key == 'g8':
         gkey_functionality.g8(device)
-    elif key is 'g9':
+    elif key == 'g9':
         gkey_functionality.g9(device)
-    elif key is "release":
+    elif key == "release":
         gkey_functionality.release(device)
 
     elif media_static_keys_functionality.resolve_key(device, key):
@@ -101,6 +101,7 @@ def main():
                 if b in command_bytearray.commands.values():
                     key = list(command_bytearray.commands.keys())[
                         list(command_bytearray.commands.values()).index(b)]
+                    log.debug(f"Pressed {key}, bytecode: {b}")
                     emitKeys(device, key)
                 else:
                     log.warning(str(b) + ' no match')

@@ -30,31 +30,31 @@ def prev_song(device):
 
 
 def resolve_key(device, key):
-    if key is 'vol_down':
+    if key == 'vol_down':
         volume_down(device)
         return True
 
-    elif key is 'vol_up':
+    elif key == 'vol_up':
         volume_up(device)
         return True
 
-    elif key is 'vol_mute':
+    elif key == 'vol_mute':
         volume_mute(device)
         return True
 
-    elif key is 'play_pause':
+    elif key == 'play_pause':
         play_pause(device)
         return True
 
-    elif key is 'stop':
+    elif key == 'stop':
         stop(device)
         return True
 
-    elif key is 'prev_song':
+    elif key == 'prev_song':
         prev_song(device)
         return True
 
-    elif key is 'next_song':
+    elif key == 'next_song':
         next_song(device)
         return True
     return False

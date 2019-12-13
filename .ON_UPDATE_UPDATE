@@ -14,4 +14,5 @@ Update:
 Before release:
     - Check documentation for correct version numbers
     - Check PKG-INFO (generated with python setup.py build) for correct version numbers
+    - Check g910-gkeys --version
     - Check pacman for correct version numbers

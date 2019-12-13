@@ -1,4 +1,4 @@
-# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.3)
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.4)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
@@ -14,7 +14,7 @@ Note: From version 0.2.0 onwards the g810-led controller is no longer required b
 ## Requirements
 
 To use this project you need:
- - Python 3.7
+ - Python >=3.7
  - git
  - ~~[g810-led controller](https://github.com/MatMoul/g810-led)~~
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))

@@ -10,7 +10,7 @@ fh.setFormatter(formatter)
 
 def logger(name):
     log = logging.getLogger(name)
-    log.setLevel(logging.DEBUG)
+    log.setLevel(logging.INFO)
     log.propagate = False
     log.addHandler(fh)
     return log
