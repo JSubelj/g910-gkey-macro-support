@@ -22,6 +22,7 @@ To use this project you need:
  - git
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
+ - g810-led for color changing per profile, https://github.com/MatMoul/g810-led
  
 ## Installation
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
