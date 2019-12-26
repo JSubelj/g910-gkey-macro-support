@@ -3,9 +3,7 @@ from lib.misc import paths, logger
 from lib.data_mappers import supported_configs, char_uinput_mapper
 
 log = logger.logger(__name__)
-
 config = None
-
 
 def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
     if hotkey_action == "nothing" or hotkey_action == "run" or hotkey_action == "swap_config":
@@ -56,6 +54,7 @@ def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
 
 def validate_config(config_dic : dict):
     errors = {}
+    paths.color = config_dic.get("color", supported_configs.default_color)
     keyboard_mapping = config_dic.get("keyboard_mapping", supported_configs.default_keyboard_mapping)
     return_config = {"keyboard_mapping": keyboard_mapping}
     if keyboard_mapping not in supported_configs.keyboard_mappings:
@@ -115,9 +114,6 @@ def validate_config(config_dic : dict):
         return None, return_config
 
     return errors, return_config
-
-
-
 
 def update_config():
     global config

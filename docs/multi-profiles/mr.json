@@ -1,0 +1,56 @@
+{
+    "color": "ff00ff",
+    "keyboard_mapping": "en",
+    "g1": {
+        "hotkey_type": "shortcut",
+        "do": "win+1"
+    },
+    "g2": {
+        "hotkey_type": "shortcut",
+        "do": "win+2"
+    },
+    "g3": {
+        "hotkey_type": "shortcut",
+        "do": "win+3"
+    },
+    "g4": {
+        "hotkey_type": "shortcut",
+        "do": "win+4"
+    },
+    "g5": {
+        "hotkey_type": "shortcut",
+        "do": "win+5"
+    },
+    "g6": {
+        "hotkey_type": "shortcut",
+        "do": "win+6"
+    },
+    "g7": {
+        "hotkey_type": "shortcut",
+        "do": "win+7"
+    },
+    "g8": {
+        "hotkey_type": "shortcut",
+        "do": "win+8"
+    },
+    "g9": {
+        "hotkey_type": "shortcut",
+        "do": "win+9"
+    },
+    "m1": {
+	"hotkey_type": "swap_config",
+	"do": "m1.json"
+    },
+    "m2": {
+	"hotkey_type": "swap_config",
+	"do": "m2.json"
+    },
+    "m3": {
+	"hotkey_type": "swap_config",
+	"do": "m3.json"
+    },
+    "mr": {
+	"hotkey_type": "swap_config",
+	"do": "mr.json"
+    }
+}

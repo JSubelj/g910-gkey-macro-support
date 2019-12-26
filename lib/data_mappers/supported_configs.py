@@ -1,4 +1,5 @@
 default_keyboard_mapping = "si"
+default_color=""
 keyboard_mappings = ["si", "en", "fr"]
 
 default_hotkey_type = "nothing"

@@ -8,6 +8,6 @@ start() {
 
 stop() {
 	ebegin "Stopping g910 keyboard macro daemon"
-	killall g910-gkeys
+	killall g910-gkeys </dev/null &>/dev/null &
 	eend $?
 }
