@@ -1,7 +1,6 @@
-FORK to provide M key support and profile changing
+FORK to provide M key support and profile changing, with openrc support from https://github.com/JSubelj/g910-gkey-macro-support
 
-COMING
-openrc support
+#
 
 # Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.4)
 
@@ -21,20 +20,23 @@ Note: From version 0.2.0 onwards the g810-led controller is no longer required b
 To use this project you need:
  - Python >=3.7
  - git
- - ~~[g810-led controller](https://github.com/MatMoul/g810-led)~~
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
-## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
- - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
- - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
+## Installation
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
- - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
+ - clone repo: `git clone https://github.com/MR-R080T/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
- - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
- - This will install the module and set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` and reload systemd daemon
+
+ FOR SYSTEMD
+ - run the installer shell: `chmod +x installer-systemd.sh; sudo ./installer-systemd.sh`
  - start the daemon: `systemctl start g910-gkeys`
  - you can also add it to start on startup: `systemctl enable g910-gkeys`
+
+ FOR OPENRC
+ - run the installer shell: `chmod +x installer-openrc.sh; sudo ./installer-openrc.sh`
+ - start the daemon: `/etc/init.d/g910-gkey-macro-support start`
+ - you can also add it to start on startup: `rc-update add g910-gkey-macro-support`
  
 ## Uninstalling
  - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
@@ -48,11 +50,12 @@ To use this project you need:
 ## Configuration
 Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example 
 configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json).
-Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+Currently the mapper supports four types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
  * `"nothing"` - Do nothing (unbound key)
+ * `"swap_config"` - Change macro config file inuse
 
 To add a hotkey add to `config.json` the following code:
 ```

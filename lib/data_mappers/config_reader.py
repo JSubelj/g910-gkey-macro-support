@@ -94,7 +94,6 @@ def validate_config(config_dic : dict):
         errors.pop("mr")
     return_config["mr"] = {"hotkey_type": hotkey_type, "do": do}
 
-
     #g keys
     for i in range(1,10):
         setting_for_gkey = config_dic.get("g"+str(i), {})
