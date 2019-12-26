@@ -1,3 +1,8 @@
+FORK to provide M key support and profile changing
+
+COMING
+openrc support
+
 # Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.4)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
@@ -51,10 +56,11 @@ Currently the mapper supports three types of hotkeys (also described in [hotkey_
 
 To add a hotkey add to `config.json` the following code:
 ```
-"g<no_of_gkey>": {
+"g/m+no_of_key": {
     "hotkey_type": <type of command "nothing" or "typeout" or "shortcut" or "run">,
     "do": "<thing to do>"
   }
+  note that mr key is mr
 ```
 
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
@@ -63,6 +69,7 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
+ * `"swap_config"` - Name of new config file to change to when called, isnide the same config dir
 
 
 ### Disclaimer

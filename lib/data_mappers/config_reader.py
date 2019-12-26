@@ -8,7 +8,7 @@ config = None
 
 
 def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
-    if hotkey_action == "nothing" or hotkey_action == "run":
+    if hotkey_action == "nothing" or hotkey_action == "run" or hotkey_action == "swap_config":
         return None
     if hotkey_action == "typeout":
         error = {}
@@ -60,9 +60,44 @@ def validate_config(config_dic : dict):
     return_config = {"keyboard_mapping": keyboard_mapping}
     if keyboard_mapping not in supported_configs.keyboard_mappings:
         return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
+    
+    #m 1-3 keys
+    for i in range(1,4):
+        setting_for_gkey = config_dic.get("m"+str(i), {})
+        hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
+        errors["m" + str(i)] = {}
+        if hotkey_type not in supported_configs.hotkey_types:
+            errors["m" + str(i)]["hotkey_type"] = hotkey_type + " does not exist!"
+        do = setting_for_gkey.get("do",supported_configs.default_hotkey_do)
+        do_validation = validate_hotkey_action(do, hotkey_type, keyboard_mapping)
+        if do_validation:
+            errors["m" + str(i)]["do"] = do_validation.copy()
+            do = ""
+            hotkey_type = "nothing"
+        if len(errors["m" + str(i)]) == 0:
+            errors.pop("m" + str(i))
+        return_config["m" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
+    
+    #mr key
+    setting_for_gkey = config_dic.get("mr", {})
+    hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
+    errors["mr"] = {}
+    if hotkey_type not in supported_configs.hotkey_types:
+        errors["mr"]["hotkey_type"] = hotkey_type + " does not exist!"
+    do = setting_for_gkey.get("do",supported_configs.default_hotkey_do)
+    do_validation = validate_hotkey_action(do, hotkey_type, keyboard_mapping)
+    if do_validation:
+        errors["mr"]["do"] = do_validation.copy()
+        do = ""
+        hotkey_type = "nothing"
+    if len(errors["mr"]) == 0:
+        errors.pop("mr")
+    return_config["mr"] = {"hotkey_type": hotkey_type, "do": do}
 
+
+    #g keys
     for i in range(1,10):
-        setting_for_gkey =config_dic.get("g"+str(i), {})
+        setting_for_gkey = config_dic.get("g"+str(i), {})
         hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
         errors["g" + str(i)] = {}
         if hotkey_type not in supported_configs.hotkey_types:
