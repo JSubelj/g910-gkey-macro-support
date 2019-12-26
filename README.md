@@ -67,11 +67,25 @@ To add a hotkey add to `config.json` the following code:
   note that mr key is mr
 ```
 
-Each config json file can have a color set for it that changes the color of the GKerys on the keyboard depending on which profile is active by adding
+Each config json file can have a color set for it that changes the color of the logoon the keyboard depending on which profile is active by adding, this can be edited by editing 
+
+lib/functionalities/gkey_functionality.py
+
+changing the g910-led call to what ever color group to color, since setting colors on gkeys stops keyboard effects, I have set mine to the logo and have it breathing
+
+```
+subprocess.call(["g910-led", "-fx", "breathing", "logo", paths.color, "0a"])
+```
+This prevents setting the color from stopping the current running animation
+
+see https://github.com/MatMoul/g810-led for details
+
+setting the color in each json to be used is as follows to the top
 
 ```
 "color": "HEXCOLOR",
 ```
+#
 
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
