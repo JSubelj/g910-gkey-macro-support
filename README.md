@@ -1,4 +1,4 @@
-FORK to provide M key support and profile changing, with openrc support from https://github.com/JSubelj/g910-gkey-macro-support
+FORK to provide M key support and profile changing (including color changing), with openrc support from https://github.com/JSubelj/g910-gkey-macro-support
 
 #
 
@@ -66,6 +66,12 @@ To add a hotkey add to `config.json` the following code:
   note that mr key is mr
 ```
 
+Each config json file can have a color set for it that changes the color of the GKerys on the keyboard depending on which profile is active by adding
+
+```
+"color": "HEXCOLOR",
+```
+
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"typeout"` - Typeout syntax is same as you would type text out (ex. "tyPe Me Out!")
@@ -74,6 +80,9 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
  * `"swap_config"` - Name of new config file to change to when called, isnide the same config dir
 
+An example is uploaded alongside in the docs file
+
+The current active profile is copied to config.json from its own json file
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

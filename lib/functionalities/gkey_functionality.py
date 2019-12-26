@@ -1,5 +1,6 @@
 import subprocess
 import inspect
+import time
 from lib.data_mappers import hotkey_type, config_reader
 from lib.misc import logger, paths
 from lib.uinput_keyboard import keyboard
@@ -21,6 +22,9 @@ def execute_command(command):
 
 def execute_config_swap(config):
     subprocess.call(["cp", paths.config_dir + "/" + config, paths.config_path])
+    if paths.color != "":
+        time.sleep(0.5)
+        subprocess.call(["g910-led", "-g", "gkeys", paths.color])
 
 def resolve_config(key):
 
