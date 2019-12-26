@@ -1,7 +1,7 @@
 import subprocess
 import inspect
 from lib.data_mappers import hotkey_type, config_reader
-from lib.misc import logger
+from lib.misc import logger, paths
 from lib.uinput_keyboard import keyboard
 
 log = logger.logger(__name__)
@@ -18,6 +18,9 @@ def execute_release(device):
 
 def execute_command(command):
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def execute_config_swap(config):
+    subprocess.call(["cp", paths.config_dir + "/" + config, paths.config_path])
 
 def resolve_config(key):
 
@@ -44,6 +47,9 @@ def resolve_config(key):
     if command == 2:
         log.info(key+" pressed, running: "+key_config["do"])
         return lambda _: execute_command(key_config["do"])
+    if command == 3:
+        log.info(key + " pressed, swapping config to " + key_config["do"])
+        return lambda _: execute_config_swap(key_config["do"])
     if command == -1:
         log.info(key+" pressed, doing nothing!")
         return lambda _: None
@@ -83,6 +89,18 @@ def g7(device):
 def g8(device):
     resolve_config(inspect.stack()[0][3])(device)
 
-
 def g9(device):
     resolve_config(inspect.stack()[0][3])(device)
+
+def m1(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def m2(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def m3(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def mr(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
