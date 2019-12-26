@@ -25,7 +25,7 @@ def execute_config_swap(config):
     subprocess.call(["cp", paths.config_dir + "/" + config, paths.config_path])
     if paths.color != "":
         time.sleep(0.5)
-        subprocess.call(["g910-led", "-g", "gkeys", paths.color])
+        subprocess.call(["g910-led", "-fx", "breathing", "logo", paths.color, "0a"])
 
 def resolve_config(key):
 
