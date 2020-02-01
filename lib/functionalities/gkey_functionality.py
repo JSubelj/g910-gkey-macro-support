@@ -1,5 +1,6 @@
 import subprocess
 import inspect
+import sys
 from lib.data_mappers import hotkey_type, config_reader
 from lib.misc import logger
 from lib.uinput_keyboard import keyboard
@@ -21,11 +22,14 @@ def execute_command(command):
 
 def execute_python(command: str, device):
     try:
+        global output_string
+        output_string = None
         exec(command)
         if output_string:
             keyboard.writeout(output_string,config_reader.read()['keyboard_mapping'],device)
-    except Exception as raised_exception:
-        log.error("Exception raised when running python command '"+command+"' || Exception: '"+raised_exception.args[0]+"'")
+    except Exception:
+        e_type, value, traceback = sys.exc_info()
+        log.error("Exception raised when running python command '"+command+"' || Exception: '"+str(e_type)+"' || Details: '"+str(value)+"'")
 
 def resolve_config(key):
 
