@@ -43,10 +43,11 @@ To use this project you need:
 ## Configuration
 Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example 
 configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json).
-Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+Currently the mapper supports four types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
+ * `"python"` - Execute a snippet of Python code and print provided output (ex. `import datetime; global output_string; output_string = datetime.datetime.now().isoformat()`)
  * `"nothing"` - Do nothing (unbound key)
 
 To add a hotkey add to `config.json` the following code:
@@ -63,6 +64,7 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
+ * `"python"` - A Python one-line script. If output is desired, the script should define a global variable named `output_string` and set it to the string to be output.
 
 
 ### Disclaimer

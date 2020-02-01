@@ -1,5 +1,5 @@
 {
-  "__comment" : "following hotkey types are supported: nothing, typeout, shortcut; only en and si keyboard mappings are currently supported",
+  "__comment" : "following hotkey types are supported: nothing, typeout, shortcut, python; only en and si keyboard mappings are currently supported",
   "keyboard_mapping": "si",
   "g1": {
     "hotkey_type": "typeout",
@@ -8,6 +8,10 @@
   "g2": {
     "hotkey_type": "shortcut",
     "do": "alt+f4"
+  },
+  "g3": {
+    "hotkey_type": "python",
+    "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
   },
   "g5": {
     "hotkey_type": "nothing"
