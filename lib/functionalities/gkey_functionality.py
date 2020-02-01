@@ -19,6 +19,14 @@ def execute_release(device):
 def execute_command(command):
     subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+def execute_python(command: str, device):
+    try:
+        exec(command)
+        if output_string:
+            keyboard.writeout(output_string,config_reader.read()['keyboard_mapping'],device)
+    except Exception as raised_exception:
+        log.error("Exception raised when running python command '"+command+"' || Exception: '"+raised_exception.args[0]+"'")
+
 def resolve_config(key):
 
 
@@ -33,7 +41,7 @@ def resolve_config(key):
     try:
         command = hotkey_type.type[command]
     except:
-        raise Exception("hotkey_type: \""+command+"\" for key "+key+" not known! hotkey_types can only be: nothing, typeout, shortcut and run!")
+        raise Exception("hotkey_type: \""+command+"\" for key "+key+" not known! hotkey_types can only be: nothing, typeout, shortcut, python and run!")
     if command == 0:
 
         log.info(key+" pressed, typing out: "+repr(key_config["do"]))
@@ -44,6 +52,9 @@ def resolve_config(key):
     if command == 2:
         log.info(key+" pressed, running: "+key_config["do"])
         return lambda _: execute_command(key_config["do"])
+    if command == 3:
+        log.info(key+" pressed, running: "+key_config["do"])
+        return lambda device: execute_python(key_config["do"], device)
     if command == -1:
         log.info(key+" pressed, doing nothing!")
         return lambda _: None
