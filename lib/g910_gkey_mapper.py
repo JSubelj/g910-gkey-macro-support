@@ -16,27 +16,10 @@ log = logger.logger(__name__)
 
 
 def emitKeys(device, key):
-    if key == 'g1':
-        gkey_functionality.g1(device)
-    elif key == 'g2':
-        gkey_functionality.g2(device)
-    elif key == 'g3':
-        gkey_functionality.g3(device)
-    elif key == 'g4':
-        gkey_functionality.g4(device)
-    elif key == 'g5':
-        gkey_functionality.g5(device)
-    elif key == 'g6':
-        gkey_functionality.g6(device)
-    elif key == 'g7':
-        gkey_functionality.g7(device)
-    elif key == 'g8':
-        gkey_functionality.g8(device)
-    elif key == 'g9':
-        gkey_functionality.g9(device)
+    if gkey_functionality.handle_gkey_press(key, device):
+        return
     elif key == "release":
         gkey_functionality.release(device)
-
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
@@ -45,6 +28,7 @@ def emitKeys(device, key):
 log.debug("gathering uinput device")
 device = usb_and_keyboard_device_init.init_uinput_device()
 program_running=True
+
 
 def signal_handler(sig, frame):
     global program_running
