@@ -50,9 +50,17 @@ def shortcut(value, keymap, device):
         uinput_combo = []
         for key_string in combo:
             if len(key_string) == 1:
-                uinput_combo.append(keys[keymap][key_string][0][0])
+                key_def = keys[keymap][key_string]
+                for press,state in key_def:
+                    uinput_combo.append(press)
+                    if state == 3:
+                        break
             else:
-                uinput_combo.append(keys["control"][key_string][0][0])
+                key_def = keys["control"][key_string]
+                for press,state in key_def:
+                    uinput_combo.append(press)
+                    if state == 3:
+                        break
 
         uinput_groups.append(uinput_combo)
 
