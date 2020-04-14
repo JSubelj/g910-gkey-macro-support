@@ -53,7 +53,7 @@ def shortcut(value, keymap, device):
                 key_def = keys[keymap][key_string]
             else:
                 key_def = keys["control"][key_string]
-                
+
             for press,state in key_def:
                 uinput_combo.append(press)
                 if state == 3:
