@@ -86,3 +86,16 @@ def g8(device):
 
 def g9(device):
     resolve_config(inspect.stack()[0][3])(device)
+
+def m1(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def m2(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def m3(device):
+    resolve_config(inspect.stack()[0][3])(device)
+
+def mr(device):
+    resolve_config(inspect.stack()[0][3])(device)
+    

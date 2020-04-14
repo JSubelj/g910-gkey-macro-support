@@ -37,6 +37,15 @@ def emitKeys(device, key):
     elif key == "release":
         gkey_functionality.release(device)
 
+    elif key == 'm1':
+        gkey_functionality.m1(device)
+    elif key == 'm2':
+        gkey_functionality.m2(device)
+    elif key == 'm3':
+        gkey_functionality.m3(device)
+    elif key == 'mr':
+        gkey_functionality.mr(device)
+
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
