@@ -17,7 +17,7 @@ def execute_release(device):
     keyboard.release(device)
 
 def execute_command(command):
-    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 def resolve_config(key):
 
