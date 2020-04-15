@@ -34,14 +34,9 @@ keys = {
         'esc': click(uinput.KEY_ESC),
         "enter": click(uinput.KEY_ENTER),
         "capslock": click(uinput.KEY_CAPSLOCK),
-        #unfortunately these aren't already supported by uinput
         'end':click(uinput.KEY_END),
         'insert':click(uinput.KEY_INSERT),
-        #but on my machine we can simulate them with: How universal is this?
-        #"insert": wrap_shift(click(uinput.KEY_KP0)),
-        #"end": wrap_shift(click(uinput.KEY_KP1)),
-
-
+        
         # keypad
         "NUM0": click(uinput.KEY_KP0),
         "NUM1": click(uinput.KEY_KP1),
