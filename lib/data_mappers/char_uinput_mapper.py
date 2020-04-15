@@ -36,7 +36,7 @@ keys = {
         "capslock": click(uinput.KEY_CAPSLOCK),
         'end':click(uinput.KEY_END),
         'insert':click(uinput.KEY_INSERT),
-        
+
         # keypad
         "NUM0": click(uinput.KEY_KP0),
         "NUM1": click(uinput.KEY_KP1),
