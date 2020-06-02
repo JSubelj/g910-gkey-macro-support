@@ -2,5 +2,5 @@
 
 
 python3 setup.py install --record files.txt
-cp g910-gkeys.service /usr/lib/systemd/system
+cp g910-gkeys.service /usr/lib/systemd/system/g910-gkeys.service
 systemctl daemon-reload
