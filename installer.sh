@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
+DEST=/usr/lib/systemd/system
 
 python3 setup.py install --record files.txt
-cp g910-gkeys.service /usr/lib/systemd/system/g910-gkeys.service
+mkdir -p "$DEST" && cp g910-gkeys.service "$DEST"
 systemctl daemon-reload
