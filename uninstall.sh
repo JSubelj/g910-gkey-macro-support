@@ -22,7 +22,7 @@ DRYRUN=""
 CONFDIR=/etc/g910-gkeys
 
 # check if we are 'root' user.
-(( $EUID != 0 )) && echo Must be root to run this script. Exiting. &&
+(( EUID != 0 )) && echo Must be root to run this script. Exiting. &&
     exit 1
 
 usage() {
