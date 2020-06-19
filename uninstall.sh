@@ -74,7 +74,7 @@ CLEANOLD=n
 for p in /etc/systemd/systemd /usr/lib/systemd/system ; do
     [[ -e "$p"/g910-gkeys.service ]] && CLEANOLD=y && rm -f "$p/g910-gkeys.service"
 done
-[[ CLEANOLD = y ]] && echo Deleted residual systemd files.
+[[ $CLEANOLD = y ]] && echo Deleted residual systemd files.
 
 # echo
 # echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
