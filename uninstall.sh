@@ -72,10 +72,10 @@ fi
 # remove early g910-gkeys hard-coded systemd files
 CLEANOLD=n
 for p in /etc/systemd/systemd /usr/lib/systemd/system ; do
-    [[ -e "$p"/g910-gkeys.service ]] && CLEANOLD=y && rm -f ""$p"/g910-gkeys.service"
+    [[ -e "$p"/g910-gkeys.service ]] && CLEANOLD=y && rm -f "$p/g910-gkeys.service"
 done
 [[ CLEANOLD = y ]] && echo Deleted residual systemd files.
-    
+
 # echo
 # echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # echo + Please remove "g910-gkeys.service" in "/usr/lib/systemd/system"
