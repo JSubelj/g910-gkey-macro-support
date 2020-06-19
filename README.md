@@ -23,21 +23,25 @@ To use this project you need:
 ## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
  - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
  - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
- - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik)
+ - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
  - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
  - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
- - This will install the module, set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` or `/lib/systemd/system/g910-gkeys.service`, install a default configuration file in `/etc/g910-gkeys/config.json` if none exists, end finally enable and start this service.
+ - This will install the module, set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` or `/lib/systemd/system/g910-gkeys.service`, install a default configuration file in `/etc/g910-gkeys/config.json` if none exists, and finally enable and start this service.
+
+If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sudo ./installer.sh -n`. You will have to do it yourself in this case: `sudo systemctl enable --now g910-gkeys.service`.
 
 ## Uninstalling
- - run the uninstall script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. This will do the following, that you can do manually instead:
+Run the uninstall script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. If you prefer to do it manually, these are the commands :
+
  - Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
  - Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
-  Note: if you deletedfiles.txt you can always run the installer again to create it.
+  Note: if you delete files.txt you can always run the installer again to create it.
  - list pip packages that include g910-gkeys: `pip (or pip3) list | grep g910-gkeys`
  - remove the ones that concern this driver: `pip (or pip3) uninstall ${pkgs to uninstall}`
- - remove configuration directory if `-a` option was provided: `rm -rf /etc/g910-gkeys`
- - You may use the "-d" switch to have uninstall.sh to perform a dry-run (no action will be done, only displayed).
+ - remove configuration directory if `-a` option is given to uninstall.sh: `rm -rf /etc/g910-gkeys`
+
+uninstall.sh also accepts the `-d` switch to perform a dry-run (no actual removal will be done, actions will only be displayed).
 
 ## Configuration
 Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example
