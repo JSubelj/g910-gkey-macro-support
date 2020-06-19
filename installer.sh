@@ -53,7 +53,9 @@ cp g910-gkeys.service "$DEST"/g910-gkeys.service
 [[ -d "$CONFDIR" ]] ||  mkdir "$CONFDIR"
 cp -a -n "config/config.$KEYBOARD.json" "$CONFDIR"/config.json || true
 
-# enable and start service
+systemctl daemon-reload
+
+# enable and start service if necessary
 if [[ $STARTSERVICE = y ]]; then
     systemctl enable --now g910-gkeys.service
 else
