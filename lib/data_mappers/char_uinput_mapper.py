@@ -336,6 +336,135 @@ keys = {
 
         ' ': click(uinput.KEY_SPACE),
         '±': click(uinput.KEY_KPPLUSMINUS),
+    },
+    'fr': {
+        '0': wrap_shift(click(uinput.KEY_0)),
+        '1': wrap_shift(click(uinput.KEY_1)),
+        '2': wrap_shift(click(uinput.KEY_2)),
+        '3': wrap_shift(click(uinput.KEY_3)),
+        '4': wrap_shift(click(uinput.KEY_4)),
+        '5': wrap_shift(click(uinput.KEY_5)),
+        '6': wrap_shift(click(uinput.KEY_6)),
+        '7': wrap_shift(click(uinput.KEY_7)),
+        '8': wrap_shift(click(uinput.KEY_8)),
+        '9': wrap_shift(click(uinput.KEY_9)),
+
+        'a': click(uinput.KEY_Q),
+        'A': wrap_shift(click(uinput.KEY_Q)),
+        'b': click(uinput.KEY_B),
+        'B': wrap_shift(click(uinput.KEY_B)),
+        'c': click(uinput.KEY_C),
+        'C': wrap_shift(click(uinput.KEY_C)),
+        'd': click(uinput.KEY_D),
+        'D': wrap_shift(click(uinput.KEY_D)),
+        'e': click(uinput.KEY_E),
+        'E': wrap_shift(click(uinput.KEY_E)),
+        'f': click(uinput.KEY_F),
+        'F': wrap_shift(click(uinput.KEY_F)),
+        'g': click(uinput.KEY_G),
+        'G': wrap_shift(click(uinput.KEY_G)),
+        'h': click(uinput.KEY_H),
+        'H': wrap_shift(click(uinput.KEY_H)),
+        'i': click(uinput.KEY_I),
+        'I': wrap_shift(click(uinput.KEY_I)),
+        'j': click(uinput.KEY_J),
+        'J': wrap_shift(click(uinput.KEY_J)),
+        'k': click(uinput.KEY_K),
+        'K': wrap_shift(click(uinput.KEY_K)),
+        'l': click(uinput.KEY_L),
+        'L': wrap_shift(click(uinput.KEY_L)),
+        'm': click(uinput.KEY_SEMICOLON),
+        'M': wrap_shift(click(uinput.KEY_SEMICOLON)),
+        'n': click(uinput.KEY_N),
+        'N': wrap_shift(click(uinput.KEY_N)),
+        'o': click(uinput.KEY_O),
+        'O': wrap_shift(click(uinput.KEY_O)),
+        'p': click(uinput.KEY_P),
+        'P': wrap_shift(click(uinput.KEY_P)),
+        'q': click(uinput.KEY_A),
+        'Q': wrap_shift(click(uinput.KEY_A)),
+        'r': click(uinput.KEY_R),
+        'R': wrap_shift(click(uinput.KEY_R)),
+        's': click(uinput.KEY_S),
+        'S': wrap_shift(click(uinput.KEY_S)),
+        't': click(uinput.KEY_T),
+        'T': wrap_shift(click(uinput.KEY_T)),
+        'u': click(uinput.KEY_U),
+        'U': wrap_shift(click(uinput.KEY_U)),
+        'v': click(uinput.KEY_V),
+        'V': wrap_shift(click(uinput.KEY_V)),
+        'w': click(uinput.KEY_W),
+        'W': wrap_shift(click(uinput.KEY_W)),
+        'x': click(uinput.KEY_X),
+        'X': wrap_shift(click(uinput.KEY_X)),
+        'y': click(uinput.KEY_Y),
+        'Y': wrap_shift(click(uinput.KEY_Y)),
+        'z': click(uinput.KEY_W),
+        'Z': wrap_shift(click(uinput.KEY_W)),
+
+        '²': click(uinput.KEY_GRAVE),
+
+        'à': click(uinput.KEY_0),
+        '&': click(uinput.KEY_1),
+        'é': click(uinput.KEY_2),
+        '"': click(uinput.KEY_3),
+        '\'': click(uinput.KEY_4),
+        '(': click(uinput.KEY_5),
+        '-': click(uinput.KEY_6),
+        'è': click(uinput.KEY_7),
+        '_': click(uinput.KEY_8),
+        'ç': click(uinput.KEY_9),
+
+        '@': wrap_altgr(click(uinput.KEY_0)),
+        # No altgr+1
+        '~': wrap_altgr(click(uinput.KEY_2)),
+        '#': wrap_altgr(click(uinput.KEY_3)),
+        '{': wrap_altgr(click(uinput.KEY_4)),
+        '[': wrap_altgr(click(uinput.KEY_5)),
+        '|': wrap_altgr(click(uinput.KEY_6)),
+        '`': wrap_altgr(click(uinput.KEY_7)),
+        '\\': wrap_altgr(click(uinput.KEY_8)),
+        '^': wrap_altgr(click(uinput.KEY_9)),
+
+        ')': click(uinput.KEY_MINUS),
+        '°': wrap_shift(click(uinput.KEY_MINUS)),
+        ']': wrap_altgr(click(uinput.KEY_MINUS)),
+        '=': click(uinput.KEY_EQUAL),
+        # wrap_shift(click(uinput.KEY_EQUAL)) cannot be mapped ('+' char).
+        '}': wrap_altgr(click(uinput.KEY_EQUAL)),
+
+        '\t': click(uinput.KEY_TAB),
+        '\n': click(uinput.KEY_ENTER),
+        ' ': click(uinput.KEY_SPACE),
+
+        # click(uinput.KEY_LEFTBRACE) already mapped ('^' char),
+        '$': click(uinput.KEY_RIGHTBRACE),
+        '¨': wrap_shift(click(uinput.KEY_LEFTBRACE)),
+        '£': wrap_shift(click(uinput.KEY_RIGHTBRACE)),
+        'ø': wrap_altgr(click(uinput.KEY_RIGHTBRACE)),
+
+        'ù': click(uinput.KEY_APOSTROPHE),
+        '*': click(uinput.KEY_BACKSLASH),
+        '%': wrap_shift(click(uinput.KEY_APOSTROPHE)),
+        'µ': wrap_shift(click(uinput.KEY_BACKSLASH)),
+
+        ",": click(uinput.KEY_M),
+        ";": click(uinput.KEY_COMMA),
+        ":": click(uinput.KEY_DOT),
+        "!": click(uinput.KEY_SLASH),
+
+        "?": wrap_shift(click(uinput.KEY_M)),
+        '.': wrap_shift(click(uinput.KEY_COMMA)),
+        "/": wrap_shift(click(uinput.KEY_DOT)),
+        '§': wrap_shift(click(uinput.KEY_SLASH)),
+
+        # '<': Key between left shift and 'w': unknown uinput mapping.
+
+        # Other altgr
+        '€': wrap_altgr(click(uinput.KEY_E)),
+        'æ': wrap_altgr(click(uinput.KEY_A)),
+        'œ': wrap_altgr(click(uinput.KEY_O)),
+
     }
 }
 
@@ -346,4 +475,5 @@ if __name__ == "__main__":
     print(reverse_keys)
     print(keys["si"].keys())
     print(keys["en"].keys())
+    print(keys["fr"].keys())
     print(keys["control"].keys())
