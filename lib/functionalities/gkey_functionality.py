@@ -33,7 +33,7 @@ def resolve_config(key):
     command = key_config.get("hotkey_type","nothing")
     try:
         command = hotkey_type.type[command]
-    except:
+    except KeyError:
         raise Exception("hotkey_type: \""+command+"\" for key "+key+" not known! hotkey_types can only be: nothing, typeout, shortcut and run!")
     if command == 0:
 
