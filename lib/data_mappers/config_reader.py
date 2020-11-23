@@ -54,12 +54,11 @@ def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
 
 def validate_config(config_dic : dict):
     errors = {}
-    paths.color = config_dic.get("color", supported_configs.default_color)
     keyboard_mapping = config_dic.get("keyboard_mapping", supported_configs.default_keyboard_mapping)
     return_config = {"keyboard_mapping": keyboard_mapping}
     if keyboard_mapping not in supported_configs.keyboard_mappings:
         return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
-    
+
     #m 1-3 keys
     for i in range(1,4):
         setting_for_gkey = config_dic.get("m"+str(i), {})
@@ -76,7 +75,7 @@ def validate_config(config_dic : dict):
         if len(errors["m" + str(i)]) == 0:
             errors.pop("m" + str(i))
         return_config["m" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
-    
+
     #mr key
     setting_for_gkey = config_dic.get("mr", {})
     hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
