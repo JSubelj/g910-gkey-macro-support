@@ -25,6 +25,8 @@ def resolve_config(key):
 
     config = config_reader.read()
 
+
+
     if key not in config.keys():
         log.info(key+" pressed, unbound in config, doing nothing!")
         return lambda _: None
@@ -87,3 +89,6 @@ def g8(device):
 
 def g9(device):
     resolve_config(inspect.stack()[0][3])(device)
+
+def g_combo(device, key):
+    resolve_config(key)(device)

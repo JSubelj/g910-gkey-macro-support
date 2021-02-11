@@ -22,5 +22,14 @@ commands = {
     'play_pause': bytearray(b'\x02\x08'),
     'stop': bytearray(b'\x02\x04'),
     'next_song': bytearray(b'\x02\x01'),
-    'prev_song': bytearray(b'\x02\x02')
+    'prev_song': bytearray(b'\x02\x02'),
 }
+
+for base in range(1, 10):
+    for secondary in range(base + 1, 10):
+        base_g_command = commands['g' + str(base)]
+        secondary_g_command = commands['g' + str(secondary)]
+        combined_keys_command = bytearray(base_g_command);
+        for index, byte in enumerate(secondary_g_command):
+            combined_keys_command[index] = base_g_command[index] | secondary_g_command[index]
+        commands['g'+str(base)+'+g'+str(secondary)] = combined_keys_command
