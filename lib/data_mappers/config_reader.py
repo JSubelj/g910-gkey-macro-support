@@ -61,21 +61,26 @@ def validate_config(config_dic : dict):
     if keyboard_mapping not in supported_configs.keyboard_mappings:
         return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
 
-    for i in range(1,10):
-        setting_for_gkey =config_dic.get("g"+str(i), {})
+    combinations = ['g' + str(i) for i in range(1,10)]
+    for base in range(1, 10):
+        for secondary in range(base + 1, 10):
+            combinations.append('g'+str(base)+'+g'+str(secondary))
+
+    for g_key in combinations:
+        setting_for_gkey =config_dic.get(g_key, {})
         hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
-        errors["g" + str(i)] = {}
+        errors[g_key] = {}
         if hotkey_type not in supported_configs.hotkey_types:
-            errors["g" + str(i)]["hotkey_type"] = hotkey_type + " does not exist!"
+            errors[g_key]["hotkey_type"] = hotkey_type + " does not exist!"
         do = setting_for_gkey.get("do",supported_configs.default_hotkey_do)
         do_validation = validate_hotkey_action(do, hotkey_type, keyboard_mapping)
         if do_validation:
-            errors["g" + str(i)]["do"] = do_validation.copy()
+            errors[g_key]["do"] = do_validation.copy()
             do = ""
             hotkey_type = "nothing"
-        if len(errors["g" + str(i)]) == 0:
-            errors.pop("g" + str(i))
-        return_config["g" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
+        if len(errors[g_key]) == 0:
+            errors.pop(g_key)
+        return_config[g_key] = {"hotkey_type": hotkey_type, "do": do}
 
     if len(errors) == 0:
         return None, return_config
@@ -95,7 +100,6 @@ def read():
     if config:
         return config
 
-    log.debug("Reading config from " + paths.config_path)
     try:
         with open(paths.config_path, "r") as f:
             try:

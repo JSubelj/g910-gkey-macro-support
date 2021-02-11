@@ -11,9 +11,11 @@ import signal
 import sys
 import os
 import fcntl
+import itertools
 
 log = logger.logger(__name__)
 
+combinations = frozenset(['g'+str(k[0])+'+g'+str(k[1]) for k in itertools.product(range(1,10), range(1,10)) if k[0] < k[1]])
 
 def emitKeys(device, key):
     if key == 'g1':
@@ -36,6 +38,8 @@ def emitKeys(device, key):
         gkey_functionality.g9(device)
     elif key == "release":
         gkey_functionality.release(device)
+    elif key in combinations:
+        gkey_functionality.g_combo(device, key)
 
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
@@ -101,11 +105,11 @@ def main():
                 if b in command_bytearray.commands.values():
                     key = list(command_bytearray.commands.keys())[
                         list(command_bytearray.commands.values()).index(b)]
-                    log.debug(f"Pressed {key}, bytecode: {b}")
+                    log.info(f"Pressed {key}, bytecode: {b}")
                     emitKeys(device, key)
-                elif b[:3] in (bytearray(b'\x11\xff\x0f'), bytearray(b'\x11\xff\x10'), bytearray(b'\x11\xff\xff')):
-                    #Suppress warnings on these values, these are return values from LEDs being set.
-                    pass
+#                elif b[:3] in (bytearray(b'\x11\xff\x0f'), bytearray(b'\x11\xff\x10'), bytearray(b'\x11\xff\xff')):
+#                    #Suppress warnings on these values, these are return values from LEDs being set.
+#                    pass
                 else:
                     log.warning(str(b) + ' no match')
         except SystemExit:
