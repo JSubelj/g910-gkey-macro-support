@@ -112,6 +112,9 @@ def main():
                         list(command_bytearray.commands.values()).index(b)]
                     log.debug(f"Pressed {key}, bytecode: {b}")
                     emitKeys(device, key)
+                elif b[:3] in (bytearray(b'\x11\xff\x0f'), bytearray(b'\x11\xff\x10'), bytearray(b'\x11\xff\xff')):
+                    #Suppress warnings on these values, these are return values from LEDs being set.
+                    pass
                 else:
                     log.warning(str(b) + ' no match')
         except SystemExit:
