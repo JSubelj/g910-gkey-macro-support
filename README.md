@@ -46,7 +46,7 @@ configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.
  * de - german
  * en - english
  * fr - french
- * si - espanol (default)
+ * si - slovenian (default)
 
 Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
