@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+
+start() {
+	ebegin "Starting g910 keyboard macro daemon"
+	/usr/bin/g910-gkeys </dev/null &>/dev/null &
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping g910 keyboard macro daemon"
+	killall g910-gkeys </dev/null &>/dev/null &
+	eend $?
+}
