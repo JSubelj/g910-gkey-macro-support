@@ -53,35 +53,14 @@ Currently the mapper supports three types of hotkeys (also described in [hotkey_
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
  * `"nothing"` - Do nothing (unbound key)
- * `"swap_config"` - Change macro config file inuse
 
 To add a hotkey add to `config.json` the following code:
 ```
-"<g|m><no_of_key|r>": {
+"g<no_of_gkey>": {
     "hotkey_type": <type of command "nothing" or "typeout" or "shortcut" or "run">,
     "do": "<thing to do>"
   }
 ```
-
-Each config json file can have a color set for it that changes the color of the logo on the keyboard depending on which profile is active by adding, this can be edited by editing 
-
-lib/functionalities/gkey_functionality.py
-
-changing the g910-led call to what ever color group to color, since setting colors on gkeys stops keyboard effects, I have set mine to the logo and have it breathing
-
-```
-subprocess.call(["g910-led", "-fx", "breathing", "logo", paths.color, "0a"])
-```
-This prevents setting the color from stopping the current running animation
-
-see https://github.com/MatMoul/g810-led for details
-
-setting the color in each json to be used is as follows to the top
-
-```
-"color": "HEXCOLOR",
-```
-#
 
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
@@ -89,11 +68,9 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
- * `"swap_config"` - Name of new config file to change to when called, isnide the same config dir
 
-An example is uploaded alongside in the docs file
-
-The current active profile is copied to config.json from its own json file
+### Profiles
+There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

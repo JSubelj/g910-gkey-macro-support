@@ -3,5 +3,4 @@ keyboard_mappings = ["si", "en", "fr", "de"]
 
 default_hotkey_type = "nothing"
 default_hotkey_do = ""
-hotkey_types = ["nothing", "typeout", "shortcut", "run", "swap_config"]
-
+hotkey_types = ["nothing", "typeout", "shortcut", "run"]
