@@ -31,6 +31,10 @@ To use this project you need:
  - start the daemon: `systemctl start g910-gkeys`
  - you can also add it to start on startup: `systemctl enable g910-gkeys`
  
+## Update
+ If you update from version <= v0.2.4 you will need to make some manual changes to your `/etc/g910-gkeys/config.json` to make use of the new gkey profile feature.
+ You don't need to do anything if you don't want to use the profile feature your old config will be loaded as default profile m1.
+
 ## Uninstalling
  - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
  - run command: `cat files.txt | sudo xargs rm -rf`

@@ -2,13 +2,11 @@ import subprocess
 import inspect
 from lib import g910_gkey_mapper
 from lib.data_mappers import hotkey_type, config_reader
-from lib.misc import logger, paths
+from lib.misc import logger
 from lib.uinput_keyboard import keyboard
 
 log = logger.logger(__name__)
 
-
-profile = 'm1'
 
 def execute_writing(string_to_write: str, device):
     keyboard.writeout(string_to_write,config_reader.read()['keyboard_mapping'],device)

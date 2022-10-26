@@ -96,6 +96,9 @@ def main():
     # To see if config exists
     config_reader.read()
 
+    global profile
+    profile = 'm1'
+
     global g910_led
     g910_led = False
     which_led_process = subprocess.run(['which', 'g910-led'], capture_output=True)
