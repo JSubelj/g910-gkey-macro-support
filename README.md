@@ -16,9 +16,9 @@ Note: From version 0.2.0 onwards the g810-led controller is no longer required b
 To use this project you need:
  - Python >=3.7
  - git
- - ~~[g810-led controller](https://github.com/MatMoul/g810-led)~~
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
+ - g810-led for color changing per profile, https://github.com/MatMoul/g810-led
  
 ## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
  - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
@@ -31,6 +31,10 @@ To use this project you need:
  - start the daemon: `systemctl start g910-gkeys`
  - you can also add it to start on startup: `systemctl enable g910-gkeys`
  
+## Update
+ If you update from version <= v0.2.4 you will need to make some manual changes to your `/etc/g910-gkeys/config.json` to make use of the new gkey profile feature.
+ You don't need to do anything if you don't want to use the profile feature your old config will be loaded as default profile m1.
+
 ## Uninstalling
  - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
  - run command: `cat files.txt | sudo xargs rm -rf`
@@ -69,6 +73,8 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
 
+### Profiles
+There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

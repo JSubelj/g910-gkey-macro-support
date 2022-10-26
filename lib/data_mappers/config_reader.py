@@ -61,21 +61,61 @@ def validate_config(config_dic : dict):
     if keyboard_mapping not in supported_configs.keyboard_mappings:
         return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
 
+    return_config["notify"] = config_dic.get("notify", False)
+    return_config["username"] = config_dic.get("username", "")
+
+    profile_start_range = 1
+    return_config["profiles"] = {}
+    return_config["profiles"]["m1"] = {}
+    backward_compatibility = False
+    errors["backward_compatibility"] = {}
+    # add backward compatibility
     for i in range(1,10):
-        setting_for_gkey =config_dic.get("g"+str(i), {})
+        setting_for_gkey = config_dic.get("g" + str(i), {})
         hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
-        errors["g" + str(i)] = {}
+        errors["backward_compatibility"]["g" + str(i)] = {}
         if hotkey_type not in supported_configs.hotkey_types:
-            errors["g" + str(i)]["hotkey_type"] = hotkey_type + " does not exist!"
+            errors["backward_compatibility"]["g" + str(i)]["hotkey_type"] = hotkey_type + " does not exist!"
         do = setting_for_gkey.get("do",supported_configs.default_hotkey_do)
         do_validation = validate_hotkey_action(do, hotkey_type, keyboard_mapping)
         if do_validation:
-            errors["g" + str(i)]["do"] = do_validation.copy()
+            errors["backward_compatibility"]["g" + str(i)]["do"] = do_validation.copy()
             do = ""
             hotkey_type = "nothing"
-        if len(errors["g" + str(i)]) == 0:
-            errors.pop("g" + str(i))
-        return_config["g" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
+        if len(errors["backward_compatibility"]["g" + str(i)]) == 0:
+            errors["backward_compatibility"].pop("g" + str(i))
+        if do != "":
+            backward_compatibility = True
+            profile_start_range = 2
+        return_config["profiles"]["m1"]["g" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
+
+    if len(errors["backward_compatibility"]) == 0:
+        errors.pop("backward_compatibility")
+
+    for profile_index in range(profile_start_range,4):
+        if profile_index == 4:
+            profile_index = "r"
+
+        return_config["profiles"]["m" + str(profile_index)] = {}
+        errors["m" + str(profile_index)] = {}
+        for i in range(1,10):
+            setting_for_gkey = config_dic.get("profiles", {}).get("m" + str(profile_index), {}).get("g" + str(i), {})
+            hotkey_type = setting_for_gkey.get("hotkey_type",supported_configs.default_hotkey_type)
+            errors["m" + str(profile_index)]["g" + str(i)] = {}
+            if hotkey_type not in supported_configs.hotkey_types:
+                errors["m" + str(profile_index)]["g" + str(i)]["hotkey_type"] = hotkey_type + " does not exist!"
+            do = setting_for_gkey.get("do",supported_configs.default_hotkey_do)
+            do_validation = validate_hotkey_action(do, hotkey_type, keyboard_mapping)
+            if do_validation:
+                errors["m" + str(profile_index)]["g" + str(i)]["do"] = do_validation.copy()
+                do = ""
+                hotkey_type = "nothing"
+            if len(errors["m" + str(profile_index)]["g" + str(i)]) == 0:
+                errors["m" + str(profile_index)].pop("g" + str(i))
+            return_config["profiles"]["m" + str(profile_index)]["g" + str(i)] = {"hotkey_type": hotkey_type, "do": do}
+
+        if len(errors["m" + str(profile_index)]) == 0:
+            errors.pop("m" + str(profile_index))
 
     if len(errors) == 0:
         return None, return_config

@@ -1,5 +1,6 @@
 # Taken from https://github.com/CReimer/g910-gkey-uinput/issues/3 and expanded
 
+import subprocess
 import usb.core
 import usb.util
 import time
@@ -34,6 +35,14 @@ def emitKeys(device, key):
         gkey_functionality.g8(device)
     elif key == 'g9':
         gkey_functionality.g9(device)
+    elif key == 'm1':
+        gkey_functionality.m1(device)
+    elif key == 'm2':
+        gkey_functionality.m2(device)
+    elif key == 'm3':
+        gkey_functionality.m3(device)
+    elif key == 'mr':
+        gkey_functionality.mr(device)
     elif key == "release":
         gkey_functionality.release(device)
 
@@ -86,6 +95,15 @@ def main():
                 fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
     # To see if config exists
     config_reader.read()
+
+    global profile
+    profile = 'm1'
+
+    global g910_led
+    g910_led = False
+    which_led_process = subprocess.run(['which', 'g910-led'], capture_output=True)
+    if len(which_led_process.stdout) > 0:
+        g910_led = True
 
     dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
 

@@ -1,5 +1,6 @@
-Following hotkey types are supported in config.json: nothing, typeout, shortcut
+Following hotkey types are supported in config.json: nothing, typeout, shortcut, run
 
 nothing - Do nothing
 typout - Types out what is written in "do" key, as you would on a keyboard (all supported keys are written in supported_keys.txt)
-shortcut - Clicks keys that are separated by a comma at the same time (ex. for copying "ctrl+c", or pasting and writing out: "ctrl+v,i, ,d,i,d, ,i,t")
+shortcut - Clicks keys at the same time (ex. for copying "ctrl+c")
+run - Runs anything that is written in "do" key as it would be run in command line
