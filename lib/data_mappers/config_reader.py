@@ -116,6 +116,9 @@ def validate_config(config_dic : dict):
 
     return errors, return_config
 
+
+
+
 def update_config():
     global config
     config = None
