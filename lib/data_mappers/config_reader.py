@@ -3,7 +3,9 @@ from lib.misc import paths, logger
 from lib.data_mappers import supported_configs, char_uinput_mapper
 
 log = logger.logger(__name__)
+
 config = None
+
 
 def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
     if hotkey_action == "nothing" or hotkey_action == "run" or hotkey_action == "swap_config":

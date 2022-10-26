@@ -1,7 +1,3 @@
-FORK to provide M key support and profile changing (including color changing), with openrc support from https://github.com/JSubelj/g910-gkey-macro-support
-
-#
-
 # Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.4)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
@@ -24,20 +20,15 @@ To use this project you need:
  - pip requirements are stored in requirements.txt
  - g810-led for color changing per profile, https://github.com/MatMoul/g810-led
  
-## Installation
+## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
+ - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
+ - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
- - clone repo: `git clone https://github.com/MR-R080T/g910-gkey-macro-support.git`
+ - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
  - move to cloned repo: `cd g910-gkey-macro-support`
-
- FOR SYSTEMD
- - run the installer shell: `chmod +x installer-systemd.sh; sudo ./installer-systemd.sh`
+ - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
  - start the daemon: `systemctl start g910-gkeys`
  - you can also add it to start on startup: `systemctl enable g910-gkeys`
-
- FOR OPENRC
- - run the installer shell: `chmod +x installer-openrc.sh; sudo ./installer-openrc.sh`
- - start the daemon: `/etc/init.d/g910-gkey-macro-support start`
- - you can also add it to start on startup: `rc-update add g910-gkey-macro-support`
  
 ## Uninstalling
  - Uninstalling can be done with files.txt that was created on install (if you deleted it you can always run the installer again to create it)
@@ -65,14 +56,13 @@ Currently the mapper supports three types of hotkeys (also described in [hotkey_
 
 To add a hotkey add to `config.json` the following code:
 ```
-"g/m+no_of_key": {
+"<g|m><no_of_key|r>": {
     "hotkey_type": <type of command "nothing" or "typeout" or "shortcut" or "run">,
     "do": "<thing to do>"
   }
-  note that mr key is mr
 ```
 
-Each config json file can have a color set for it that changes the color of the logoon the keyboard depending on which profile is active by adding, this can be edited by editing 
+Each config json file can have a color set for it that changes the color of the logo on the keyboard depending on which profile is active by adding, this can be edited by editing 
 
 lib/functionalities/gkey_functionality.py
 

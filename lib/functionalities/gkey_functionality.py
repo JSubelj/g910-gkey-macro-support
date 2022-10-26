@@ -8,6 +8,7 @@ from lib.uinput_keyboard import keyboard
 
 log = logger.logger(__name__)
 
+
 def execute_writing(string_to_write: str, device):
     keyboard.writeout(string_to_write,config_reader.read()['keyboard_mapping'],device)
 
@@ -117,17 +118,22 @@ def g7(device):
 def g8(device):
     resolve_config(inspect.stack()[0][3])(device)
 
+
 def g9(device):
     resolve_config(inspect.stack()[0][3])(device)
+
 
 def m1(device):
     resolve_config(inspect.stack()[0][3])(device)
 
+
 def m2(device):
     resolve_config(inspect.stack()[0][3])(device)
 
+
 def m3(device):
     resolve_config(inspect.stack()[0][3])(device)
+
 
 def mr(device):
     resolve_config(inspect.stack()[0][3])(device)

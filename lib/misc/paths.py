@@ -3,6 +3,7 @@ import sys
 from lib.misc import is_installed
 from lib.misc import create_config
 
+
 main_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
 if is_installed.is_installed():
     config_dir = "/etc/g910-gkeys"
