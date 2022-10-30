@@ -3,19 +3,8 @@
 # uninstall/removes g910-gkeys.
 #
 # options:
-#  -a: will also remove /etc/g910-gkeys/ configuration directory.
-#  -d: dry-run: will display actions without doing anything
-#
-# TODO: remove possible faulty previous versions files (in /etc/systemd/system
-#       and /usr/lib/systemd/system)
-#
-# BUGS: files.txt is not correct:
-#     - it does not contain directories.
-#     - files added later (_pycache__) are not removed
-#   I would suggest to use egg directory, instead of a list of files, and link
-#   a g910_gkeys.egg to current version. This would allow to install a new version
-#   easily (by uninstalling previous one first).
-#
+#  -a               Remove all (configuration)
+#  -d --dry-run     Only print what would be done
 
 # check if we are 'root' user.
 (( EUID != 0 )) && echo Must be root to run this script. Exiting. &&
@@ -26,22 +15,26 @@ PIPCMD=""
 REMOVECONF=n
 DRYRUN=""
 CONFDIR=/etc/g910-gkeys
+OPTIONS=$(getopt -l "all,dry-run" -o "ad" -- "$@")
+eval set -- "$OPTIONS"
 
 usage() {
-    echo "usage: ${0##*/}" [-a][-d]
+    echo "usage: ${0##*/}" [-a][-d]$'\n'
+    echo "  -a --all         Remove all (configuration)"
+    echo "  -d --dry-run     Only print what would be done"
     echo Exiting.
 }
 
-while getopts ad opt; do
-    case "$opt" in
-        a) REMOVECONF=y
+while true; do
+    case "$1" in
+        -a) REMOVECONF=y
            ;;
-        d) DRYRUN="echo"
+        -d|--dry-run) DRYRUN="echo"
            ;;
-        *) usage
-           exit 1
-           ;;
+        --)
+           break;;
     esac
+    shift
 done
 
 # determine if we should use pip or pip3, pip3 being preferred
@@ -50,34 +43,27 @@ for p in pip pip3; do
 done
 
 # stops and disable service
-systemctl disable --now g910-gkeys
+if [[ $DRYRUN = "echo" ]]; then
+    echo "systemctl disable --now g910-gkeys &>/dev/null"
+else
+    systemctl disable --now g910-gkeys &>/dev/null
+fi
 
 # remove all installed files (not configuration files, in /etc/g910-gkeys)
 [[ -f "$FILESLST" ]] &&
     ${DRYRUN} xargs --arg-file="$FILESLST" rm -rf &&
-    echo "Removed installed files"
+    [[ $DRYRUN = "" ]] && echo "Removed installed files"
 
 # remove configuration file[s] if requested
-[[ "$REMOVECONF" = y ]] &&
-    ${DRYRUN} rm -rf "$CONFDIR" &&
-    echo "Removed configuration files"
+if [[ "$REMOVECONF" = y ]]; then
+    ${DRYRUN} rm -rf "$CONFDIR"
+    [[ $DRYRUN = "" ]] && echo "Removed configuration files"
+fi
 
+# remove pip package
 if [[ -n "$PIPCMD" ]]; then
     PIPLST=$($PIPCMD list | grep 'g910-gkeys' | cut -d " " -f 1)
     [[ -n "$PIPLST" ]] &&
         ${DRYRUN} ${PIPCMD} uninstall "$PIPLST" &&
-        echo "Uninstalled $PIPCMD files"
+        [[ $DRYRUN = "" ]] && echo "Uninstalled $PIPCMD files"
 fi
-
-# remove early g910-gkeys hard-coded systemd files
-CLEANOLD=n
-for p in /etc/systemd/systemd /usr/lib/systemd/system ; do
-    [[ -e "$p"/g910-gkeys.service ]] && CLEANOLD=y && rm -f "$p/g910-gkeys.service"
-done
-[[ $CLEANOLD = y ]] && echo Deleted residual systemd files.
-
-# echo
-# echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# echo + Please remove "g910-gkeys.service" in "/usr/lib/systemd/system"
-# echo + and "/etc/systemd/system.conf", if they exist.
-# echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

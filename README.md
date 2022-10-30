@@ -5,8 +5,6 @@ Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3
 in [g910-gkey-uinput](https://github.com/CReimer/g910-gkey-uinput) project. I expanded the code, so that it is more 
 user friendly to add functionality to GKeys.
 
-The code is tested on Logitech G910 keyboard, OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3.
-
 Everything is described in great depth (and actually much better) on [WIKI](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
 
 Note: From version 0.2.0 onwards the g810-led controller is no longer required because Gkey to Fkey mapping is disabled inside the driver.
@@ -38,24 +36,27 @@ If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sud
 ## Uninstalling
 Run the uninstall script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. If you prefer to do it manually, these are the commands :
 
- - Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
- - Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
-  Note: if you delete files.txt you can always run the installer again to create it.
- - list pip packages that include g910-gkeys: `pip (or pip3) list | grep g910-gkeys`
- - remove the ones that concern this driver: `pip (or pip3) uninstall ${pkgs to uninstall}`
- - remove configuration directory if `-a` option is given to uninstall.sh: `rm -rf /etc/g910-gkeys`
+ 1. Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
+ 2. Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
+ 3. List pip packages that include g910-gkeys: `pip (or pip3) list | grep g910-gkeys`
+ 4. Remove the ones that concern this driver: `pip (or pip3) uninstall ${pkgs to uninstall}`
+ 5. Remove configuration directory if `-a` option is given to uninstall.sh: `rm -rf /etc/g910-gkeys`
 
-uninstall.sh also accepts the `-d` switch to perform a dry-run (no actual removal will be done, actions will only be displayed).
+If you deleted files.txt you can always run the installer again to create it.   
+Run `uninstall.sh -d` to perform a dry-run (no actual removal will be done, actions will only be displayed).
 
 ## Configuration
 Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example 
-configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json). Currently supported keyboard layouts:
- * de - german
- * en - english
- * fr - french
- * si - slovenian (default)
+configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json). 
 
-Currently the mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+### Supported languages:
+ * `"de"` - german
+ * `"en"` - english
+ * `"fr"` - french
+ * `"si"` - slovenian (default)
+
+### Hotkey types
+The mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
@@ -66,7 +67,7 @@ To add a hotkey add to `config.json` the following code:
 "g<no_of_gkey>": {
     "hotkey_type": <type of command "nothing" or "typeout" or "shortcut" or "run">,
     "do": "<thing to do>"
-  }
+}
 ```
 
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
@@ -78,6 +79,37 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
 
 ### Profiles
 There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
+If you use the profile feature you can also use the following parameter:
+ * `notify` - Send notifications if profile gets changed
+ * `username` - Username to send notifications with (required if notify is used)
+ * `profiles` - Define a profile which is bound to the matching mkey
+
+The following example shows how to set english layout and define the g1 key for profile m1 and m2 and shows how to run a app like firefox, chrome or similar. Please replace **\<username\>** with your username.
+ ```
+{
+    "notify": "True",
+    "username": "<username>",
+    "keyboard_mapping": "en",
+    "profiles": {
+        "m1": {
+            "g1": {
+                "hotkey_type": "run",
+                "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
+            }
+        },
+        "m2": {
+            "g1": {
+                "hotkey_type": "run",
+                "do": "su <username> -c 'DISPLAY=:0 nohup chrome' & 2>&1 > /dev/null"
+            }
+        }
+    }
+}
+ ```
+
+The code is tested on Logitech G910 keyboard with
+- OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3
+- OS: Ubuntu 20.04.5 LTS, Linux 5.4.0-131-generic, GNOME: 3.36.8
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
