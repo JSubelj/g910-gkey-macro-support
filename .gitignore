@@ -2,7 +2,6 @@ __pycache__/
 venv/
 .idea/
 dist/
-build/
 g910_gkey_macro*/
 log.txt
 files.txt
@@ -11,3 +10,8 @@ install_and_run.sh
 wiki/
 g910_gkeys.egg-info/
 g910-gkey-macro-support.wiki/
+
+# build
+/build/
+/.pybuild/
+/debian/
