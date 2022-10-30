@@ -1,4 +1,4 @@
-# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.4)
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.5)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)

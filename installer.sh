@@ -14,7 +14,7 @@ DEST=$(pkg-config systemd --variable=systemdsystemunitdir)
 CONFDIR=/etc/g910-gkeys
 FILES=files.txt
 STARTSERVICE=y
-SUPPORTED_KEYBOARDS=(en fr si)
+SUPPORTED_KEYBOARDS=(de en fr si)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
 
 usage() {
