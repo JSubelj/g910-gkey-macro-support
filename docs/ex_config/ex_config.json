@@ -18,7 +18,8 @@
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
       "g4": {
-        "hotkey_type": "nothing"
+        "hotkey_type": "python",
+        "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
     "m2": {
@@ -35,7 +36,8 @@
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
       "g4": {
-        "hotkey_type": "nothing"
+        "hotkey_type": "python",
+        "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
     "m3": {
@@ -52,7 +54,8 @@
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
       "g4": {
-        "hotkey_type": "nothing"
+        "hotkey_type": "python",
+        "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
     "mr": {
@@ -69,7 +72,8 @@
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
       "g4": {
-        "hotkey_type": "nothing"
+        "hotkey_type": "python",
+        "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     }
   }

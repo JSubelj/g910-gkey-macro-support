@@ -51,15 +51,16 @@ configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.
 
 ### Supported languages:
  * `"de"` - german
- * `"en"` - english
+ * `"en"` - english (default)
  * `"fr"` - french
- * `"si"` - slovenian (default)
+ * `"si"` - slovenian
 
 ### Hotkey types
-The mapper supports three types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+The mapper supports four types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
- * `"run"` - Starting a program (anything you can start from shell) This works only on cli programs (see why: [Why can't I run graphic programs by default](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Why-can't-I-run-graphic-programs-by-default)).
+ * `"run"` - Starting a program (anything you can start from shell)
+ * `"python"` - Execute a snippet of Python code and print provided output (see ex. below)
  * `"nothing"` - Do nothing (unbound key)
 
 To add a hotkey add to `config.json` the following code:
@@ -76,6 +77,7 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
+ * `"python"` - A Python one-line script. If output is desired, the script should define a global variable named `output_string` and set it to the string to be output.
 
 ### Profiles
 There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
@@ -84,23 +86,31 @@ If you use the profile feature you can also use the following parameter:
  * `username` - Username to send notifications with (required if notify is used)
  * `profiles` - Define a profile which is bound to the matching mkey
 
-The following example shows how to set english layout and define the g1 key for profile m1 and m2 and shows how to run a app like firefox, chrome or similar. Please replace **\<username\>** with your username.
+The following example shows how to set slovenian layout and define the g1 key for profile m1 and m2 and shows how to run a app like firefox, chrome or similar. Please replace **\<username\>** with your username.
  ```
 {
     "notify": "True",
     "username": "<username>",
-    "keyboard_mapping": "en",
+    "keyboard_mapping": "si",
     "profiles": {
         "m1": {
             "g1": {
                 "hotkey_type": "run",
                 "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
+            },
+            "g2": {
+                "hotkey_type": "python",
+                "do": "import datetime; global output_string; output_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')"
             }
         },
         "m2": {
             "g1": {
                 "hotkey_type": "run",
                 "do": "su <username> -c 'DISPLAY=:0 nohup chrome' & 2>&1 > /dev/null"
+            },
+            "g2": {
+                "hotkey_type": "python",
+                "do": "import datetime; global output_string; output_string = datetime.datetime.now().isoformat()"
             }
         }
     }

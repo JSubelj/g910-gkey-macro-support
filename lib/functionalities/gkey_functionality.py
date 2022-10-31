@@ -1,5 +1,7 @@
 import subprocess
 from lib.data_mappers import config_reader, supported_configs
+import inspect
+import sys
 from lib.misc import logger
 from lib.uinput_keyboard import keyboard
 from lib.functionalities import g910_led
@@ -19,6 +21,18 @@ def execute_hotkey(string_for_hotkey: str, device):
 
 def execute_command(command):
     subprocess.Popen(['/bin/bash', '-c', command], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def execute_python(command: str, device):
+    try:
+        global output_string
+        output_string = None
+        exec(command)
+        if output_string:
+            keyboard.writeout(output_string,config_reader.read()['keyboard_mapping'],device)
+    except Exception:
+        e_type, value, traceback = sys.exc_info()
+        log.error("Exception raised when running python command '"+command+"' || Exception: '"+str(e_type)+"' || Details: '"+str(value)+"'")
 
 
 def execute_change_profile(key):
@@ -83,6 +97,9 @@ def resolve_config(key):
     if command == 'run':
         log.info(f"{key} pressed, running: {do}")
         return lambda _: execute_command(do)
+    if command == 'python':
+        log.info(key+" pressed, running: {do}")
+        return lambda device: execute_python(do, device)
 
     # only nothing key config remains
     log.info(f"{key} pressed, doing nothing!")

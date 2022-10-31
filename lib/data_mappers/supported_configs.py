@@ -3,7 +3,7 @@ keyboard_mappings = ["si", "en", "fr", "de"]
 
 default_hotkey_type = "nothing"
 default_hotkey_do = ""
-hotkey_types = ["nothing", "typeout", "shortcut", "run"]
+hotkey_types = ["nothing", "typeout", "shortcut", "run", "python"]
 
 profile = "m1"
 profiles = ["m1", "m2", "m3", "mr"]
