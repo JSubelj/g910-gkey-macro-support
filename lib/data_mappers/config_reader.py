@@ -151,5 +151,5 @@ def read():
         log.error(f"JSONDecodeError: {str(e)} in {paths.config_path}")
     except Exception as e:
         log.error(f"{type(e).__name__}: {str(e)}")
-        log.error("NO CONFIG FOUND! Create config.json in {paths.config_path}\n To create default config run: g910-gkeys --create-config\n")
+        log.error(f"NO CONFIG FOUND! Create config.json in {paths.config_path}\n To create default config run: g910-gkeys --create-config\n")
     g910_gkey_mapper.program_running = False
