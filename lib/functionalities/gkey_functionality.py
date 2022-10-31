@@ -1,7 +1,8 @@
+import ast
 import subprocess
-from lib.data_mappers import config_reader, supported_configs
 import inspect
 import sys
+from lib.data_mappers import config_reader, supported_configs
 from lib.misc import logger
 from lib.uinput_keyboard import keyboard
 from lib.functionalities import g910_led
@@ -27,12 +28,12 @@ def execute_python(command: str, device):
     try:
         global output_string
         output_string = None
+        ast.parse(command)
         exec(command)
         if output_string:
             keyboard.writeout(output_string,config_reader.read()['keyboard_mapping'],device)
-    except Exception:
-        e_type, value, traceback = sys.exc_info()
-        log.error("Exception raised when running python command '"+command+"' || Exception: '"+str(e_type)+"' || Details: '"+str(value)+"'")
+    except Exception as e:
+        log.error(f"{type(e).__name__} when running python command '{command}'\nDetails: '{str(e)}'")
 
 
 def execute_change_profile(key):
@@ -98,7 +99,7 @@ def resolve_config(key):
         log.info(f"{key} pressed, running: {do}")
         return lambda _: execute_command(do)
     if command == 'python':
-        log.info(key+" pressed, running: {do}")
+        log.info(f"{key} pressed, running: {do}")
         return lambda device: execute_python(do, device)
 
     # only nothing key config remains
