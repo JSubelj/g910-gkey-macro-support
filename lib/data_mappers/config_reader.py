@@ -1,6 +1,8 @@
 import json
+from json.decoder import JSONDecodeError
 from lib.misc import paths, logger
 from lib.data_mappers import supported_configs, char_uinput_mapper
+from lib import g910_gkey_mapper
 
 log = logger.logger(__name__)
 
@@ -138,17 +140,16 @@ def read():
     log.debug("Reading config from " + paths.config_path)
     try:
         with open(paths.config_path, "r") as f:
-            try:
-                err, config = validate_config(json.load(f))
-                log.debug("using config: " + str(config))
-                if err:
-                    log.warning("Error(s) in config: "+str(err))
-                return config
-            except:
-                log.error("JSON FILE ERROR, CORRECT JSON! in path: " + paths.config_path)
-                print("JSON FILE ERROR, CORRECT JSON! in path: " + paths.config_path)
-                exit(1)
-    except:
-        log.error("NO CONFIG FOUND! Create config.json in " + paths.config_path)
-        print("NO CONFIG FOUND! Create config.json in " + paths.config_path + "\n To create default config run: g910-gkeys --create-config\n")
-        exit(1)
+            
+            err, config = validate_config(json.load(f))
+            log.debug("using config: " + str(config))
+            if err:
+                log.warning("Error(s) in config: "+str(err))
+            return config
+
+    except JSONDecodeError as e:
+        log.error(f"JSONDecodeError: {str(e)} in {paths.config_path}")
+    except Exception as e:
+        log.error(f"{type(e).__name__}: {str(e)}")
+        log.error(f"NO CONFIG FOUND! Create config.json in {paths.config_path}\n To create default config run: g910-gkeys --create-config\n")
+    g910_gkey_mapper.program_running = False

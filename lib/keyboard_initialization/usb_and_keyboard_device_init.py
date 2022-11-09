@@ -1,12 +1,11 @@
+import time
 import uinput
 import usb
 from lib.data_mappers import uinput_all_keys
 from lib.misc import logger
-import sys
+from lib import g910_gkey_mapper
 
 log = logger.logger(__name__)
-import time
-
 
 def init_uinput_device():
     device = uinput.Device(uinput_all_keys.uinput_all_keys)
@@ -76,7 +75,7 @@ def init_g910_keyboard():
         try:
             dev, endpoint, USB_TIMEOUT, USB_IF = init_usb_dev()
         except SystemExit:
-            sys.exit(0)
+            g910_gkey_mapper.program_running = False
         except Exception as e:
             if e.args[0] == 5:
                 counter += 1
@@ -93,7 +92,7 @@ def init_g910_keyboard():
         try:
             successfully_disabled_mapping = disable_fkey_to_gkey_binding(dev, endpoint, USB_TIMEOUT, USB_IF)
         except SystemExit:
-            sys.exit(0)
+            g910_gkey_mapper.program_running = False
         except Exception as e:
             if e.args[0] == 110:
                 counter += 1
@@ -106,7 +105,7 @@ def init_g910_keyboard():
                 try:
                     dev, endpoint, USB_TIMEOUT, USB_IF = init_usb_dev()
                 except SystemExit:
-                    sys.exit(0)
+                    g910_gkey_mapper.program_running = False
                 except:
                     pass
 

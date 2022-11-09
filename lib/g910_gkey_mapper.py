@@ -1,79 +1,33 @@
 # Taken from https://github.com/CReimer/g910-gkey-uinput/issues/3 and expanded
 
-import subprocess
+import fcntl
+import os
 import usb.core
 import usb.util
+import signal
 import time
 from lib.functionalities import gkey_functionality, media_static_keys_functionality
 from lib.data_mappers import command_bytearray, config_reader
 from lib.keyboard_initialization import usb_and_keyboard_device_init
 from lib.misc import logger, paths
-import signal
-import sys
-import os
-import fcntl
 
 log = logger.logger(__name__)
 
+program_running=True
 
 def emitKeys(device, key):
-    if key == 'g1':
-        gkey_functionality.g1(device)
-    elif key == 'g2':
-        gkey_functionality.g2(device)
-    elif key == 'g3':
-        gkey_functionality.g3(device)
-    elif key == 'g4':
-        gkey_functionality.g4(device)
-    elif key == 'g5':
-        gkey_functionality.g5(device)
-    elif key == 'g6':
-        gkey_functionality.g6(device)
-    elif key == 'g7':
-        gkey_functionality.g7(device)
-    elif key == 'g8':
-        gkey_functionality.g8(device)
-    elif key == 'g9':
-        gkey_functionality.g9(device)
-    elif key == 'm1':
-        gkey_functionality.m1(device)
-    elif key == 'm2':
-        gkey_functionality.m2(device)
-    elif key == 'm3':
-        gkey_functionality.m3(device)
-    elif key == 'mr':
-        gkey_functionality.mr(device)
+    if gkey_functionality.handle_gkey_press(device, key):
+        return
     elif key == "release":
         gkey_functionality.release(device)
-
     elif media_static_keys_functionality.resolve_key(device, key):
         pass
 
 
-# uinput device
-log.debug("gathering uinput device")
-device = usb_and_keyboard_device_init.init_uinput_device()
-program_running=True
-
 def signal_handler(sig, frame):
     global program_running
-    log.warning("Got signal, " + signal.Signals(sig).name + " terminating!")
-    print("Got signal,", signal.Signals(sig).name, "terminating!")
-    try:
-        device.__exit__()
-        log.info("Removed uinput device")
-        print("Removed uinput device")
-    except SystemExit:
-        sys.exit(0)
-    except Exception as e:
-        print("Could not remove uinput device:",e)
-        log.info("Could not remove uinput device:",e)
-
-    # pid_handler.remove_pid()
-    log.info("----------------------EXITING-----------------------")
-    print("Exiting")
+    log.debug(f"Got signal, {signal.Signals(sig).name} terminating!")
     program_running = False
-    sys.exit(0)
 
 
 def config_changed_handler(sig, frame):
@@ -83,6 +37,11 @@ def config_changed_handler(sig, frame):
 
 
 def main():
+    global program_running
+    log.info("--------------------------------------------------------------------------------")
+    log.info(f"----------------------STARTED g910-keys-pid:{str(os.getpid())}------------------------------")
+    log.info("--------------------------------------------------------------------------------")
+
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGQUIT, signal_handler)
@@ -95,17 +54,13 @@ def main():
                 fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
     # To see if config exists
     config_reader.read()
-
-    global profile
-    profile = 'm1'
-
-    global g910_led
-    g910_led = False
-    which_led_process = subprocess.run(['which', 'g910-led'], capture_output=True)
-    if len(which_led_process.stdout) > 0:
-        g910_led = True
-
-    dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
+    
+    if program_running:
+        # uinput device
+        log.debug("gathering uinput device")
+        device = usb_and_keyboard_device_init.init_uinput_device()
+        # usb device
+        dev, endpoint, USB_TIMEOUT, USB_IF = usb_and_keyboard_device_init.init_g910_keyboard()
 
     while program_running:
         try:
@@ -127,7 +82,7 @@ def main():
                 else:
                     log.warning(str(b) + ' no match')
         except SystemExit:
-            sys.exit(0)
+            program_running = False
         except Exception as e:
             if e.args[0] == 110:
                 pass
@@ -137,10 +92,20 @@ def main():
                 except:
                     pass
             else:
-                log.error("ERROR:" + str(e))
+                log.exception(e)
 
         time.sleep(0.001)
 
+    try:
+        if device:
+            device.__exit__()
+            log.info("Removed uinput device")
+    except UnboundLocalError:
+        pass # pass if no device is assigned
+    except Exception as e:
+        log.error("Could not remove uinput device.",e)
+
+    log.info("------------------------------------EXITING-------------------------------------")
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 {
   "__comment" : "following hotkey types are supported: nothing, typeout, shortcut and run; only en, fr, de and si keyboard mappings are currently supported",
-  "keyboard_mapping": "si",
+  "keyboard_mapping": "en",
   "notify": "True",
   "username": "",
   "profiles": {

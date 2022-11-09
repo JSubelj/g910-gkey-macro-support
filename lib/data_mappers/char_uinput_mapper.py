@@ -336,6 +336,7 @@ keys = {
         ',': click(uinput.KEY_COMMA),
         '.': click(uinput.KEY_DOT),
         '/': click(uinput.KEY_SLASH),
+        '?': wrap_shift(click(uinput.KEY_SLASH)),
 
         '*': click(uinput.KEY_KPASTERISK),
 
@@ -398,8 +399,8 @@ keys = {
         'U': wrap_shift(click(uinput.KEY_U)),
         'v': click(uinput.KEY_V),
         'V': wrap_shift(click(uinput.KEY_V)),
-        'w': click(uinput.KEY_W),
-        'W': wrap_shift(click(uinput.KEY_W)),
+        'w': click(uinput.KEY_Z),
+        'W': wrap_shift(click(uinput.KEY_Z)),
         'x': click(uinput.KEY_X),
         'X': wrap_shift(click(uinput.KEY_X)),
         'y': click(uinput.KEY_Y),

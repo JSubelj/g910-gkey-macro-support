@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-
 import argparse
-import lib.PROJECT_INFO as PROJECT_INFO
+from lib import g910_gkey_mapper, PROJECT_INFO
 
 def main():
-    parser = argparse.ArgumentParser(description="Support for Logitech G910 GKeys on Linux")
+    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
     parser.add_argument("--create-config", help="Creates config in /etc/g910-gkeys", action='store_true', default=False)
+    parser.add_argument("-c","--set-config", help="Set the config file to use", default='/etc/g910-gkeys/config.json', dest="config_file")
     parser.add_argument("-v","--version", help="Displays the information about the driver", action='store_true', default=False)
     args = parser.parse_args()
     if args.create_config:
@@ -22,28 +21,13 @@ def main():
         print()
         print("Created by", PROJECT_INFO.AUTHOR)
         print("Version", PROJECT_INFO.VERSION)
-    else:
-        from lib.misc import logger
-        from lib import g910_gkey_mapper
+    elif args.config_file != "/etc/g910-gkeys/config.json":
         from lib.misc import paths
 
-        log = logger.logger("launcher")
-
-        print(f"Starting g910-gkeys, PID: {os.getpid()}, logging at:", paths.logs_path)
-        log.info("------------------------------------------------------------------------------------")
-        log.info(
-            "----------------------STARTED g910-keys-pid:" + str(os.getpid()) + "-----------------------------------")
-        log.info("------------------------------------------------------------------------------------")
-        #pid: ",os.getpid(),
-        #pid_handler.kill_previous()
+        paths.config_path = args.config_file
         g910_gkey_mapper.main()
-        #pid_handler.write_pid(os.getpid())
-        #Daemonize(app="g910-keys", pid=paths.pid_path, action=g910_gkey_mapper.main, keep_fds=[logger.fh.stream.fileno()]).start()
-        '''else:
-            print("g910-keys daemon already exists on pid:",paths.read_pid())
-            print("if you made sure that the program isn't running ('ps -p "+paths.read_pid()+" -o comm=' returns nothing) then manually remove pid file:")
-            print()
-            print("    rm "+paths.pid_path)
-            print()'''
+    else:
+        g910_gkey_mapper.main()
+
 if __name__=="__main__":
     main()
