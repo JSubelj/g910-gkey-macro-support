@@ -1,4 +1,4 @@
-default_keyboard_mapping = "si"
+default_keyboard_mapping = "en"
 keyboard_mappings = ["si", "en", "fr", "de"]
 
 default_hotkey_type = "nothing"

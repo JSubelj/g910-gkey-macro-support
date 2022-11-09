@@ -9,6 +9,8 @@ If you have any questions on the issue you are currently working on, send me an 
 
 If you think you can greatly enhance the project contact me on my email (at the bottom of this page), we will talk and if I see you are interested and qualified I will add you to the team.
 
+If you don't already have a favourite ide you can try [pycharm community](https://www.jetbrains.com/de-de/pycharm/download/) it is free and has a lot of good features to help you write better code. It's also available via snap: `sudo snap install pycharm-community`
+
 # Requesting additional features
 If you have a bright new feature that you want to see in my driver and don't know how to code it in please write an Issue and if it looks good I will gladly implement it.
 

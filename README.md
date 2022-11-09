@@ -34,7 +34,7 @@ If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sud
  You don't need to do anything if you don't want to use the profile feature your old config will be loaded as default profile m1.
 
 ## Uninstalling
-Run the uninstall script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. If you prefer to do it manually, these are the commands :
+Run the uninstalling script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. If you prefer to do it manually, these are the commands :
 
  1. Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
  2. Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
@@ -56,7 +56,7 @@ configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.
  * `"si"` - slovenian
 
 ### Hotkey types
-The mapper supports four types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+The mapper supports five types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell)
