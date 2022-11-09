@@ -55,6 +55,8 @@ configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.
  * `"fr"` - french
  * `"si"` - slovenian
 
+Even if your language is not supported you can still use the driver with hotkey_type run. Other types won't work as expected with the wrong language configured.
+
 ### Hotkey types
 The mapper supports five types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
