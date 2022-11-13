@@ -1,178 +1,292 @@
-# this file has function that can help you get the right config for your layout. it is not optimized i dont even promise
-# that it will work when u run it, if there's interest i can beautify it so it will be simpler to use. open an issue or smth idk.
-import uinput
-from lib.data_mappers import uinput_all_keys
-from lib.data_mappers.char_uinput_mapper import keys
-
-def click(uinput_key):
-    return [(uinput_key, 3)]
-
-def wrap_shift(key_array):
-    return [(uinput.KEY_LEFTSHIFT, 1)]+key_array+[(uinput.KEY_LEFTSHIFT, 0)]
-
-
-def wrap_altgr(key_array):
-    return [(uinput.KEY_RIGHTALT, 1)]+key_array+[(uinput.KEY_RIGHTALT, 0)]
-
-def get_shift_keys():
-    import sys
-    import time
-    time.sleep(5)
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
-    for i in range(48, 58):
-        sys.stdout.write("'")
-        sys.stdout.flush()
-
-        for key in wrap_shift(click(getattr(uinput, "KEY_" + chr(i)))):
-            time.sleep(0.1)
-            device.emit(*key)
-        sys.stdout.write("': wrap_shift(click(uinput.KEY_" + chr(i) + ")),\n")
-        sys.stdout.flush()
-
-def get_altgr_keys():
-    import sys
-    import time
-    time.sleep(5)
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
-    for i in range(48, 58):
-        sys.stdout.write("'")
-        sys.stdout.flush()
-
-        for key in wrap_altgr(click(getattr(uinput, "KEY_" + chr(i)))):
-            time.sleep(0.1)
-            device.emit(*key)
-        device.emit_click(uinput.KEY_SPACE)
-        time.sleep(0.1)
-        sys.stdout.write("': wrap_altgr(click(uinput.KEY_" + chr(i) + ")+click(uinput.KEY_SPACE)),\n")
-        sys.stdout.flush()
-
-def get_other_keys():
-    keys = {"uinput.KEY_MINUS" : uinput.KEY_MINUS,
-"uinput.KEY_EQUAL" : uinput.KEY_EQUAL,
-"uinput.KEY_BACKSPACE" : uinput.KEY_BACKSPACE,
-"uinput.KEY_TAB" : uinput.KEY_TAB,
-"uinput.KEY_Q" : uinput.KEY_Q,
-"uinput.KEY_W" : uinput.KEY_W,
-"uinput.KEY_E" : uinput.KEY_E,
-"uinput.KEY_R" : uinput.KEY_R,
-"uinput.KEY_T" : uinput.KEY_T,
-"uinput.KEY_Y" : uinput.KEY_Y,
-"uinput.KEY_U" : uinput.KEY_U,
-"uinput.KEY_I" : uinput.KEY_I,
-"uinput.KEY_O" : uinput.KEY_O,
-"uinput.KEY_P" : uinput.KEY_P,
-"uinput.KEY_LEFTBRACE" : uinput.KEY_LEFTBRACE,
-"uinput.KEY_RIGHTBRACE" : uinput.KEY_RIGHTBRACE,
-"uinput.KEY_ENTER" : uinput.KEY_ENTER,
-"uinput.KEY_LEFTCTRL" : uinput.KEY_LEFTCTRL,
-"uinput.KEY_A" : uinput.KEY_A,
-"uinput.KEY_S" : uinput.KEY_S,
-"uinput.KEY_D" : uinput.KEY_D,
-"uinput.KEY_F" : uinput.KEY_F,
-"uinput.KEY_G" : uinput.KEY_G,
-"uinput.KEY_H" : uinput.KEY_H,
-"uinput.KEY_J" : uinput.KEY_J,
-"uinput.KEY_K" : uinput.KEY_K,
-"uinput.KEY_L" : uinput.KEY_L,
-"uinput.KEY_SEMICOLON" : uinput.KEY_SEMICOLON,
-"uinput.KEY_APOSTROPHE" : uinput.KEY_APOSTROPHE,
-"uinput.KEY_GRAVE" : uinput.KEY_GRAVE,
-"uinput.KEY_LEFTSHIFT" : uinput.KEY_LEFTSHIFT,
-"uinput.KEY_BACKSLASH" : uinput.KEY_BACKSLASH,
-"uinput.KEY_Z" : uinput.KEY_Z,
-"uinput.KEY_X" : uinput.KEY_X,
-"uinput.KEY_C" : uinput.KEY_C,
-"uinput.KEY_V" : uinput.KEY_V,
-"uinput.KEY_B" : uinput.KEY_B,
-"uinput.KEY_N" : uinput.KEY_N,
-"uinput.KEY_M" : uinput.KEY_M,
-"uinput.KEY_COMMA" : uinput.KEY_COMMA,
-"uinput.KEY_DOT" : uinput.KEY_DOT,
-"uinput.KEY_SLASH" : uinput.KEY_SLASH,
-"uinput.KEY_RIGHTSHIFT" : uinput.KEY_RIGHTSHIFT,
-"uinput.KEY_KPASTERISK" : uinput.KEY_KPASTERISK,
-"uinput.KEY_LEFTALT" : uinput.KEY_LEFTALT,
-"uinput.KEY_SPACE" : uinput.KEY_SPACE,
-"uinput.KEY_CAPSLOCK" : uinput.KEY_CAPSLOCK}
-    import sys
-    import time
-    time.sleep(5)
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
-    for val,key in keys.items():
-        sys.stdout.write("'")
-        sys.stdout.flush()
-        for key_event in click(key):
-            time.sleep(0.1)
-            device.emit(*key_event)
-        #device.emit_click(uinput.KEY_SPACE)
-        #time.sleep(0.1)
-        sys.stdout.write("': click("+val+"),\n")
-        sys.stdout.flush()
+"""
+    This file contains functions that can help you get the right config for your layout.
+    Run g910-gkeys -l help to show all commands
+"""
+import locale
+import signal
+import sys
+import tty
+import termios
+import lib.data_mappers.char_uinput_mapper as uinput_mapper
+from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
+from lib.keyboard_initialization.usb_and_keyboard_device_init import USBDevice
+from lib.uinput_keyboard.keyboard import Keyboard, KeyInputTimeoutException
+from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
 
 
-def get_keys():
-    for i in range(48,58):
-        print("'"+chr(i)+"': click(uinput.KEY_"+chr(i)+"),")
+class LayoutHelper:
+    device: USBDevice = None
+    keyboard: Keyboard = None
 
-    for i in range(65,91):
-        #if chr(i) == 'Z':
-        #    print("'y': click(uinput.KEY_Z),")
-        #    print("'Y': wrap_shift(click(uinput.KEY_Z)),")
-        #elif chr(i) == 'Y':
-        #    print("'z': click(uinput.KEY_Y),")
-        #    print("'Z': wrap_shift(click(uinput.KEY_Y)),")
+    WRAPPING_CLICK: int = 0  # only use key click
+    WRAPPING_SHIFT: int = 1  # key click and wrapped shift key click
+    WRAPPING_ALTGR: int = 2  # key click, wrapped shift key click and wrapped alt key click
 
-        #else:
-        print("'"+chr(i).lower()+"': click(uinput.KEY_"+chr(i)+"),")
-        print("'"+chr(i)+"': wrap_shift(click(uinput.KEY_"+chr(i)+")),")
+    skip_keys_altgr: list = [
+        "uinput.KEY_EQUAL",
+        "uinput.KEY_LEFTBRACE",
+        "uinput.KEY_SEMICOLON",
+        "uinput.KEY_APOSTROPHE",
+        "uinput.KEY_GRAVE"
+    ]
 
-def get_fkeys():
-    for i in range(1,13):
-        print("'F"+str(i)+"': click(uinput.KEY_F"+str(i)+"),")
+    def __init__(self, command: str):
+        """
+        Setup signals and run
+        :param command:
+        """
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        signal.signal(signal.SIGQUIT, self.signal_handler)
 
-
-def execute_events(events, device):
-    import time
-    for event in events:
-        if event[1] == 3:
-            device.emit_click(event[0])
+        if command == "read1":
+            self.read_raw_bytes(1)
+        elif command == "read0":
+            self.read_raw_bytes(0)
+        elif command == "create":
+            self.create()
+        elif command == "test":
+            self.test()
+        elif command == "uinput":
+            self.uinput_key()
+        elif command == "help":
+            print(f"Syntax: g910-gkey -l [help|read0|read1|create|test|uinput]")
+            print()
+            print(f"    read0               read the raw bytes from interface 0 (default keys)")
+            print(f"    read1               read the raw bytes from interface 1 (g- and media-keys)")
+            print(f"    create              create localized layout")
+            print(f"    test                test localized layout")
+            print(f"    uinput              get uinput key from key press")
         else:
-            device.emit(*event)
+            print(f"Syntax: g910-gkey -l [help|read0|read1|create|test|uinput]")
+            if command != "help":
+                print(f"No matching helper '{command}' found!")
 
-        time.sleep(0.02)
+        self.__exit__()
 
+    def signal_handler(self, sig, frame):
+        """
+        Terminating signale handler
+        :param sig:
+        :param frame:
+        """
+        print(f"Got signal, {signal.Signals(sig).name} terminating!")
+        print("The application will end the current process and needs to disconnect your usb and uinput device.")
 
-def writeout(string, charset, device):
-    for c in string:
-        execute_events(keys[charset][c],device)
+    def read_raw_bytes(self, interface: int):
+        """
+        Read raw bytes send over usb from keyboard and try to get matching command or key from command_bytearray
+        :param interface: 0 for all normal keys, 1 for g-, m- and media-keys
+        """
+        self.device = USBDevice(interface)
+        if interface == 0:
+            byte_map = uinput_key_map
+        else:
+            byte_map = uinput_if1
+        bytes_received = None
+        while bytes_received is None:
+            bytes_received = self.device.read()
+            if bytes_received is not None:
+                try:
+                    uinput_key = list(byte_map.keys())[list(byte_map.values()).index(bytes(bytes_received))]
+                except ValueError:
+                    uinput_key = "NO_MATCH"
+                print(f"{uinput_key}: {bytes(bytes_received)}")
 
-def test():
-    import sys
-    import time
+    def uinput_key(self):
+        """
+        Get uinput key by pressing a key on the keyboard
+        """
+        self.device = USBDevice(0)  # init keyboard interface 0 to read default keys
+        write_config = ''
+        print(f"Press a key you want to get the uinput key definition:")
+        user_input = False
+        while not user_input:
+            bytes_received = self.device.read()
+            if bytes_received is not None:
+                if bytes(bytes_received) == uinput_key_map.get('KEY_LEFTSHIFT') or \
+                        bytes(bytes_received) == uinput_key_map.get('KEY_RIGHTSHIFT') or \
+                        bytes(bytes_received) == uinput_key_map.get('KEY_LEFTALT') or \
+                        bytes(bytes_received) == uinput_key_map.get('KEY_RIGHTALT'):
+                    pass
+                elif bytes(bytes_received) != b'\x00\x00\x00\x00\x00\x00\x00\x00':
+                    wrap_byte = bytes_received[0]
+                    bytes_received[0] = 0  # remove shift wrap from byte array
+                    try:
+                        uinput_key = list(uinput_key_map.keys())[list(uinput_key_map.values()).index(bytes(bytes_received))]
+                        if wrap_byte == uinput_key_map.get('KEY_LEFTSHIFT')[0]:
+                            # wrapped with left shift
+                            write_config = f"wrap_shift(click(uinput.{uinput_key}))"
+                        elif wrap_byte == uinput_key_map.get('KEY_RIGHTALT')[0]:
+                            # wrapped with right alt (altgr)
+                            write_config = f"wrap_altgr(click(uinput.{uinput_key}))"
+                        else:
+                            write_config = f"click(uinput.{uinput_key})"
+                    except ValueError:
+                        pass  # just keep on going if a key is not found
+                elif bytes(bytes_received) == b'\x00\x00\x00\x00\x00\x00\x00\x00':
+                    user_input = True
+        print(write_config)
 
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
-    time.sleep(4)
-    events = keys['en']
-    for key, event in events.items():
-        sys.stdout.write("'"+key+"'=='")
-        sys.stdout.flush()
-        time.sleep(0.1)
-        execute_events(event,device)
-        time.sleep(0.1)
-        sys.stdout.write("'\n")
+    def create(self):
+        """
+        Create localized uinput key map
+        """
+        user_lang, encoding = locale.getdefaultlocale()
+        user_lang = user_lang.split("_")[0]
+        try:
+            self.keyboard = Keyboard()
+            locale_map = self.get_keys()
+            filename = f"char_uinput_mapping_{user_lang}"
+            with open(filename, "w") as fd:
+                fd.write("'" + user_lang + "': {\n")
+                for row in locale_map:
+                    fd.write(f"{row}\n")
+                fd.write("}")
 
-if __name__ == "__main__":
-    #print(keys)
-    #get_keys()
-    #get_shift_keys()
-    #get_altgr_keys()
-    #get_other_keys()
-    #test()
-    import uinput_all_keys
+        except Exception as e:
+            print(repr(e))
+        print(f"Your local char to uinput map was saved to {filename}.")
 
-    import time
-    device = uinput.Device(uinput_all_keys.uinput_all_keys)
+    @staticmethod
+    def get_key_timeout_handler(signum, frame):
+        """
+        Timeout handler for char to uinput mapping raise a KeyInputTimeoutException
+        :param signum:
+        :param frame:
+        """
+        raise KeyInputTimeoutException("No key emitted.")
 
-    time.sleep(4)
-    #writeout("šđčćžŠĐČĆŽ\n","si", device)
-    #get_fkeysfdsaf( )
+    def get_emitted_char(self, event: list):
+        """
+        Get character written down to stdout on emit of given key
+        :param event: uinput event
+        :return: character written down in stdout on key emit
+        :rtype: str
+        """
+        # set alarm signal to 1s to go on if key emit doesn't output any character
+        signal.signal(signal.SIGALRM, self.get_key_timeout_handler)
+        signal.alarm(1)
+        file_descriptors = termios.tcgetattr(sys.stdin)  # save old file descriptors to reset later
+        tty.setcbreak(sys.stdin)  # set cbreak to stdin (we will need no enter to read from stdin)
+        if event == uinput_mapper.click((eval("uinput.KEY_GRAVE"))):
+            # KEY_GRAVE have to be pressed two times
+            event += event
+        elif event == uinput_mapper.click((eval("uinput.KEY_EQUAL"))) or \
+                event == uinput_mapper.wrap_shift(uinput_mapper.click(eval("uinput.KEY_EQUAL"))):
+            # KEY_EQUAL have to be pressed two times alone and also together with shift
+            event += event
+        self.keyboard.execute_events(event)
+        try:
+            char = sys.stdin.read(1)[0]  # read the char which gets writen by uinput keyboard
+            signal.alarm(0)  # remove the alarm signal
+        except KeyInputTimeoutException:
+            # if we capture an alarm, we set an empty character to remove from mapping later
+            char = ''
+        # reset file descriptor on stdin
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, file_descriptors)
+        return char
+
+    @staticmethod
+    def get_other_keys():
+        """
+        Get none alphanumeric keys
+        :return: Return a list of keys with a string interpretation of uinput key (ex. ["uinput.KEY_COMMA", ...])
+        :rtype: list
+        """
+        keys = [
+            "uinput.KEY_EQUAL",
+            "uinput.KEY_MINUS",
+            "uinput.KEY_LEFTBRACE",
+            "uinput.KEY_RIGHTBRACE",
+            "uinput.KEY_SEMICOLON",
+            "uinput.KEY_APOSTROPHE",
+            "uinput.KEY_GRAVE",
+            "uinput.KEY_BACKSLASH",
+            "uinput.KEY_COMMA",
+            "uinput.KEY_DOT",
+            "uinput.KEY_SLASH"
+        ]
+        return keys
+
+    def get_keys(self):
+        """
+        Get config list entries for all keys
+        :return: config list entries for all keys
+        :rtype: list
+        """
+        key_config = []
+        for i in range(48, 58):  # digits 0-9
+            key_config += self.get_key_config("uinput.KEY_" + chr(i), self.WRAPPING_ALTGR)
+
+        for i in range(65, 91):  # characters a-z
+            key_config += self.get_key_config("uinput.KEY_" + chr(i), self.WRAPPING_ALTGR)
+
+        for key in self.get_other_keys():  # add other keys (no control keys)
+            key_config += self.get_key_config(key, self.WRAPPING_ALTGR)
+
+        return key_config
+
+    def get_key_config(self, key: str, wrapping: int = 0):
+        """
+        Get key configuration by given uinput key
+        :param key: uinput key as string (ex. uinput.KEY_0)
+        :param wrapping: one of WRAPPING_CLICK | WRAPPING_SHIFT | WRAPPING_ALTGR
+        :return: list entry/ies for key for use in the driver
+        :rtype: list
+        """
+        locale_keys = []
+        char = self.get_emitted_char(uinput_mapper.click((eval(key))))
+        if char != '':
+            locale_keys.append(f"\t'{char}': click({key}),")
+        if wrapping > 0:  # wrap key with shift
+            char = self.get_emitted_char(uinput_mapper.wrap_shift(uinput_mapper.click((eval(key)))))
+            if char != '':
+                locale_keys.append(f"\t'{char}': wrap_shift(click({key})),")
+        if wrapping > 1 and key not in skip_keys_altgr:  # wrap key with right alt
+            char = self.get_emitted_char(uinput_mapper.wrap_altgr(uinput_mapper.click((eval(key)))))
+            if char != '':
+                locale_keys.append(f"\t'{char}': wrap_altgr(click({key})),")
+
+        return locale_keys
+
+    def test(self):
+        """
+        Test the char to uinput map with current locale
+        A virtual keyboard is initialized and all keys from the map will be emitted.
+        After each key is emitted the written char gets checked against the key map.
+        """
+        user_lang, encoding = locale.getdefaultlocale()
+        user_lang = user_lang.split("_")[0]
+        self.keyboard = Keyboard()
+        events = locale_key_mapping[user_lang]
+        error = False
+        for key, event in events.items():
+            if error:
+                break
+            try:
+                char = self.get_emitted_char(event)
+                if key != char:
+                    error = True
+                    print(f"{key} != {char}")
+            except Exception as e:
+                print(repr(e))
+                error = True
+
+        if error:
+            print("Error in key map: Please correct char_uinput_mapper.py")
+        else:
+            print(f"'{user_lang}' Key map tested successfully.")
+
+    def __exit__(self):
+        """
+        Disconnect the usb- and uinput-device on exit
+        """
+        try:
+            self.device.__exit__()
+        except AttributeError:
+            pass  # pass if no usb device was initialized
+        try:
+            self.keyboard.__exit__()
+        except AttributeError:
+            pass  # pass if no uinput device was initialized
