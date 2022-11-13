@@ -1,0 +1,251 @@
+* Alternative settings for g910-gkeys
+*Important: This document is for Xorg only (not Wayland).*
+
+This document will explain how to setup g910-gkeys by limiting as much as possible the usage of a global config, the idea being to setup global mapping in a static manner, and let the user set the actions in his/her own environment.
+
+** Preamble
+~g910-gkeys-macro-support~ allows different actions, mainly: ~typeout~, ~shortcut~, ~run~, and ~python~.
+
+There are some drawbacks with that:
+- All of these actions will be performed within the process environment, that is ~root~. This is problematic with ~run~ and ~python~ actions.
+- These actions are global.
+- The actions (especially ~run~ and ~python~) will be performed even when the user is not logged-on.
+- It is impossible to use the G-keys as all other keys (for example different actions with different modifiers, for example ~Shift-G1~ or ~Control-Meta-G1~).
+- The ~typeout~ action depends on keyboard localization.
+- The ~typeout~ does not allow any UTF-8 string.
+
+** g910-gkeys configuration file (/etc/g910-gkeys/config.json)
+The configuration chosen will be basic: assign each ~G-key~ to a key which does not exist on physical keyboard. Any key could be used, like specific localized keys which do not exist on your keyboard (example: Japanese keys for an English keyboard), or function keys above F12.
+
+We will choose to map them to Function keys ~F13~ to ~F21~.
+
+My ~config.json~ is:
+
+#+BEGIN_SRC json
+{
+    "__comment": "I was sometimes unable to use F20, even xev did not show the keycode (It just muted/unmuted sound, same as the G910's <mute> button). If it is the case for you, just skip F20 and use F22 instead.",
+    "keyboard_mapping": "en",
+    "g1": { "hotkey_type": "shortcut", "do": "F13" },
+    "g2": { "hotkey_type": "shortcut", "do": "F14" },
+    "g3": { "hotkey_type": "shortcut", "do": "F15" },
+    "g4": { "hotkey_type": "shortcut", "do": "F16" },
+    "g5": { "hotkey_type": "shortcut", "do": "F17" },
+    "g6": { "hotkey_type": "shortcut", "do": "F18" },
+    "g7": { "hotkey_type": "shortcut", "do": "F19" },
+    "g8": { "hotkey_type": "shortcut", "do": "F20" },
+    "g9": { "hotkey_type": "shortcut", "do": "F21" }
+}
+#+END_SRC
+
+** X11 keyboard mapping
+*Note*: Below, I configure also ~F22~ (which looks un-necessary), because I had trouble with ~F20~ at some point, and used ~F22~ as fallback.
+
+By default, the F13-F22 keys may be mapped to some defaults. For example, ~F13~ could return ~XF86Tools~.
+This is not what we want: Instead we want F13-F22 to return themselves.
+
+It could be possible to keep the default mappings, but it makes less sense, and it would probably clash with the keyboard Media keys.
+
+You can check if this mapping is done on your system with the following command:
+
+*Correct F-keys mapping:*
+#+BEGIN_SRC
+$ xmodmap -pke | grep -E 'keycode (19[1-9]|200)'
+keycode 191 = F13 F13 F13 F13 F13 F13 F13
+keycode 192 = F14 F14 F14 F14 F14 F14 F14
+keycode 193 = F15 F15 F15 F15 F15 F15 F15
+keycode 194 = F16 F16 F16 F16 F16 F16 F16
+...
+keycode 200 = F22 F22 F22 F22 F22 F22 F22
+#+END_SRC
+
+*Incorrect F-keys mapping:*
+#+BEGIN_SRC
+$ xmodmap -pke | grep -E 'keycode (19[1-9]|200)'
+keycode 191 = XF86Tools NoSymbol XF86Tools
+keycode 192 = XF86Launch5 NoSymbol XF86Launch5
+keycode 193 = XF86Launch6 NoSymbol XF86Launch6
+...
+keycode 200 = XF86TouchpadOn NoSymbol XF86TouchpadOn
+#+END_SRC
+
+If your configuration is incorrect, you can choose one of the two solutions below (I prefer the first one):
+
+*** Solution 1: Fix F-keys mapping globally
+You will need to find out where the mapping *F-key -> Different key* is done. On my system, it was in ~/usr/share/X11/xkb/symbols/inet~.
+
+To find where the mapping is done on your system, you may run: ~setxkbmap -print -verbose 10~:
+#+BEGIN_SRC
+$ setxkbmap -print -verbose 10
+Setting verbose level to 10
+locale is C
+Trying to load rules file ./rules/evdev...
+Trying to load rules file /usr/share/X11/xkb/rules/evdev...
+Success.
+Applied rules from evdev:
+rules:      evdev
+model:      pc105
+layout:     us
+variant:    altgr-intl
+options:    compose:ralt,grp:ctrls_toggle,lv3:ralt_switch,terminate:ctrl_alt_bksp
+Trying to build keymap using the following components:
+keycodes:   evdev+aliases(qwerty)
+types:      complete
+compat:     complete
+symbols:    pc+us(altgr-intl)+inet(evdev)+group(ctrls_toggle)+level3(ralt_switch)+compose(ralt)+terminate(ctrl_alt_bksp)
+geometry:   pc(pc105)
+xkb_keymap {
+	xkb_keycodes  { include "evdev+aliases(qwerty)"	};
+	xkb_types     { include "complete"	};
+	xkb_compat    { include "complete"	};
+	xkb_symbols   { include "pc+us(altgr-intl)+inet(evdev)+group(ctrls_toggle)+level3(ralt_switch)+compose(ralt)+terminate(ctrl_alt_bksp)"	};
+	xkb_geometry  { include "pc(pc105)"	};
+};
+#+END_SRC
+
+In my case, the faulty configuration was the ~inet(evdev)~ part on ~symbols~ line, meaning in the ~xkb_symbols "evdev" {~ section of ~/usr/share/X11/xkb/symbols/inet~ file. I had to remove the ~FK13-FK22~ lines and add my own. For example, replacing the line:
+#+BEGIN_SRC
+key <FK13>   {      [ XF86Tools         ]       };
+#+END_SRC
+With:
+#+BEGIN_SRC
+key <FK13>   {      [ F13, F13, F13, F13   ]       };
+#+END_SRC
+The full diff with my changes is:
+#+BEGIN_SRC
+$ diff -u0 inet.brsav.2022.11.13 inet
+--- inet.brsav.2022.11.13	2022-02-08 18:13:55.000000000 +0100
++++ inet	2022-11-13 13:09:29.910184100 +0100
+@@ -115,5 +114,0 @@
+-    key <FK21>   {      [ XF86TouchpadToggle    ]       };
+-    key <FK22>   {      [ XF86TouchpadOn        ]       };
+-    key <FK23>   {      [ XF86TouchpadOff       ]       };
+-
+-    key <FK20>   {      [ XF86AudioMicMute      ]       };
+@@ -204,6 +199,10 @@
+-    key <FK13>   {      [ XF86Tools         ]       };
+-    key <FK14>   {      [ XF86Launch5       ]       };
+-    key <FK15>   {      [ XF86Launch6       ]       };
+-    key <FK16>   {      [ XF86Launch7       ]       };
+-    key <FK17>   {      [ XF86Launch8       ]       };
+-    key <FK18>   {      [ XF86Launch9       ]       };
++    key <FK13>   {      [ F13, F13, F13, F13   ]       };
++    key <FK14>   {      [ F14, F14, F14, F14   ]       };
++    key <FK15>   {      [ F15, F15, F15, F15   ]       };
++    key <FK16>   {      [ F16, F16, F16, F16   ]       };
++    key <FK17>   {      [ F17, F17, F17, F17   ]       };
++    key <FK18>   {      [ F18, F18, F18, F18   ]       };
++    key <FK19>   {      [ F19, F19, F19, F19   ]       };
++    key <FK20>   {      [ F20, F20, F20, F20   ]       };
++    key <FK21>   {      [ F21, F21, F21, F21   ]       };
++    key <FK22>   {      [ F22, F22, F22, F22   ]       };
+#+END_SRC
+
+*** Solution 2: Fix F-keys mapping with .Xmodmaprc
+If you prefer not to touch system-wide files, you can add in your *~/.Xmodmap*:
+#+BEGIN_SRC
+!!!!!!!!!!!!!! Logitech G910 keyboard
+! Note:
+! F11-F20 have synonyms L1-L10
+! F21-F35 have synonyms R1-R15
+! See: /usr/include/X11/keysymdef.h
+!
+! original F13, F14, etc... mapping on my system:
+! F13 = keycode 191 = XF86Tools NoSymbol XF86Tools
+! F14 = keycode 192 = XF86Launch5 NoSymbol XF86Launch5
+! F15 = keycode 193 = XF86Launch6 NoSymbol XF86Launch6
+! F16 = keycode 194 = XF86Launch7 NoSymbol XF86kLaunch7
+! F17 = keycode 195 = XF86Launch8 NoSymbol XF86Launch8
+! F18 = keycode 196 = XF86Launch9 NoSymbol XF86Launch9
+! F19 = keycode 197 = (nothing)
+! F20 = keycode 198 = XF86AudioMicMute NoSymbol XF86AudioMicMute
+! F21 = keycode 199 = XF86TouchpadToggle NoSymbol XF86TouchpadToggle
+! F22 = keycode 200 = XF86TouchpadOn NoSymbol XF86TouchpadOn
+
+! we map the Gkeys (G1-G9), to F13-F21,
+
+! G1
+keycode 191 = F13 F13 F13 F13 F13 F13
+! G2
+keycode 192 = F14 F14 F14 F14 F14 F14
+! G3
+keycode 193 = F15 F15 F15 F15 F15 F15
+! G4
+keycode 194 = F16 F16 F16 F16 F16 F16
+! G5
+keycode 195 = F17 F17 F17 F17 F17 F17
+! G6
+keycode 196 = F18 F18 F18 F18 F18 F18
+! G7
+keycode 197 = F19 F19 F19 F19 F19 F19
+! G8
+keycode 198 = F20 F20 F20 F20 F20 F20
+! G9
+keycode 199 = F21 F21 F21 F21 F21 F21
+#+END_SRC
+
+** User configuration
+*Note*: Configuration below will make the ~G-keys~ active only when user is logged-on, as any other key.
+
+We will assign the F-keys we defined in ~config.json~ to run any program (this includes graphical programs), or to send a string/command output to active window.
+
+Below are some examples (screenshots from ~Xubuntu 22.10~). We will define the following actions:
+- ~G1~: Activate the *Emacs* main window (whose title is always "*GNU Emacs*").
+- ~Shift-G1~: Launch *Gnome Terminal*.
+- ~G2~ (including with modifiers): Send ~strings~ or ~commands output~ to active window.
+- ~G5~: Assigned to ~Hyper~ modifier: ~G5+a~ will be ~Hyper-a~, as ~Control+a~ is ~Control-a~.
+- ~G6~: Will move the cursor to top-left corner.
+All settings below (except for ~G5~) are configurable in ~Settings/keyboard~, ~Application Shortcuts~ tab, or, for pasting text, via ~autokey~:
+*Xfce keyboard settings:*
+
+[[./img/g910-keyboard-settings.png]]
+
+*Autokey:*
+
+[[./img/autokey.png]]
+
+*** G1: Activate the *Emacs* main window
+In ~Application Shortcut~ section, click on ~Add~, then set command to ~wmctrl -F -a "GNU Emacs"​~, click ~OK~, then press ~G1~ when asked.
+
+*** Shift-G1: Launch *Gnome Terminal*
+In ~Application Shortcut~ section, click on ~Add~, then set command to ~gnome-terminal~, click ~OK~, then press ~Shift-G1~ when asked.
+
+*** G2: Send different strings to active window
+We can send static/dynamic strings to active window, using ~autokey~ (on Ubuntu 22.10, autokey is provided by ~autokey-gtk~ or ~autokey-qt~ packages).
+
+Note that you can use any combination of modifiers (for example Shift+Meta+G2).
+
+*Example 1*: Insert current date to active window with G2:
+[[./img/date.png]]
+
+*Example 2*: Insert Japanese "山" with Control-Shift-G2:
+[[./img/yama.png]]
+
+*Note*: The Example 2 looks pretty unstable, when using non US-ASCII strings.
+
+*Example 3*: Use clipboard to insert any UTF-8 string
+A workaround for Example 2 would be to use the clipboard, it looks much more stable. You may use any of:
+- With ~autokey~, create a new script, with the following command to add the string /こんばんは/ to clipboard with ~Super-G2~ shortcut:
+  #+BEGIN_SRC
+  clipboard.fill_clipboard("さよなら")
+  #+END_SRC
+  [[./img/sayonara.png]]
+
+- With keyboard manager, use any command which can alter clipboard. For example, to copy /今日は/ to clipboard with ~Control-G2~ shortcut:
+  #+BEGIN_SRC
+  bash -c 'echo "今日は" | xsel -bi'
+  #+END_SRC
+  [[./img/konnichiwa.png]]
+Of course, you will have to paste yourself the current clipboard (Control-v, Control-y, Control-Shift-v, depending on application).
+
+*** G5: Assign to /Hyper/ modifier
+In ~$HOME/.Xmodmap~, add the following lines:
+#+CAPTION: Add an Hyper modifier to G5
+#+BEGIN_SRC
+! G5 becomes Hyper_L
+keycode 195 = Hyper_L NoSymbol Hyper_L
+clear mod3
+add mod3 = Hyper_L
+#+END_SRC
+
+*** G6: Move mouse cursor to top-left corner
+In ~Application Shortcut~ section, click on ~Add~, then set command to ~xvkbd -text \\x0\\y0~ (or ~xdotool mousemove 0 0~), click ~OK~, then press ~G6~ when asked.
