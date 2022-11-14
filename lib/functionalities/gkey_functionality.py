@@ -1,7 +1,6 @@
 import ast
 import subprocess
-import inspect
-import sys
+import uinput
 from lib.data_mappers import config_reader, supported_configs
 from lib.misc import logger
 from lib.uinput_keyboard import keyboard
@@ -34,6 +33,11 @@ def execute_python(command: str, device):
             keyboard.writeout(output_string,config_reader.read()['keyboard_mapping'],device)
     except Exception as e:
         log.error(f"{type(e).__name__} when running python command '{command}'\nDetails: '{str(e)}'")
+
+
+def execute_uinput(uinput_key, device):
+    uinput_key = eval(f"uinput.{uinput_key}")
+    keyboard.execute_events([(uinput_key, 3)], device)
 
 
 def execute_change_profile(key):
@@ -101,7 +105,9 @@ def resolve_config(key):
     if command == 'python':
         log.info(f"{key} pressed, running: {do}")
         return lambda device: execute_python(do, device)
-
+    if command == 'uinput':
+        log.info(f"{key} pressed, mapped to: {do}")
+        return lambda device: execute_uinput(do, device)
     # only nothing key config remains
     log.info(f"{key} pressed, doing nothing!")
     return lambda _: None
