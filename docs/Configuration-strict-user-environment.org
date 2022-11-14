@@ -197,11 +197,11 @@ Below are some examples (screenshots from ~Xubuntu 22.10~). We will define the f
 All settings below (except for ~G5~) are configurable in ~Settings/keyboard~, ~Application Shortcuts~ tab, or, for pasting text, via ~autokey~:
 *Xfce keyboard settings:*
 
-[[./img/g910-keyboard-settings.png]]
+[[img/g910-keyboard-settings.png]]
 
 *Autokey:*
 
-[[./img/autokey.png]]
+[[img/autokey.png]]
 
 *** G1: Activate the *Emacs* main window
 In ~Application Shortcut~ section, click on ~Add~, then set command to ~wmctrl -F -a "GNU Emacs"​~, click ~OK~, then press ~G1~ when asked.
@@ -215,10 +215,10 @@ We can send static/dynamic strings to active window, using ~autokey~ (on Ubuntu 
 Note that you can use any combination of modifiers (for example Shift+Meta+G2).
 
 *Example 1*: Insert current date to active window with G2:
-[[./img/date.png]]
+[[img/date.png]]
 
 *Example 2*: Insert Japanese "山" with Control-Shift-G2:
-[[./img/yama.png]]
+[[img/yama.png]]
 
 *Note*: The Example 2 looks pretty unstable, when using non US-ASCII strings.
 
@@ -228,13 +228,13 @@ A workaround for Example 2 would be to use the clipboard, it looks much more sta
   #+BEGIN_SRC
   clipboard.fill_clipboard("さよなら")
   #+END_SRC
-  [[./img/sayonara.png]]
+  [[img/sayonara.png]]
 
 - With keyboard manager, use any command which can alter clipboard. For example, to copy /今日は/ to clipboard with ~Control-G2~ shortcut:
   #+BEGIN_SRC
   bash -c 'echo "今日は" | xsel -bi'
   #+END_SRC
-  [[./img/konnichiwa.png]]
+  [[img/konnichiwa.png]]
 Of course, you will have to paste yourself the current clipboard (Control-v, Control-y, Control-Shift-v, depending on application).
 
 *** G5: Assign to /Hyper/ modifier

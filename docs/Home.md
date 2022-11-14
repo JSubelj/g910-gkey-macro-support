@@ -14,7 +14,8 @@ You can find a detailed installation guide [here](https://github.com/JSubelj/g91
 If you have already installed a previous version of the driver and want to upgrade take a look [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Upgrading).
 
 ### Configuration
-Everything about the Configuration you will find [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Configuration).
+Everything about the configuration you will find [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Configuration).  
+For a more advanced configuration limiting the usage of global gkey config, where user set the actions in his/her own environment. See [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Configuration-strict-user-environment.md)
 
 ### Troubleshooting
 If you have problems installing or running the driver you can have a look [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Troubleshooting).
