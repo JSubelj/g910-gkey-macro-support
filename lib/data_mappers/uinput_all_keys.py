@@ -1,7 +1,7 @@
 import uinput
 
-uinput_all_keys = \
-    [uinput.KEY_RESERVED,
+uinput_all_keys = [
+    uinput.KEY_RESERVED,
     uinput.KEY_ESC,
     uinput.KEY_1,
     uinput.KEY_2,
@@ -426,6 +426,3 @@ uinput_all_keys = \
     uinput.KEY_MIN_INTERESTING,
     uinput.KEY_MAX
 ]
-
-
-
