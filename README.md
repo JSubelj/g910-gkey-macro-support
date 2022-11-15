@@ -63,6 +63,7 @@ The mapper supports five types of hotkeys (also described in [hotkey_types.txt](
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell)
  * `"python"` - Execute a snippet of Python code and print provided output (see ex. below)
+ * `"uinput"` - Direct mapping with uinput.KEY_XY
  * `"nothing"` - Do nothing (unbound key)
 
 To add a hotkey add to `config.json` the following code:
@@ -80,6 +81,9 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
  * `"python"` - A Python one-line script. If output is desired, the script should define a global variable named `output_string` and set it to the string to be output.
+ * `"uinput"` - A key defined by python3-uinput to emit (ex. KEY_F13 or KEY_KATAKANA)
+
+**Important: Commands and python code is executed as root**
 
 ### Profiles
 There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
@@ -88,7 +92,7 @@ If you use the profile feature you can also use the following parameter:
  * `username` - Username to send notifications with (required if notify is used)
  * `profiles` - Define a profile which is bound to the matching mkey
 
-The following example shows how to set slovenian layout and define the g1 key for profile m1 and m2 and shows how to run a app like firefox, chrome or similar. Please replace **\<username\>** with your username.
+The following example shows how to set slovenian layout and define the g1-5 keys for profile m1 and m2 and shows an example of every `hotkey_type`.
  ```
 {
     "notify": "True",
@@ -97,20 +101,44 @@ The following example shows how to set slovenian layout and define the g1 key fo
     "profiles": {
         "m1": {
             "g1": {
-                "hotkey_type": "run",
-                "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
+                "hotkey_type": "uinput",
+                "do": "KEY_F13"
             },
             "g2": {
+                "hotkey_type": "shortcut",
+                "do": "ctrl+c"
+            },
+            "g3": {
+                "hotkey_type": "typeout",
+                "do": "averylongemailadressyoudontwanttowriteoutyourself@gmail.com"
+            },
+            "g4": {
+                "hotkey_type": "run",
+                "do": "/path/script_run_by_root"
+            },
+            "g5": {
                 "hotkey_type": "python",
                 "do": "import datetime; global output_string; output_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')"
             }
         },
         "m2": {
             "g1": {
-                "hotkey_type": "run",
-                "do": "su <username> -c 'DISPLAY=:0 nohup chrome' & 2>&1 > /dev/null"
+                "hotkey_type": "uinput",
+                "do": "KEY_KATAKANA"
             },
             "g2": {
+                "hotkey_type": "shortcut",
+                "do": "ctrl+v"
+            },
+            "g3": {
+                "hotkey_type": "typeout",
+                "do": "ssh -p1234 -i ~/.ssh/id_rsa user@domain\n"
+            },
+            "g4": {
+                "hotkey_type": "run",
+                "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
+            },
+            "g5": {
                 "hotkey_type": "python",
                 "do": "import datetime; global output_string; output_string = datetime.datetime.now().isoformat()"
             }
@@ -118,6 +146,7 @@ The following example shows how to set slovenian layout and define the g1 key fo
     }
 }
  ```
+To run an app like firefox, chrome or similar you need to replace **\<username\>** with your username. The DISPLAY variable defines the screen to open the app on a multi-screen-setup.
 
 The code is tested on Logitech G910 keyboard with
 - OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3
