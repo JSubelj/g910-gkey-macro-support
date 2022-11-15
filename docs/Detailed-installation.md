@@ -38,6 +38,13 @@ To run the installer you need to make it executable `chmod +x installer.sh` and 
  
 If you just want to start the driver for this session skip the last step and use: `systemctl start g910-gkeys`. You can also stop the service with `systemctl stop g910-gkeys`.
 
+#### Why running the driver with a service manager is recommended
+These are the plus sides to running the driver with a service manager and I believe there are many more:
+- You don't have to worry about the number of instances spawned. There is only one, and you can't by mistake spawn more of them
+- Service manager takes care of correctly shutting down the program
+- The driver launches as soon as possible (if enabled with `systemctl enable g910-gkeys`), giving you functionality before even the graphical environment starts
+- You can diagnose the driver by running `systemctl status g910-gkeys` and looking at systemd logs with `journalctl -u g910-gkeys`
+
 ## First Steps
 The driver should work now and pressing the G1 key should typeout: *This is profile m1*  
 Be sure to enter a text window/field before hitting G1, since the type out use the focus of the cursor.
