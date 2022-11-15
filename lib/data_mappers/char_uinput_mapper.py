@@ -34,6 +34,8 @@ keys = {
         'esc': click(uinput.KEY_ESC),
         "enter": click(uinput.KEY_ENTER),
         "capslock": click(uinput.KEY_CAPSLOCK),
+        'end':click(uinput.KEY_END),
+        'insert':click(uinput.KEY_INSERT),
 
         # keypad
         "NUM0": click(uinput.KEY_KP0),
