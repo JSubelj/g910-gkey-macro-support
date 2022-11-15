@@ -1,5 +1,3 @@
-First read the [wiki](https://github.com/JSubelj/g910-gkey-macro-support/wiki)! This can also been seen on [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Contributing)
-
 There are many ways you can contribute to this project. But first of all I would like to thank you for using my software, trying to enhance it and giving me the energy to improve it.
 
 # Adding your code
