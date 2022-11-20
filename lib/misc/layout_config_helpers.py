@@ -7,6 +7,7 @@ import signal
 import sys
 import tty
 import termios
+import uinput  # used to eval keys
 import lib.data_mappers.char_uinput_mapper as uinput_mapper
 from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
 from lib.keyboard_initialization.usb_and_keyboard_device_init import USBDevice
@@ -143,10 +144,9 @@ class LayoutHelper:
                 for row in locale_map:
                     fd.write(f"{row}\n")
                 fd.write("}")
-
+            print(f"Your local char to uinput map was saved to {filename}.")
         except Exception as e:
             print(repr(e))
-        print(f"Your local char to uinput map was saved to {filename}.")
 
     @staticmethod
     def get_key_timeout_handler(signum, frame):
@@ -243,7 +243,7 @@ class LayoutHelper:
             char = self.get_emitted_char(uinput_mapper.wrap_shift(uinput_mapper.click((eval(key)))))
             if char != '':
                 locale_keys.append(f"\t'{char}': wrap_shift(click({key})),")
-        if wrapping > 1 and key not in skip_keys_altgr:  # wrap key with right alt
+        if wrapping > 1 and key not in self.skip_keys_altgr:  # wrap key with right alt
             char = self.get_emitted_char(uinput_mapper.wrap_altgr(uinput_mapper.click((eval(key)))))
             if char != '':
                 locale_keys.append(f"\t'{char}': wrap_altgr(click({key})),")

@@ -102,7 +102,7 @@ The driver is set up so that it will work without any data in config (using the 
 `g[1-9]` - G-keys macro definition, defined in root of config if no profiles are needed or as entity of the assigned profile. In each `g*` object you have two entities `hotkey_type` and `do` which set what to do when a gkey is pressed.
 
 ### Hotkey types
-There are currently 5 hotkey types: `nothing`, `shortcut`, `typeout`, `run` and `python` their functionality is as follows:
+There are currently 6 hotkey types: `nothing`, `shortcut`, `typeout`, `run` and `python`, `uinput` their functionality is as follows:
 
 #### Type out - `"typeout"`  
 Types out what is written in "do" key by key, as you would on a keyboard. New line is `\n` and tab is `\t`.
@@ -119,9 +119,13 @@ If you want to run something that interacts with gnome or your desktop service y
 #### Execute a snippet of Python code - `"python"`  
 A Python one-line script. If output is desired, the script should define a global variable named `output_string` and set it to the string to be output.
 
+#### Map a G-Key to a different key - `"uinput"`
+A key defined by python3-uinput to emit (ex. `KEY_F13` or `KEY_KATAKANA`)  
+A full list of all available keys you can find [here](https://github.com/tuomasjjrasanen/python-uinput/blob/master/src/ev.py).
+
 #### Do nothing - `"nothing"`
 
-Also, not all possible characters and control keys are supported (yeah no emojis!). Supported characters and control keys can be viewed in [supported_keys.txt](https://github.com/JSubelj/g910-gkey-macro-support/blob/master/docs/supported_keys.txt) (or if you like to dwell in python dicts (and more consistent): [char_uinput_mapper.py](https://github.com/JSubelj/g910-gkey-macro-support/blob/master/lib/data_mappers/char_uinput_mapper.py)).
+Also, not all possible characters and control keys are supported (yeah no emojis!). Supported characters and control keys can be viewed in [char_uinput_mapper.py](https://github.com/JSubelj/g910-gkey-macro-support/blob/master/lib/data_mappers/char_uinput_mapper.py).
 
 
 >It is also worth pointing out that Enter and Tab keys are pressed while typing out `\n` and `\t`, so you can use this when controlling a program like vim or terminal without using `shortcut`.
