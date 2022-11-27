@@ -1,4 +1,4 @@
-As of version 0.2.5 the default language set in keyboard_mapping is `en`. In earlier versions the default keyboard_mapping was set to `si` for slovene, because the author of this package is from [Slovenia](https://en.wikipedia.org/wiki/Slovenia). If you have an other keyboard layout configured in your system you need to change this in the configuration accordingly.
+As of version 0.2.5 the default language set in keyboard_mapping is `en`. In earlier versions the default keyboard_mapping was set to `si` for slovene, because the author of this package is from [Slovenia](https://en.wikipedia.org/wiki/Slovenia). If you have another keyboard layout configured in your system you need to change this in the configuration accordingly.
 
 ## Location
 Config created on setup is located in: `/etc/g910-gkeys/config.json`
@@ -12,71 +12,71 @@ The driver is set up so that it will work without any data in config (using the 
   "notify": "True",
   "username": "",
   "profiles": {
-    "m1": {
-      "g1": {
+    "MEMORY_1": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m1"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "nothing"
       }
     },
-    "m2": {
-      "g1": {
+    "MEMORY_2": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m2"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "nothing"
       }
     },
-    "m3": {
-      "g1": {
+    "MEMORY_3": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m3"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "nothing"
       }
     },
-    "mr": {
-      "g1": {
+    "MEMORY_RECORD": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile mr"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "nothing"
       }
     }
@@ -95,11 +95,11 @@ The driver is set up so that it will work without any data in config (using the 
 
 `username` - used to show notification (optional)  
 
-`profiles` - use up to 4 profiles, define `m[1-3|r]` as entity of profile  
+`profiles` - use up to 4 profiles, define `MEMORY_[1-3|RECORD]` as entity of profile  
 
-`m[1-3|r]` - switch profile (only if you have more then one profile in config.json)  
+`MEMORY_[1-3|RECORD]` - switch profile (only if you have more than one profile in config.json)  
 
-`g[1-9]` - G-keys macro definition, defined in root of config if no profiles are needed or as entity of the assigned profile. In each `g*` object you have two entities `hotkey_type` and `do` which set what to do when a gkey is pressed.
+`MACRO_[1-N]` - G-keys macro definition, defined in root of config if no profiles are needed or as entity of the assigned profile. In each `MACRO_[1-N]` object you have two entities `hotkey_type` and `do` which set what to do when a gkey is pressed.
 
 ### Hotkey types
 There are currently 6 hotkey types: `nothing`, `shortcut`, `typeout`, `run` and `python`, `uinput` their functionality is as follows:
@@ -134,29 +134,33 @@ Also, not all possible characters and control keys are supported (yeah no emojis
 ```
 {
     "keyboard_mapping": "si",
-    "g1": {
-        "hotkey_type": "shortcut",
-        "do": "ctrl+alt+t"
-    },
-    "g2": {
-        "hotkey_type": "typeout",
-        "do": "vim /tmp/test-gkey.txt\n"
-    },
-    "g3": {
-        "hotkey_type": "typeout",
-        "do": "iThis Is a Test \n \t also %$&$\"& characters."
-    },
-    "g4": {
-        "hotkey_type": "shortcut",
-        "do": "esc"
-    },
-    "g5": {
-        "hotkey_type": "typeout",
-        "do": ":wq\n"
-    },
-    "g6": {
-        "hotkey_type": "typeout",
-        "do": "cat /tmp/test-gkey.txt\n"
+    "profiles": {
+        "MEMORY_1": {
+            "MACRO_1": {
+                "hotkey_type": "shortcut",
+                "do": "ctrl+alt+t"
+            },
+            "MACRO_2": {
+                "hotkey_type": "typeout",
+                "do": "vim /tmp/test-gkey.txt\n"
+            },
+            "MACRO_3": {
+                "hotkey_type": "typeout",
+                "do": "iThis Is a Test \n \t also %$&$\"& characters."
+            },
+            "MACRO_4": {
+                "hotkey_type": "shortcut",
+                "do": "esc"
+            },
+            "MACRO_5": {
+                "hotkey_type": "typeout",
+                "do": ":wq\n"
+            },
+            "MACRO_6": {
+                "hotkey_type": "typeout",
+                "do": "cat /tmp/test-gkey.txt\n"
+            }
+        }
     }
 }   
 ```

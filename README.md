@@ -13,21 +13,24 @@ Note: From version 0.2.0 onwards the g810-led controller is no longer required b
 
 To use this project you need:
  - Python >=3.7
- - git
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
- - g810-led for color changing per profile, https://github.com/MatMoul/g810-led
  
 ## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
- - ~~install [g810-led-git](https://github.com/MatMoul/g810-led) for your distro (for Arch based distros: [aur](https://aur.archlinux.org/packages/g810-led-git/))~~
- - ~~disable Gkeys to Fkeys mapping: `g910-led -gkm 1` (probably will include that on program start)~~
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
- - clone repo: `git clone https://github.com/JSubelj/g910-gkey-macro-support.git`
- - move to cloned repo: `cd g910-gkey-macro-support`
+ - clone repo:  
+   ```
+   git clone https://github.com/JSubelj/g910-gkey-macro-support.git
+   ```  
+   or download & unzip:  
+   ```
+   wget https://github.com/JSubelj/g910-gkey-macro-support/archive/refs/heads/master.zip; unzip master.zip
+   ```
+ - move to driver directory: `cd g910-gkey-macro-support`
  - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
  - This will install the module, set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` or `/lib/systemd/system/g910-gkeys.service`, install a default configuration file in `/etc/g910-gkeys/config.json` if none exists, and finally enable and start this service.
 
-If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sudo ./installer.sh -n`. You will have to do it yourself in this case: `sudo systemctl enable --now g910-gkeys.service`.
+If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sudo ./installer.sh -n`. If you want to enable it later you can use: `sudo systemctl enable --now g910-gkeys.service`. To just start the service one till next reboot use: `sudo systemctl start g910-gkeys`
  
 ## Update
  If you update from version <= v0.2.4 you will need to make some manual changes to your `/etc/g910-gkeys/config.json` to make use of the new gkey profile feature.
@@ -92,53 +95,53 @@ If you use the profile feature you can also use the following parameter:
  * `username` - Username to send notifications with (required if notify is used)
  * `profiles` - Define a profile which is bound to the matching mkey
 
-The following example shows how to set slovenian layout and define the g1-5 keys for profile m1 and m2 and shows an example of every `hotkey_type`.
+The following example shows how to set slovenian layout and define the g1-5 macro keys for profile m1 and m2 and shows an example of every `hotkey_type`.
  ```
 {
     "notify": "True",
     "username": "<username>",
     "keyboard_mapping": "si",
     "profiles": {
-        "m1": {
-            "g1": {
+        "MEMORY_1": {
+            "MACRO_1": {
                 "hotkey_type": "uinput",
                 "do": "KEY_F13"
             },
-            "g2": {
+            "MACRO_2": {
                 "hotkey_type": "shortcut",
                 "do": "ctrl+c"
             },
-            "g3": {
+            "MACOR_3": {
                 "hotkey_type": "typeout",
                 "do": "averylongemailadressyoudontwanttowriteoutyourself@gmail.com"
             },
-            "g4": {
+            "MACRO_4": {
                 "hotkey_type": "run",
                 "do": "/path/script_run_by_root"
             },
-            "g5": {
+            "MACRO_5": {
                 "hotkey_type": "python",
                 "do": "import datetime; global output_string; output_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')"
             }
         },
-        "m2": {
-            "g1": {
+        "MEMORY_2": {
+            "MACRO_1": {
                 "hotkey_type": "uinput",
                 "do": "KEY_KATAKANA"
             },
-            "g2": {
+            "MACRO_2": {
                 "hotkey_type": "shortcut",
                 "do": "ctrl+v"
             },
-            "g3": {
+            "MACRO_3": {
                 "hotkey_type": "typeout",
                 "do": "ssh -p1234 -i ~/.ssh/id_rsa user@domain\n"
             },
-            "g4": {
+            "MACRO_4": {
                 "hotkey_type": "run",
                 "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
             },
-            "g5": {
+            "MACRO_5": {
                 "hotkey_type": "python",
                 "do": "import datetime; global output_string; output_string = datetime.datetime.now().isoformat()"
             }
