@@ -5,12 +5,10 @@ import os
 import signal
 import time
 import uinput
-from lib.functionalities import g910_led
-from lib.data_mappers import supported_configs
 from lib.data_mappers.config_reader import Config
-from lib.keyboard_initialization.usb_and_keyboard_device_init import USBDevice
-from lib.uinput_keyboard.keyboard import Keyboard
-from lib.misc import logger, paths, notify
+from lib.usb_device import USBDevice
+from lib.keyboard import Keyboard
+from lib.misc import logger, paths, notify, g910_led
 
 log = logger.logger(__name__)
 config = Config()
@@ -30,10 +28,11 @@ def config_changed_handler(sig, frame):
     config.update_config()
 
 
-def change_profile(profile: str):
+def change_profile(device: USBDevice, profile: str):
     log.debug(f"Change profile to {profile}.")
     config.profile = profile
-    g910_led.change_profile(profile)
+    if g910_led.change_profile(device, profile):
+        log.debug(f"Changed memory key led for {profile}.")
     notifier.send_notification(profile)
 
 
@@ -48,25 +47,29 @@ def main():
     signal.signal(signal.SIGQUIT, signal_handler)
     signal.signal(signal.SIGIO, config_changed_handler)
 
-    # sends signal if config is changed (or really anything in the config directory)
-    fd = os.open(paths.config_dir, os.O_RDONLY)
-    fcntl.fcntl(fd, fcntl.F_SETSIG, 0)
-    fcntl.fcntl(fd, fcntl.F_NOTIFY,
-                fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
-    # To see if config exists
-    config.read()
-
     device = keyboard = None
     if program_running:
         # usb keyboard
         device = USBDevice()
+        # check paths, create config directory and default config if not exists
+        paths.check_paths(config, device)
+        # sends signal if config is changed (or really anything in the config directory)
+        fd = os.open(paths.config_dir, os.O_RDONLY)
+        fcntl.fcntl(fd, fcntl.F_SETSIG, 0)
+        fcntl.fcntl(fd, fcntl.F_NOTIFY, fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
+        # To see if config exists
+        config.read()
+        # disable macro key default f key binding on interface 0
+        device.disable_fkey_to_gkey_binding()
         # uinput keyboard
         keyboard = Keyboard(config)
         keyboard.set_keyboard(device.keyboard)
+        # set first profile out of event interface
+        change_profile(device, list(keyboard.keyboard.events.memoryKeys.values())[0])
 
     while program_running:
         try:
-            # log.debug("reading control values")
+            # main loop
             control = device.read()
 
             if control:
@@ -80,7 +83,7 @@ def main():
                 elif b in device.keyboard.events.memoryKeys.keys():
                     profile = list(device.keyboard.events.memoryKeys.values())[
                         list(device.keyboard.events.memoryKeys.keys()).index(b)]
-                    change_profile(profile)
+                    change_profile(device, profile)
                 elif b in device.keyboard.events.mediaKeys.keys():
                     key = list(device.keyboard.events.mediaKeys.values())[
                         list(device.keyboard.events.mediaKeys.keys()).index(b)]

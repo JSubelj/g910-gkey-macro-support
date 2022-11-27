@@ -22,8 +22,6 @@ class USBDevice:
         if self.dev.is_kernel_driver_active(self.usb_if) is True:
             log.debug("detaching kernel driver")
             self.dev.detach_kernel_driver(self.usb_if)
-        if usb_if == 1:  # disable gkey mapping
-            self.disable_fkey_to_gkey_binding()
 
     def init_usb_dev(self):
         for keyboard in SUPPORTED_DEVICES:
@@ -36,7 +34,7 @@ class USBDevice:
         if self.dev is None:
             log.warn(f"No supported keyboard found.")
         else:
-            log.debug(f"Keyboard {self.keyboard.deviceName} found.")
+            log.info(f"Keyboard {self.keyboard.deviceName} found.")
 
         log.debug("usb dev: " + str(self.dev[self.keyboard.usbConfiguration][(self.usb_if, 0)]))
         self.endpoint = self.dev[self.keyboard.usbConfiguration][(self.usb_if, 0)][self.keyboard.usbEndpoint]

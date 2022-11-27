@@ -1,28 +1,31 @@
 import os
 import sys
 from lib.misc.helper import Helper
-from lib.data_mappers.config_reader import Config
 
 
-main_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
-if Helper.is_installed():
-    config_dir = "/etc/g910-gkeys"
-    config_path = config_dir + "/config.json"
-
+def check_paths(config, device):
     if not os.path.exists(config_dir):
         print("Creating directory: "+config_dir)
         os.makedirs(config_dir)
-        Config.create()
+    if not os.path.exists(config_path):
+        config.create(device.keyboard)  # create config with keyboard interface
 
+
+# set config path
+if Helper.is_installed():
+    config_dir = "/etc/g910-gkeys"
+    config_path = config_dir + "/config.json"
 else:
+    main_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
     config_dir = os.path.join(main_dir, "config")
     config_path = config_dir + "/config.json"
 
+# set log path
 if os.geteuid() != 0:
     logs_path = "g910-gkeys.log"
 else:
     logs_path = "/var/log/g910-gkeys.log"
-
+# rename log to keep log storage low
 try:
     size = os.path.getsize(logs_path)
     if size > 5000000:  # More then 5MB

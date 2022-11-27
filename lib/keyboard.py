@@ -7,8 +7,7 @@ from lib.data_mappers.config_reader import Config
 from lib.data_mappers.char_uinput_mapper import keys, reverse_keys
 from lib.data_mappers.uinput_all_keys import uinput_all_keys
 from lib.data_mappers.supported_devices import KeyboardInterface
-from lib.functionalities import g910_led
-from lib.misc import logger, notify
+from lib.misc import logger
 
 log = logger.logger(__name__)
 output_string = ''
@@ -22,12 +21,12 @@ class Keyboard:
     locale: str = 'en'
     config: Config
 
-    def __init__(self, config: Config = None):
+    def __init__(self, config: Config):
         self.config = config
         log.debug("gathering uinput keyboard")
         self.device = uinput.Device(uinput_all_keys)
         log.debug("got uinput keyboard: " + str(self.device))
-        self.locale = self.config.read()["keyboard_mapping"]
+        self.locale = self.config.read().get("keyboard_mapping", supported_configs.default_keyboard_mapping)
         log.debug(f"Set {self.locale} uinput mapping.")
         time.sleep(1)  # wait till keyboard is fully initialized
 

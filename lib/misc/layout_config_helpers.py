@@ -10,8 +10,8 @@ import termios
 import uinput  # used to eval keys
 import lib.data_mappers.char_uinput_mapper as uinput_mapper
 from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
-from lib.keyboard_initialization.usb_and_keyboard_device_init import USBDevice
-from lib.uinput_keyboard.keyboard import Keyboard, KeyInputTimeoutException
+from lib.usb_device import USBDevice
+from lib.keyboard import Keyboard, KeyInputTimeoutException
 from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
 
 

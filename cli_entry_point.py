@@ -19,7 +19,11 @@ def main():
                         action='store_true', default=False)
     args = parser.parse_args()
     if args.create_config:
-        Config.create()
+        from lib.usb_device import USBDevice
+        config = Config()
+        device = USBDevice()  # init usb device and keyboard interface
+        config.create(device.keyboard)  # create config with keyboard interface
+        device.__exit__()  # clean up usb connection
     elif args.version:
         print(PROJECT_INFO.NAME)
         print()

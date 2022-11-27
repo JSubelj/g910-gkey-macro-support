@@ -1,3 +1,4 @@
+import locale
 import json
 import os
 from json.decoder import JSONDecodeError
@@ -144,42 +145,48 @@ class Config:
         if self.config:
             return self.config
 
-        log.debug("Reading config from " + paths.config_path)
+        log.info("Reading config from " + paths.config_path)
         try:
             with open(paths.config_path, "r") as f:
                 self.config = self.validate_config(json.load(f))
-                log.debug("using config: " + str(self.config))
+                log.debug("using config: " + json.dumps(self.config, indent=4))
                 return self.config
 
         except JSONDecodeError as e:
             log.error(f"JSONDecodeError: {str(e)} in {paths.config_path}")
         except ConfigException as e:
             log.warning(str(e))
+        except FileNotFoundError:
+            # this should no longer occur since config is created at start of the service if not exists
+            log.error("No config found.")
         except Exception as e:
-            log.error(f"{type(e).__name__}: {str(e)}")
-            log.error(f"NO CONFIG FOUND! Create config.json in {paths.config_path}\n"
-                      f"To create default config run: g910-gkeys --create-config\n")
+            log.exception(e)
         g910_gkey_mapper.program_running = False
 
     def get_profile(self):
         return self.read().get('profiles', {}).get(self.profile, {})
 
     @staticmethod
-    def initialize_config():
-        # todo: create config by keyboard interface
+    def initialize_config(keyboard):
+        # detect current locale and set as keyboard mapping
+        user_lang, encoding = locale.getdefaultlocale()
+        user_lang = user_lang.split("_")[0]
+        # check for support and otherwise set to default
+        if user_lang not in supported_configs.keyboard_mappings:
+            log.warn(f"No support for {user_lang} keyboard layout. Using default (en).")
+            user_lang = "en"
         config = {
-            "__comment": "following hotkey types are supported: nothing, typeout, shortcut, run and python; "
-                         "only en, fr, de and si keyboard mappings are currently supported",
-            "keyboard_mapping": "en",
-            "profiles": {
-                "m1": {}, "m2": {}, "m3": {}, "mr": {}
-            }
+            "keyboard_mapping": user_lang,
+            "notify": "False",
+            "username": "",
+            "profiles": {}
         }
-        for mkey in range(1, 4):
-            config["profiles"]["m" + str(mkey)]["g1"] = {"hotkey_type": "typeout", "do": "Its WORKING!!!"}
+        for profile in keyboard.events.memoryKeys.values():
+            config["profiles"].update({profile: {}})
 
-            for i in range(2, 10):
-                config["profiles"]["m" + str(mkey)]["g" + str(i)] = {"hotkey_type": "nothing", "do": ""}
+            for macro_key in keyboard.events.macroKeys.values():
+                key = "KEY_F" + str(12+int(macro_key.split("_")[1]))
+                config["profiles"][profile][macro_key] = {"hotkey_type": "uinput", "do": key}
 
         return config
 
@@ -187,13 +194,14 @@ class Config:
     def exists():
         return os.path.exists(paths.config_path)
 
-    # Creates config at home
+    # Creates config
     @staticmethod
-    def create():
-        if Config.exists():
-            print("Backing up existing config to: " + paths.config_path + ".bak")
+    def create(keyboard):
+        if Config.exists():  # backup config if there is already one
+            log.info("Backing up existing config to: " + paths.config_path + ".bak")
             os.rename(paths.config_path, paths.config_path + ".bak")
 
+        config_json = Config.initialize_config(keyboard)
         with open(paths.config_path, "w") as f:
-            print("Writing config at: " + paths.config_path)
-            f.write(json.dumps(Config.initialize_config(), indent=4))
+            log.info("Creating default config: " + paths.config_path)
+            f.write(json.dumps(config_json, indent=4))
