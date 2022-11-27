@@ -2,10 +2,12 @@ import ast
 import time
 import uinput
 import subprocess
-from lib.data_mappers import config_reader, supported_configs
+from lib.data_mappers import supported_configs
+from lib.data_mappers.config_reader import Config
 from lib.data_mappers.char_uinput_mapper import keys, reverse_keys
 from lib.data_mappers.uinput_all_keys import uinput_all_keys
-from lib.functionalities import media_static_keys_functionality, g910_led
+from lib.data_mappers.supported_devices import KeyboardInterface
+from lib.functionalities import g910_led
 from lib.misc import logger, notify
 
 log = logger.logger(__name__)
@@ -16,13 +18,16 @@ class Keyboard:
     # todo: this wouldn't be needed, so the whole release function
     press_release_fifo = []
     device = None
+    keyboard: KeyboardInterface = None
     locale: str = 'en'
+    config: Config
 
-    def __init__(self):
-        log.debug("gathering uinput device")
+    def __init__(self, config: Config = None):
+        self.config = config
+        log.debug("gathering uinput keyboard")
         self.device = uinput.Device(uinput_all_keys)
-        log.debug("got uinput device: " + str(self.device))
-        self.locale = config_reader.read()["keyboard_mapping"]
+        log.debug("got uinput keyboard: " + str(self.device))
+        self.locale = self.config.read()["keyboard_mapping"]
         log.debug(f"Set {self.locale} uinput mapping.")
         time.sleep(1)  # wait till keyboard is fully initialized
 
@@ -32,12 +37,12 @@ class Keyboard:
     def set_locale(self, locale: str):
         self.locale = locale
 
-    def resolve_config(self, key):
-        config = config_reader.read()['profiles'].get(supported_configs.profile, "m1")
+    def set_keyboard(self, keyboard: KeyboardInterface):
+        self.keyboard = keyboard
 
-        if key in ["m1", "m2", "m3", "mr"]:
-            log.info(f"{key} pressed, change profile to {key}")
-            return lambda _: self.execute_change_profile(key)
+    def emit_keys(self, key):
+        # config = self.config.read()['profiles'].get(supported_configs.profile, "MEMORY_1")
+        config = self.config.get_profile()
 
         if key not in config:
             log.info(f"{key} pressed, unbound in config, doing nothing!")
@@ -76,14 +81,6 @@ class Keyboard:
             # only nothing key config remains
             log.info(f"{key} pressed, doing nothing!")
 
-    def emit_keys(self, key):
-        if key in supported_configs.valid_keys:
-            self.resolve_config(key)
-        elif key == "release":
-            self.release()
-        else:
-            media_static_keys_functionality.resolve_key(self.device, key)
-
     def execute_events(self, events):
         for event in events:
             if event[1] == 3:
@@ -120,7 +117,7 @@ class Keyboard:
 
         if len(uinput_groups) == 1:
             # todo: this could be one line, why is emit used here?
-            # self.device.emit_combo(uinput_groups[0])
+            # self.keyboard.emit_combo(uinput_groups[0])
             keys_to_fifo = []
             for uinput_key in uinput_groups[0]:
                 keys_to_fifo.insert(0, uinput_key)
@@ -145,12 +142,6 @@ class Keyboard:
                 self.execute_writing(output_string)
         except Exception as e:
             log.error(f"{type(e).__name__} when running python command '{command}'\nDetails: '{str(e)}'")
-
-    @staticmethod
-    def execute_change_profile(key):
-        supported_configs.profile = key
-        g910_led.change_profile(key)
-        notify.send_notification(key)
 
     def release(self):
         if not len(self.press_release_fifo):

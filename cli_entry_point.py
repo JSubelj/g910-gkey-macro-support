@@ -3,6 +3,7 @@
 
 import argparse
 from lib import g910_gkey_mapper, PROJECT_INFO
+from lib.data_mappers.config_reader import Config
 from lib.misc.layout_config_helpers import LayoutHelper
 
 
@@ -18,9 +19,7 @@ def main():
                         action='store_true', default=False)
     args = parser.parse_args()
     if args.create_config:
-        from lib.misc import create_config
-
-        create_config.create()
+        Config.create()
     elif args.version:
         print(PROJECT_INFO.NAME)
         print()
