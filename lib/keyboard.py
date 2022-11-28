@@ -3,7 +3,6 @@ import time
 import uinput
 import subprocess
 from lib.data_mappers import supported_configs
-from lib.data_mappers.config_reader import Config
 from lib.data_mappers.char_uinput_mapper import keys, reverse_keys
 from lib.data_mappers.uinput_all_keys import uinput_all_keys
 from lib.data_mappers.supported_devices import KeyboardInterface
@@ -19,9 +18,9 @@ class Keyboard:
     device = None
     keyboard: KeyboardInterface = None
     locale: str = 'en'
-    config: Config
+    config = None
 
-    def __init__(self, config: Config):
+    def __init__(self, config):
         self.config = config
         log.debug("gathering uinput keyboard")
         self.device = uinput.Device(uinput_all_keys)

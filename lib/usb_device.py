@@ -1,7 +1,7 @@
 import time
 import usb
+import signal
 from lib.misc import logger
-from lib import g910_gkey_mapper
 from lib.data_mappers.supported_devices import KeyboardInterface, SUPPORTED_DEVICES
 
 log = logger.logger(__name__)
@@ -32,7 +32,7 @@ class USBDevice:
             time.sleep(0.1)
 
         if self.dev is None:
-            log.warn(f"No supported keyboard found.")
+            log.warning(f"No supported keyboard found.")
         else:
             log.info(f"Keyboard {self.keyboard.deviceName} found.")
 
@@ -56,13 +56,6 @@ class USBDevice:
                     # self.dev.ctrl_transfer(0x21, 0x09, 0x0212, 1, packet, self.usb_timeout)
                     pass
 
-                # this doesn't work :/
-                #time.sleep(0.5)
-                #buffer = bytearray()
-                #response = self.dev.ctrl_transfer(0xa1, 0x01, 0x0212, 1, buffer, self.usb_timeout)
-                #log.debug(f"{response} {str(buffer)}")
-
-                # im pretty sure this sequence of packets can be received with ctrl_transfer
                 response_count = len(self.keyboard.events.disableGKeysResponse)
                 while response_count:
                     try:
@@ -73,12 +66,14 @@ class USBDevice:
                             if bytes(confirmation_bytes) == packet:
                                 log.info("G-key-mode - Disabled successfully")
                         else:
-                            log.warn(f"Warning - G-key-mode - Unknown response: {str(confirmation_bytes)}")
+                            log.warning(f"Warning - G-key-mode - Unknown response: {str(confirmation_bytes)}")
+                            return False
                         response_count = response_count - 1
                     except usb.core.USBError as e:
                         log.debug(str(e))
 
                 time.sleep(0.2)
+        return True
 
     def read(self):
         try:
@@ -95,7 +90,7 @@ class USBDevice:
                 self.init_usb_dev()
             else:
                 log.exception(e)
-                g910_gkey_mapper.program_running = False
+                signal.raise_signal(signal.SIGQUIT)  # raise sig quit to exit
 
     def __exit__(self):
         try:

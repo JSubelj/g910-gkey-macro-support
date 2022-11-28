@@ -16,7 +16,7 @@ if Helper.is_installed():
     config_dir = "/etc/g910-gkeys"
     config_path = config_dir + "/config.json"
 else:
-    main_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
+    main_dir = Helper.get_base_path()
     config_dir = os.path.join(main_dir, "config")
     config_path = config_dir + "/config.json"
 

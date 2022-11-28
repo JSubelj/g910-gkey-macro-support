@@ -1,10 +1,11 @@
 import locale
 import json
 import os
+import signal
 from json.decoder import JSONDecodeError
 from lib.misc import paths, logger
+from lib.misc.helper import Helper
 from lib.data_mappers import supported_configs, char_uinput_mapper
-from lib import g910_gkey_mapper
 
 log = logger.logger(__name__)
 
@@ -161,7 +162,7 @@ class Config:
             log.error("No config found.")
         except Exception as e:
             log.exception(e)
-        g910_gkey_mapper.program_running = False
+        signal.raise_signal(signal.SIGQUIT)
 
     def get_profile(self):
         return self.read().get('profiles', {}).get(self.profile, {})
@@ -169,8 +170,7 @@ class Config:
     @staticmethod
     def initialize_config(keyboard):
         # detect current locale and set as keyboard mapping
-        user_lang, encoding = locale.getdefaultlocale()
-        user_lang = user_lang.split("_")[0]
+        user_lang = Helper.get_locale()
         # check for support and otherwise set to default
         if user_lang not in supported_configs.keyboard_mappings:
             log.warn(f"No support for {user_lang} keyboard layout. Using default (en).")

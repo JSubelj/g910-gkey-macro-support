@@ -13,6 +13,8 @@ from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
 from lib.usb_device import USBDevice
 from lib.keyboard import Keyboard, KeyInputTimeoutException
 from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
+from lib.misc.helper import Helper
+from lib.data_mappers.config_reader import Config
 
 
 class LayoutHelper:
@@ -133,10 +135,10 @@ class LayoutHelper:
         """
         Create localized uinput key map
         """
-        user_lang, encoding = locale.getdefaultlocale()
-        user_lang = user_lang.split("_")[0]
+        user_lang = Helper.get_locale()
+        config = Config()
         try:
-            self.keyboard = Keyboard()
+            self.keyboard = Keyboard(config)
             locale_map = self.get_keys()
             filename = f"char_uinput_mapping_{user_lang}"
             with open(filename, "w") as fd:
@@ -256,9 +258,9 @@ class LayoutHelper:
         A virtual keyboard is initialized and all keys from the map will be emitted.
         After each key is emitted the written char gets checked against the key map.
         """
-        user_lang, encoding = locale.getdefaultlocale()
-        user_lang = user_lang.split("_")[0]
-        self.keyboard = Keyboard()
+        user_lang = Helper.get_locale()
+        config = Config()
+        self.keyboard = Keyboard(config)
         events = locale_key_mapping[user_lang]
         error = False
         for key, event in events.items():

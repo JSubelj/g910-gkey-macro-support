@@ -298,6 +298,7 @@ class KeyboardInterface:
     disableGKeysUseWrite: bool = field(default=True)
 
 
+@dataclass(frozen=True)
 class LogitechG910OrionSpectrum(KeyboardInterface):
 
     deviceName = "Logitech G910 Orion Spectrum"

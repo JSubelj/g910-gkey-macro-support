@@ -10,10 +10,9 @@
     exit 1
 
 # get system unit directory
-DEST=$(pkg-config systemd --variable=systemdsystemunitdir)
-CONFDIR=/etc/g910-gkeys
+DESTINATION=$(pkg-config systemd --variable=systemdsystemunitdir)
 FILES=files.txt
-STARTSERVICE=y
+START_SERVICE=y
 SUPPORTED_KEYBOARDS=(de en fr si)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
 
@@ -23,7 +22,7 @@ usage() {
 
 while getopts nl: opt ; do
     case "$opt" in
-        n) STARTSERVICE=n
+        n) START_SERVICE=n
            ;;
         *) usage
            exit 1
@@ -31,8 +30,11 @@ while getopts nl: opt ; do
     esac
 done
 
-[[ ! " ${SUPPORTED_KEYBOARDS[@]} " =~ " ${KEYBOARD} " ]] &&
+[[ ! " ${SUPPORTED_KEYBOARDS[*]} " =~ ${KEYBOARD} ]] &&
 	echo "Your system default language is $KEYBOARD, but it's not supported." &&
+	echo "You can try to run: sudo python3 cli_entry_point.py -l create" &&
+	echo "You need to add the created mapping to lib.data_mappers.char_uinput_mapper and" &&
+	echo "add your locale to lib.data_mappers.supported_configs, before installing again." &&
 	echo "Please open a feature request on github with your language:" &&
 	echo "https://github.com/JSubelj/g910-gkey-macro-support/issues/new/choose" &&
 	exit 1
@@ -40,13 +42,13 @@ done
 python3 setup.py install --record "$FILES"
 
 # systemd service file
-echo "$DEST"/g910-gkeys.service >> "$FILES"
-cp g910-gkeys.service "$DEST"/g910-gkeys.service
+echo "$DESTINATION"/g910-gkeys.service >> "$FILES"
+cp g910-gkeys.service "$DESTINATION"/g910-gkeys.service
 
 systemctl daemon-reload
 
 # enable and start service if necessary
-if [[ $STARTSERVICE = y ]]; then
+if [[ $START_SERVICE = y ]]; then
     systemctl enable --now g910-gkeys.service
 else
     echo "g910-gkeys service was not started."
