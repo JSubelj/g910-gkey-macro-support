@@ -16,7 +16,7 @@ class Logger:
     }
 
     def __init__(self, log_level: int = logging.DEBUG):
-        from lib.data_mappers.config import Config
+        from lib.misc.config import Config
         config = Config()
         log_level = config.load().get('log_level', 'INFO')
         self.log_level = self.log_level_map[log_level]

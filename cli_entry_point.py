@@ -3,7 +3,7 @@
 
 import argparse
 from lib import g910_gkey_mapper, PROJECT_INFO
-from lib.data_mappers.config import Config
+from lib.misc.config import Config
 
 
 def main():

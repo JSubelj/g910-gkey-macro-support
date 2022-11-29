@@ -1,6 +1,6 @@
 import subprocess
 import os
-from lib.data_mappers.config import Config
+from lib.misc.config import Config
 from lib.misc.logger import Logger
 
 
