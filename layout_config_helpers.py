@@ -2,7 +2,6 @@
     This file contains functions that can help you get the right config for your layout.
     Run g910-gkeys -l help to show all commands
 """
-import locale
 import signal
 import sys
 import tty
@@ -277,8 +276,10 @@ class LayoutHelper:
 
         if error:
             print("Error in key map: Please correct char_uinput_mapper.py")
+            return False
         else:
             print(f"'{user_lang}' Key map tested successfully.")
+            return True
 
     def __exit__(self):
         """
@@ -292,3 +293,35 @@ class LayoutHelper:
             self.keyboard.__exit__()
         except AttributeError:
             pass  # pass if no uinput device was initialized
+
+
+if __name__ == "__main__":
+    import argparse
+    from lib import PROJECT_INFO
+
+    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
+    parser.add_argument("--read0", help="Read the raw bytes from interface 0 (default keys)",
+                        action='store_true', default=False)
+    parser.add_argument("--read1", help="Read the raw bytes from interface 1 (macro- and media-keys)",
+                        action='store_true', default=False)
+    parser.add_argument("-c", "--create", help="Create a keyboard mapping for your locale keyboard",
+                        action='store_true', default=False)
+    parser.add_argument("-t", "--test", help="Test the keyboard mapping set in config.json",
+                        action='store_true', default=False)
+    parser.add_argument("-u", "--uinput", help="Get uinput key from key press",
+                        action='store_true', default=False)
+    parser.add_argument("-v", "--version", help="Displays version of the driver",
+                        action='version', version='%(prog)s ' + PROJECT_INFO.VERSION)
+    args = parser.parse_args()
+
+    command = "help"
+    if args.read0:
+        command = "read0"
+    elif args.read1:
+        command = "read1"
+    elif args.create:
+        command = "create"
+    elif args.test:
+        command = "test"
+
+    LayoutHelper(command)

@@ -6,13 +6,13 @@ from lib.data_mappers import supported_configs
 from lib.data_mappers.char_uinput_mapper import keys, reverse_keys
 from lib.data_mappers.uinput_all_keys import uinput_all_keys
 from lib.data_mappers.supported_devices import KeyboardInterface
-from lib.misc import logger
+from lib.misc.logger import Logger
 
-log = logger.logger(__name__)
 output_string = ''
 
 
 class Keyboard:
+    log = None
     # todo: this wouldn't be needed, so the whole release function
     press_release_fifo = []
     device = None
@@ -21,12 +21,13 @@ class Keyboard:
     config = None
 
     def __init__(self, config):
+        self.log = Logger().logger(__name__)
         self.config = config
-        log.debug("gathering uinput keyboard")
+        self.log.debug("gathering uinput keyboard")
         self.device = uinput.Device(uinput_all_keys)
-        log.debug("got uinput keyboard: " + str(self.device))
+        self.log.debug("got uinput keyboard: " + str(self.device))
         self.locale = self.config.read().get("keyboard_mapping", supported_configs.default_keyboard_mapping)
-        log.debug(f"Set {self.locale} uinput mapping.")
+        self.log.debug(f"Set {self.locale} uinput mapping.")
         time.sleep(1)  # wait till keyboard is fully initialized
 
     def __enter__(self):
@@ -43,14 +44,14 @@ class Keyboard:
         config = self.config.get_profile()
 
         if key not in config:
-            log.info(f"{key} pressed, unbound in config, doing nothing!")
+            self.log.info(f"{key} pressed, unbound in config, doing nothing!")
             return lambda _: None
 
         key_config: dict = config[key]
 
         do = key_config.get('do', supported_configs.default_hotkey_do)
         if not do:
-            log.info(f"{key} pressed, but do is empty or not set, doing nothing!")
+            self.log.info(f"{key} pressed, but do is empty or not set, doing nothing!")
             return lambda _: None
 
         command = key_config.get("hotkey_type", supported_configs.default_hotkey_type)
@@ -61,23 +62,23 @@ class Keyboard:
             )
 
         if command == 'typeout':
-            log.info(f"{key} pressed, typing out: {repr(do)}")
+            self.log.info(f"{key} pressed, typing out: {repr(do)}")
             self.execute_writing(do)
         elif command == 'shortcut':
-            log.info(f"{key} pressed, pressing: {do}")
+            self.log.info(f"{key} pressed, pressing: {do}")
             self.execute_hotkey(do)
         elif command == 'run':
-            log.info(f"{key} pressed, running: {do}")
+            self.log.info(f"{key} pressed, running: {do}")
             self.execute_command(do)
         elif command == 'python':
-            log.info(f"{key} pressed, running: {do}")
+            self.log.info(f"{key} pressed, running: {do}")
             self.execute_python(do)
         elif command == 'uinput':
-            log.info(f"{key} pressed, mapped to: {do}")
+            self.log.info(f"{key} pressed, mapped to: {do}")
             self.execute_events([(eval(f"uinput.{do}"), 3)])
         else:
             # only nothing key config remains
-            log.info(f"{key} pressed, doing nothing!")
+            self.log.info(f"{key} pressed, doing nothing!")
 
     def execute_events(self, events):
         for event in events:
@@ -139,7 +140,7 @@ class Keyboard:
             if output_string:
                 self.execute_writing(output_string)
         except Exception as e:
-            log.error(f"{type(e).__name__} when running python command '{command}'\nDetails: '{str(e)}'")
+            self.log.error(f"{type(e).__name__} when running python command '{command}'\nDetails: '{str(e)}'")
 
     def release(self):
         if not len(self.press_release_fifo):
@@ -150,17 +151,17 @@ class Keyboard:
             self.device.emit(key, 0)
             to_log += " " + reverse_keys[key] + ","
 
-        log.info("Released keys:" + to_log[:-1] + " Shortcuts to release: " + str(
+        self.log.info("Released keys:" + to_log[:-1] + " Shortcuts to release: " + str(
             len(self.press_release_fifo)) + " (Should always be 0)")
 
     def __exit__(self):
         try:
             self.device.__exit__()
-            log.info("Removed uinput device")
+            self.log.info("Removed uinput device")
         except UnboundLocalError:
             pass
         except Exception as e:
-            log.error("Could not remove uinput device: " + str(e))
+            self.log.error("Could not remove uinput device: " + str(e))
 
 
 class KeyInputTimeoutException(Exception):

@@ -3,20 +3,17 @@
 
 import argparse
 from lib import g910_gkey_mapper, PROJECT_INFO
-from lib.data_mappers.config_reader import Config
-from lib.misc.layout_config_helpers import LayoutHelper
+from lib.data_mappers.config import Config
 
 
 def main():
     parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
     parser.add_argument("--create-config", help="Creates config in /etc/g910-gkeys",
                         action='store_true', default=False)
-    parser.add_argument("-c", "--set-config", help="Set the config file to use",
+    parser.add_argument("-s", "--set-config", help="Set the config file to use",
                         default='/etc/g910-gkeys/config.json', dest="config_file")
-    parser.add_argument("-l", "--layout-helper", help="Run layout helper tools.",
-                        dest="layout_helper")
     parser.add_argument("-v", "--version", help="Displays the information about the driver",
-                        action='store_true', default=False)
+                        action='version', version=f"%(prog)s {PROJECT_INFO.VERSION} by {PROJECT_INFO.AUTHOR}")
     args = parser.parse_args()
     if args.create_config:
         from lib.usb_device import USBDevice
@@ -24,20 +21,9 @@ def main():
         device = USBDevice()  # init usb device and keyboard interface
         config.create(device.keyboard)  # create config with keyboard interface
         device.__exit__()  # clean up usb connection
-    elif args.version:
-        print(PROJECT_INFO.NAME)
-        print()
-        print(PROJECT_INFO.DESCRIPTION)
-        print()
-        print("Created by", PROJECT_INFO.AUTHOR)
-        print("Version", PROJECT_INFO.VERSION)
     elif args.config_file != "/etc/g910-gkeys/config.json":
-        from lib.misc import paths
-
-        paths.config_path = args.config_file
+        Config.config_path = args.config_file
         g910_gkey_mapper.main()
-    elif args.layout_helper:
-        LayoutHelper(args.layout_helper)
     else:
         g910_gkey_mapper.main()
 

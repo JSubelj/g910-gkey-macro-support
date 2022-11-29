@@ -1,11 +1,10 @@
 import os
-import lib.misc.paths as paths
 from lib.data_mappers import supported_configs
 from lib.data_mappers.config_reader import ConfigException, Config
 from lib.misc.helper import Helper
 from lib.usb_device import USBDevice
 
-config = None
+config: Config
 
 config_key_action = {
     "hotkey_type": "shortcut",
@@ -50,9 +49,9 @@ class TestConfig:
         """
         Delete config for next test
         """
-        if os.path.exists(paths.config_path):
-            os.remove(paths.config_path)
-        assert os.path.exists(paths.config_path) is False
+        if os.path.exists(config.config_path):
+            os.remove(config.config_path)
+        assert os.path.exists(config.config_path) is False
 
     def test_config_create(self):
         """
@@ -62,7 +61,7 @@ class TestConfig:
         # usb keyboard
         device = USBDevice()
         config.create(device.keyboard)
-        assert config is not None and os.path.exists(paths.config_path)
+        assert config is not None and os.path.exists(config.config_path)
 
     def test_config_read(self):
         """
@@ -105,7 +104,7 @@ class TestConfig:
         success = False
         try:
             config.validate_config(invalid_config_dict)
-        except ConfigException as e:
+        except ConfigException:
             success = True
         assert success
 

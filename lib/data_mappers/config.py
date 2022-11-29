@@ -1,13 +1,10 @@
-import locale
 import json
 import os
 import signal
 from json.decoder import JSONDecodeError
-from lib.misc import paths, logger
 from lib.misc.helper import Helper
 from lib.data_mappers import supported_configs, char_uinput_mapper
-
-log = logger.logger(__name__)
+from lib.misc.logger import Logger
 
 
 class ConfigException(Exception):
@@ -20,8 +17,27 @@ class Config:
 
     profile: str = None
 
+    config_dir: str
+
+    config_path: str
+
+    logs_path: str
+
     def __init__(self):
         self.profile = supported_configs.default_profile
+        # set config path
+        if Helper.is_installed():
+            self.config_dir = "/etc/g910-gkeys"
+            self.config_path = self.config_dir + "/config.json"
+        else:
+            main_dir = Helper.get_base_path()
+            self.config_dir = os.path.join(main_dir, "config")
+            self.config_path = self.config_dir + "/config.json"
+        # set log path
+        if os.geteuid() != 0:
+            self.logs_path = "g910-gkeys.log"
+        else:
+            self.logs_path = "/var/log/g910-gkeys.log"
 
     @staticmethod
     def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
@@ -143,18 +159,17 @@ class Config:
         self.config = self.read()
 
     def read(self):
+        log = Logger().logger(__name__)
         if self.config:
             return self.config
 
-        log.info("Reading config from " + paths.config_path)
+        log.info("Reading config from " + self.config_path)
         try:
-            with open(paths.config_path, "r") as f:
+            with open(self.config_path, "r") as f:
                 self.config = self.validate_config(json.load(f))
-                log.debug("using config: " + json.dumps(self.config, indent=4))
                 return self.config
-
         except JSONDecodeError as e:
-            log.error(f"JSONDecodeError: {str(e)} in {paths.config_path}")
+            log.error(f"JSONDecodeError: {str(e)} in {self.config_path}")
         except ConfigException as e:
             log.warning(str(e))
         except FileNotFoundError:
@@ -164,16 +179,28 @@ class Config:
             log.exception(e)
         signal.raise_signal(signal.SIGQUIT)
 
+    def load(self):
+        with open(self.config_path, "r") as f:
+            return json.load(f)
+
     def get_profile(self):
         return self.read().get('profiles', {}).get(self.profile, {})
 
-    @staticmethod
-    def initialize_config(keyboard):
+    def exists(self):
+        return os.path.exists(self.config_path)
+
+    # Creates config
+    def create(self, keyboard):
+        log = Logger().logger(__name__)
+        if self.exists():  # backup config if there is already one
+            log.info("Backing up existing config to: " + self.config_path + ".bak")
+            os.rename(self.config_path, self.config_path + ".bak")
+
         # detect current locale and set as keyboard mapping
         user_lang = Helper.get_locale()
         # check for support and otherwise set to default
         if user_lang not in supported_configs.keyboard_mappings:
-            log.warn(f"No support for {user_lang} keyboard layout. Using default (en).")
+            log.warning(f"No support for {user_lang} keyboard layout. Using default (en).")
             user_lang = "en"
         config = {
             "keyboard_mapping": user_lang,
@@ -185,23 +212,16 @@ class Config:
             config["profiles"].update({profile: {}})
 
             for macro_key in keyboard.events.macroKeys.values():
-                key = "KEY_F" + str(12+int(macro_key.split("_")[1]))
+                key = "KEY_F" + str(12 + int(macro_key.split("_")[1]))
                 config["profiles"][profile][macro_key] = {"hotkey_type": "uinput", "do": key}
 
-        return config
+        with open(self.config_path, "w") as f:
+            log.info("Creating default config: " + self.config_path)
+            f.write(json.dumps(config, indent=4))
 
-    @staticmethod
-    def exists():
-        return os.path.exists(paths.config_path)
-
-    # Creates config
-    @staticmethod
-    def create(keyboard):
-        if Config.exists():  # backup config if there is already one
-            log.info("Backing up existing config to: " + paths.config_path + ".bak")
-            os.rename(paths.config_path, paths.config_path + ".bak")
-
-        config_json = Config.initialize_config(keyboard)
-        with open(paths.config_path, "w") as f:
-            log.info("Creating default config: " + paths.config_path)
-            f.write(json.dumps(config_json, indent=4))
+    def check_paths(self, config, device):
+        if not os.path.exists(self.config_dir):
+            print("Creating directory: "+self.config_dir)
+            os.makedirs(self.config_dir)
+        if not os.path.exists(self.config_path):
+            config.create(device.keyboard)  # create config with keyboard interface
