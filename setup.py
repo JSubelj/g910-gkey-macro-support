@@ -38,8 +38,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.
-about = {}
-about['__version__'] = VERSION
+about = {'__version__': VERSION}
 
 # Where the magic happens:
 setup(
@@ -52,7 +51,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('layout_config_helpers',)),
+    packages=find_packages(),
     # If your package is a single module, use this instead of 'packages':
     py_modules=['cli_entry_point'],
 
@@ -60,7 +59,7 @@ setup(
         'console_scripts': ['g910-gkeys=cli_entry_point:main'],
     },
     install_requires=REQUIRED,
-    #extras_require=EXTRAS,
+    # extras_require=EXTRAS,
     include_package_data=True,
     license='GPL3',
     classifiers=[

@@ -43,7 +43,7 @@ python3 setup.py install --record "$FILES"
 
 # systemd service file
 echo "$DESTINATION"/g910-gkeys.service >> "$FILES"
-cp g910-gkeys.service "$DESTINATION"/g910-gkeys.service
+cp etc/g910-gkeys.service "$DESTINATION"/g910-gkeys.service
 
 systemctl daemon-reload
 

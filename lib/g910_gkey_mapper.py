@@ -4,6 +4,7 @@ import fcntl
 import os
 import signal
 import time
+import uinput
 from lib.misc.config import Config
 from lib.usb_device import USBDevice
 from lib.keyboard import Keyboard

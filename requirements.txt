@@ -1,3 +1,3 @@
 python-uinput==0.11.2
 pyusb==1.0.2
-setuptools~=60.2.0
+setuptools>=60.2.0
