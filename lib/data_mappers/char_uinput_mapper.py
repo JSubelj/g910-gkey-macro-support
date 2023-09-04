@@ -583,7 +583,10 @@ keys = {
         ";": wrap_shift(click(uinput.KEY_COMMA)),
         '.': click(uinput.KEY_DOT),
         ":": wrap_shift(click(uinput.KEY_DOT)),
-        '€': wrap_altgr(click(uinput.KEY_E))
+        '€': wrap_altgr(click(uinput.KEY_E)),
+
+        "\n": click(uinput.KEY_ENTER),
+        "\t": click(uinput.KEY_TAB)
     }
 }
 
