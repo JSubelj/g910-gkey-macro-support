@@ -27,5 +27,4 @@ Information about how to remove driver from you system are [here](https://github
 If you like to contribute to this project please start [here](https://github.com/JSubelj/g910-gkey-macro-support/wiki/Contributing)
 
 The code is tested on Logitech G910 keyboard with
-- OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3
-- OS: Ubuntu 20.04.5 LTS, Linux 5.4.0-131-generic, GNOME: 3.36.8
+- OS: Ubuntu 20.04.6 LTS, Linux 5.4.0-159-generic, GNOME: 3.36.9

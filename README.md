@@ -1,13 +1,11 @@
-# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.2.5)
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.3.0)
 
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
 in [g910-gkey-uinput](https://github.com/CReimer/g910-gkey-uinput) project. I expanded the code, so that it is more 
-user friendly to add functionality to GKeys.
+user-friendly to add functionality to GKeys.
 
 Everything is described in great depth (and actually much better) on [WIKI](https://github.com/JSubelj/g910-gkey-macro-support/wiki).
-
-Note: From version 0.2.0 onwards the g810-led controller is no longer required because Gkey to Fkey mapping is disabled inside the driver.
 
 ## Requirements
 
@@ -16,6 +14,9 @@ To use this project you need:
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  - pip requirements are stored in requirements.txt
  
+#### Note: 
+From version 0.2.0 onwards the g810-led controller is no longer required because G-key to F-key mapping is disabled inside the driver.
+
 ## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
  - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
  - clone repo:  
@@ -37,7 +38,11 @@ If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sud
  You don't need to do anything if you don't want to use the profile feature your old config will be loaded as default profile m1.
 
 ## Uninstalling
-Run the uninstalling script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. If you prefer to do it manually, these are the commands :
+### By script (recommended)
+Run the uninstalling script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. 
+
+### Manual uninstall
+If you prefer to do it manually, these are the commands :
 
  1. Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
  2. Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
@@ -79,7 +84,7 @@ To add a hotkey add to `config.json` the following code:
 
 Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
 hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
- * `"typeout"` - Typeout syntax is same as you would type text out (ex. "tyPe Me Out!")
+ * `"typeout"` - Type out syntax is same as you would type text out (ex. "tyPe Me Out!")
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
@@ -152,8 +157,7 @@ The following example shows how to set slovenian layout and define the g1-5 macr
 To run an app like firefox, chrome or similar you need to replace **\<username\>** with your username. The DISPLAY variable defines the screen to open the app on a multi-screen-setup.
 
 The code is tested on Logitech G910 keyboard with
-- OS: Manjaro, 4.19.1 Linux kernel, DE: kde plasma 5.14.3
-- OS: Ubuntu 20.04.5 LTS, Linux 5.4.0-131-generic, GNOME: 3.36.8
+- OS: Ubuntu 20.04.6 LTS, Linux 5.4.0-159-generic, GNOME: 3.36.9
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
