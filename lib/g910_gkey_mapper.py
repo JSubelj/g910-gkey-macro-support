@@ -1,5 +1,3 @@
-# Taken from https://github.com/CReimer/g910-gkey-uinput/issues/3 and expanded
-
 import fcntl
 import os
 import signal
