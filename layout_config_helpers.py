@@ -1,6 +1,5 @@
 """
     This file contains functions that can help you get the right config for your layout.
-    Run g910-gkeys -l help to show all commands
 """
 import signal
 import sys
@@ -13,7 +12,7 @@ from lib.usb_device import USBDevice
 from lib.keyboard import Keyboard, KeyInputTimeoutException
 from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
 from lib.misc.helper import Helper
-from lib.data_mappers.config_reader import Config
+from lib.misc.config import Config
 
 
 class LayoutHelper:
@@ -51,16 +50,8 @@ class LayoutHelper:
             self.test()
         elif command == "uinput":
             self.uinput_key()
-        elif command == "help":
-            print(f"Syntax: g910-gkey -l [help|read0|read1|create|test|uinput]")
-            print()
-            print(f"    read0               read the raw bytes from interface 0 (default keys)")
-            print(f"    read1               read the raw bytes from interface 1 (g- and media-keys)")
-            print(f"    create              create localized layout")
-            print(f"    test                test localized layout")
-            print(f"    uinput              get uinput key from key press")
         else:
-            print(f"Syntax: g910-gkey -l [help|read0|read1|create|test|uinput]")
+            print(f"Syntax: g910-gkey [--help|--read0|--read1|--create|--test|--uinput]")
             if command != "help":
                 print(f"No matching helper '{command}' found!")
 
@@ -323,5 +314,7 @@ if __name__ == "__main__":
         command = "create"
     elif args.test:
         command = "test"
+    elif args.uinput:
+        command = "uinput"
 
     LayoutHelper(command)
