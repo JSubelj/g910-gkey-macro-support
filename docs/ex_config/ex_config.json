@@ -4,74 +4,74 @@
   "notify": "True",
   "username": "",
   "profiles": {
-    "m1": {
-      "g1": {
+    "MEMORY_1": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m1"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "python",
         "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
-    "m2": {
-      "g1": {
+    "MEMORY_2": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m2"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "python",
         "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
-    "m3": {
-      "g1": {
+    "MEMORY_3": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile m3"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "python",
         "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }
     },
-    "mr": {
-      "g1": {
+    "MEMORY_RECORD": {
+      "MACRO_1": {
         "hotkey_type": "typeout",
         "do": "This is profile mr"
       },
-      "g2": {
+      "MACRO_2": {
         "hotkey_type": "shortcut",
         "do": "alt+F4"
       },
-      "g3": {
+      "MACRO_3": {
         "hotkey_type": "run",
         "do": "su <username> -c 'DISPLAY=:0 nohup gnome-terminal' & 2>&1 > /dev/null"
       },
-      "g4": {
+      "MACRO_4": {
         "hotkey_type": "python",
         "do": "import uuid; global output_string; output_string = str(uuid.uuid4());"
       }

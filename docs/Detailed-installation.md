@@ -2,7 +2,6 @@
 First check that you have the needed requirements:
  - Python 3.7 (3.6 should work)
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
- - [g810-led controller](https://github.com/MatMoul/g810-led) (optional) switch the lights on m keys to indicate active profile
 
 For Arch based distros: It's live on [AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)
 

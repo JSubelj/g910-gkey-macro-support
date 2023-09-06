@@ -10,8 +10,15 @@ install_and_run.sh
 wiki/
 g910_gkeys.egg-info/
 g910-gkey-macro-support.wiki/
+/config/
+notes
 
 # build
 /build/
 /.pybuild/
 /debian/
+
+*.log
+
+# layout helper
+/char_uinput_mapping_*
