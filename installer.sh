@@ -58,6 +58,16 @@ if [[ -d "$HOME"/.config/systemd/user ]]; then
   cp ./etc/g910-gkeys.service "$HOME"/.config/systemd/user/g910-gkeys.service
 fi
 
+# copy udev rules
+if [[ ! -f /etc/udev/rules.d/60-g910-gkeys.rules ]]; then
+ sudo cp ./etc/60-g910-gkeys.rules /etc/udev/rules.d/60-g910-gkeys.rules
+fi
+
+# enable uinput in kernel
+if [[ ! -f /etc/modules-load.d/uinput-g910-gkeys.conf ]]; then
+  sudo cp ./etc/uinput-g910-gkeys.conf /etc/modules-load.d/uinput-g910-gkeys.conf
+fi
+
 # reload daemon
 systemctl --user daemon-reload
 
