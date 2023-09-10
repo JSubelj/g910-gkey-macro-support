@@ -1,6 +1,6 @@
 import usb
-from lib.usb_device import USBDevice
-from lib.misc.logger import Logger
+from g910_gkeys.lib.usb_device import USBDevice
+from g910_gkeys.misc.logger import Logger
 
 
 def change_profile(device: USBDevice, profile: str):

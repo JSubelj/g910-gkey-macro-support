@@ -5,13 +5,7 @@
 # options:
 #  -n: DO NOT enable and start systemd service.
 
-# check if we are 'root' user.
-(( EUID != 0 )) && echo Must be root to run this script. Exiting. &&
-    exit 1
-
 # get system unit directory
-DESTINATION=$(pkg-config systemd --variable=systemdsystemunitdir)
-FILES=files.txt
 START_SERVICE=y
 SUPPORTED_KEYBOARDS=(de en fr si)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
@@ -39,19 +33,39 @@ done
 	echo "https://github.com/JSubelj/g910-gkey-macro-support/issues/new/choose" &&
 	exit 1
 
-python3 setup.py install --record "$FILES"
+# install via pip
+pip install -e ./
 
-# systemd service file
-echo "$DESTINATION"/g910-gkeys.service >> "$FILES"
-cp etc/g910-gkeys.service "$DESTINATION"/g910-gkeys.service
+# make config dir
+if [[ ! -d "$HOME"/.config/g910-gkeys ]]; then
+  mkdir "$HOME"/.config/g910-gkeys
+fi
 
-systemctl daemon-reload
+# check for existing config file
+if [[ ! -f "$HOME"/.config/g910-gkeys/config.json ]]; then
+  if [[ -f /etc/g910-gkeys/config.json ]]; then
+    # if old config exist move it to new location (will need root privileges)
+    sudo mv /etc/g910-gkeys/config.json "$HOME"/.config/g910-gkeys/config.json
+    sudo chown "$USER":"$USER" "$HOME"/.config/g910-gkeys/config.json
+  else
+    # if not copy default config to config dir
+    cp ./etc/config.json "$HOME"/.config/g910-gkeys/config.json
+  fi
+fi
+
+# copy service unit to user home
+if [[ -d "$HOME"/.config/systemd/user ]]; then
+  cp ./etc/g910-gkeys.service "$HOME"/.config/systemd/user/g910-gkeys.service
+fi
+
+# reload daemon
+systemctl --user daemon-reload
 
 # enable and start service if necessary
 if [[ $START_SERVICE = y ]]; then
-    systemctl enable --now g910-gkeys.service
+    systemctl --user enable --now g910-gkeys.service
 else
     echo "g910-gkeys service was not started."
     echo "You can enable/start it with this command: "
-    echo "  systemctl enable --now g910-gkeys.service"
+    echo "  systemctl --user enable --now g910-gkeys.service"
 fi

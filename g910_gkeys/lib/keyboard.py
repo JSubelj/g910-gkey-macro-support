@@ -2,11 +2,11 @@ import ast
 import time
 import uinput
 import subprocess
-from lib.data_mappers import supported_configs
-from lib.data_mappers.char_uinput_mapper import keys, reverse_keys
-from lib.data_mappers.uinput_all_keys import uinput_all_keys
-from lib.data_mappers.supported_devices import KeyboardInterface
-from lib.misc.logger import Logger
+from g910_gkeys.data_mappers import supported_configs
+from g910_gkeys.data_mappers.char_uinput_mapper import keys, reverse_keys
+from g910_gkeys.data_mappers.uinput_all_keys import uinput_all_keys
+from g910_gkeys.data_mappers.supported_devices import KeyboardInterface
+from g910_gkeys.misc.logger import Logger
 
 output_string = ''
 

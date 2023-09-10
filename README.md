@@ -12,7 +12,6 @@ Everything is described in great depth (and actually much better) on [WIKI](http
 To use this project you need:
  - Python >=3.7
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
- - pip requirements are stored in requirements.txt
  
 #### Note: 
 From version 0.2.0 onwards the g810-led controller is no longer required because G-key to F-key mapping is disabled inside the driver.
@@ -28,33 +27,41 @@ From version 0.2.0 onwards the g810-led controller is no longer required because
    wget https://github.com/JSubelj/g910-gkey-macro-support/archive/refs/heads/master.zip; unzip master.zip
    ```
  - move to driver directory: `cd g910-gkey-macro-support`
- - run the installer shell: `chmod +x installer.sh; sudo ./installer.sh`
- - This will install the module, set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/system/g910-gkeys.service` or `/lib/systemd/system/g910-gkeys.service`, install a default configuration file in `/etc/g910-gkeys/config.json` if none exists, and finally enable and start this service.
+ - run the installer script: `chmod +x installer.sh; ./installer.sh`
+ - This will install the module, set a command `g910-gkeys`, add a service file to `$HOME/.config/systemd/user/g910-gkeys.service` or similar, install a default configuration file in `$HOME/.config/g910-gkeys/config.json` if none exists, and finally enable and start this service.
 
-If you do not want to enable g910-gkeys automatically, use the `-n` switch: `sudo ./installer.sh -n`. If you want to enable it later you can use: `sudo systemctl enable --now g910-gkeys.service`. To just start the service one till next reboot use: `sudo systemctl start g910-gkeys`
+If you do not want to enable g910-gkeys automatically, use the `-n` switch: `./installer.sh -n`. If you want to enable it later you can use: `systemctl --user enable --now g910-gkeys.service`. To just start the service till next reboot use: `systemctl --user start g910-gkeys`
  
 ## Update
+### <= v0.3.0
+If you use the installer your old config will be moved to the new location automatically. On manual installations you need to move your old config file to the new location and set the permissions to your username.
+```
+sudo mv /etc/g910-gkeys/config.json "$HOME"/.config/g910-gkeys/config.json
+sudo chown "$USER":"$USER" "$HOME"/.config/g910-gkeys/config.json
+```
+
+You can delete the old log file `sudo rm /var/log/g910-gkeys.log`.
+
+### <= v0.2.4
  If you update from version <= v0.2.4 you will need to make some manual changes to your `/etc/g910-gkeys/config.json` to make use of the new gkey profile feature.
  You don't need to do anything if you don't want to use the profile feature your old config will be loaded as default profile m1.
 
 ## Uninstalling
 ### By script (recommended)
-Run the uninstalling script: `chmod +x uninstall.sh; sudo ./uninstall.sh`. 
+Run the uninstalling script: `chmod +x uninstall.sh; ./uninstall.sh`  
+Run `./uninstall.sh -d` to perform a dry-run (no actual removal will be done, actions will only be displayed).
 
 ### Manual uninstall
 If you prefer to do it manually, these are the commands :
 
- 1. Disable and stop the service: `sudo systemctl disable --now g910-gkeys`
- 2. Remove installed files (list is in files.txt): `sudo xargs --arg-file=files.txt rm -rf`
- 3. List pip packages that include g910-gkeys: `pip (or pip3) list | grep g910-gkeys`
- 4. Remove the ones that concern this driver: `pip (or pip3) uninstall ${pkgs to uninstall}`
- 5. Remove configuration directory if `-a` option is given to uninstall.sh: `rm -rf /etc/g910-gkeys`
-
-If you deleted files.txt you can always run the installer again to create it.   
-Run `uninstall.sh -d` to perform a dry-run (no actual removal will be done, actions will only be displayed).
+ 1. Disable and stop the service: `systemctl --user disable --now g910-gkeys`
+ 2. List pip packages that include g910-gkeys: `pip (or pip3) list | grep g910-gkeys`
+ 3. Remove the ones that concern this driver: `pip (or pip3) uninstall ${pkgs to uninstall}`
+ 4. Optional: Remove configuration directory `rm -rf '$HOME/.config/g910-gkeys`  
+    If you want to reinstall the driver again later consider keeping the config file.
 
 ## Configuration
-Configuration should be located in `/etc/g910-gkeys/config.json` and should be syntactically correct. Example 
+Configuration should be located in `/home/[username]/.config/g910-gkeys/config.json` and should be syntactically correct. Example 
 configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json). 
 
 ### Supported languages:
@@ -97,14 +104,12 @@ hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
 There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
 If you use the profile feature you can also use the following parameter:
  * `notify` - Send notifications if profile gets changed
- * `username` - Username to send notifications with (required if notify is used)
  * `profiles` - Define a profile which is bound to the matching mkey
 
 The following example shows how to set slovenian layout and define the g1-5 macro keys for profile m1 and m2 and shows an example of every `hotkey_type`.
  ```
 {
     "notify": "True",
-    "username": "<username>",
     "keyboard_mapping": "si",
     "profiles": {
         "MEMORY_1": {
@@ -122,7 +127,7 @@ The following example shows how to set slovenian layout and define the g1-5 macr
             },
             "MACRO_4": {
                 "hotkey_type": "run",
-                "do": "/path/script_run_by_root"
+                "do": "/path/to/bash/script"
             },
             "MACRO_5": {
                 "hotkey_type": "python",
@@ -144,7 +149,7 @@ The following example shows how to set slovenian layout and define the g1-5 macr
             },
             "MACRO_4": {
                 "hotkey_type": "run",
-                "do": "su <username> -c 'DISPLAY=:0 nohup firefox' & 2>&1 > /dev/null"
+                "do": "DISPLAY=:0 nohup firefox & 2>&1 > /dev/null"
             },
             "MACRO_5": {
                 "hotkey_type": "python",
@@ -154,7 +159,13 @@ The following example shows how to set slovenian layout and define the g1-5 macr
     }
 }
  ```
-To run an app like firefox, chrome or similar you need to replace **\<username\>** with your username. The DISPLAY variable defines the screen to open the app on a multi-screen-setup.
+The DISPLAY variable defines the screen to open the app on a multi-screen-setup.
+
+## Troubleshooting
+To see a log of the running service use:
+```sehll
+journalctl --user --user-unit=g910-gkeys
+```
 
 The code is tested on Logitech G910 keyboard with
 - OS: Ubuntu 20.04.6 LTS, Linux 5.4.0-159-generic, GNOME: 3.36.9

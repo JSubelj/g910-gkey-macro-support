@@ -1,13 +1,15 @@
+import argparse
 import fcntl
 import os
 import signal
 import time
 import uinput
-from lib.misc.config import Config
-from lib.usb_device import USBDevice
-from lib.keyboard import Keyboard
-from lib.misc import notify, memory_leds
-from lib.misc.logger import Logger
+from g910_gkeys.misc.config import Config
+from g910_gkeys.lib.usb_device import USBDevice
+from g910_gkeys.lib.keyboard import Keyboard
+from g910_gkeys.misc import notify, memory_leds
+from g910_gkeys.misc.logger import Logger
+from g910_gkeys.lib import PROJECT_INFO
 
 config: Config = Config()
 log = Logger().logger(__name__)
@@ -38,6 +40,27 @@ def change_profile(dev: USBDevice, profile: str):
 
 
 def main():
+    global device
+    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
+    parser.add_argument("--create-config", help="Creates new config with current keyboard layout",
+                        action='store_true', default=False)
+    parser.add_argument("-s", "--set-config", help="Set the config file to use",
+                        default='', dest="config_file")
+    parser.add_argument("-v", "--version", help="Displays the information about the driver",
+                        action='version', version=f"%(prog)s {PROJECT_INFO.VERSION} by {PROJECT_INFO.AUTHOR}")
+    args = parser.parse_args()
+    if args.create_config:
+        device = USBDevice()  # init usb device and keyboard interface
+        config.create(device.keyboard)  # create config with keyboard interface
+        device.__exit__()  # clean up usb connection
+    elif args.config_file != "":
+        config.config_path = args.config_file
+        start()
+    else:
+        start()
+
+
+def start():
     global program_running, device, keyboard
     log.info("--------------------------------------------------------------------------------")
     log.info(f"----------------------STARTED g910-keys-pid:{str(os.getpid())}------------------------------")

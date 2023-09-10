@@ -6,13 +6,13 @@ import sys
 import tty
 import termios
 import uinput  # used to eval keys
-import lib.data_mappers.char_uinput_mapper as uinput_mapper
-from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
+import data_mappers.char_uinput_mapper as uinput_mapper
+from data_mappers.char_uinput_mapper import keys as locale_key_mapping
 from lib.usb_device import USBDevice
 from lib.keyboard import Keyboard, KeyInputTimeoutException
-from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
-from lib.misc.helper import Helper
-from lib.misc.config import Config
+from data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
+from misc.helper import Helper
+from misc.config import Config
 
 
 class LayoutHelper:

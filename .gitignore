@@ -17,6 +17,7 @@ notes
 /build/
 /.pybuild/
 /debian/
+/.pytest_cache/
 
 *.log
 

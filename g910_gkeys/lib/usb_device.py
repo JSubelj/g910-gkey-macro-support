@@ -1,8 +1,8 @@
 import time
 import usb
 import signal
-from lib.data_mappers.supported_devices import KeyboardInterface, SUPPORTED_DEVICES
-from lib.misc.logger import Logger
+from g910_gkeys.data_mappers.supported_devices import KeyboardInterface, SUPPORTED_DEVICES
+from g910_gkeys.misc.logger import Logger
 
 
 class USBDevice:
