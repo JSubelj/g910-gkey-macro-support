@@ -77,6 +77,6 @@
     }
   },
   "logging": "True",
-  "log_path": "log/g910-gkeys.log",
+  "log_path": "g910-gkeys.log",
   "log_level": "INFO"
 }
