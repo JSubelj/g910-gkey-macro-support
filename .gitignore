@@ -10,7 +10,8 @@ install_and_run.sh
 wiki/
 g910_gkeys.egg-info/
 g910-gkey-macro-support.wiki/
-/config/
+/docs/
+
 notes
 
 # build
