@@ -1,6 +1,7 @@
 """
     This file contains functions that can help you get the right config for your layout.
 """
+import importlib.metadata
 import signal
 import sys
 import tty
@@ -288,9 +289,7 @@ class LayoutHelper:
 
 if __name__ == "__main__":
     import argparse
-    from lib import PROJECT_INFO
-
-    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
+    parser = argparse.ArgumentParser(description=importlib.metadata.metadata("g910-gkeys")["summary"])
     parser.add_argument("--read0", help="Read the raw bytes from interface 0 (default keys)",
                         action='store_true', default=False)
     parser.add_argument("--read1", help="Read the raw bytes from interface 1 (macro- and media-keys)",
@@ -302,7 +301,7 @@ if __name__ == "__main__":
     parser.add_argument("-u", "--uinput", help="Get uinput key from key press",
                         action='store_true', default=False)
     parser.add_argument("-v", "--version", help="Displays version of the driver",
-                        action='version', version='%(prog)s ' + PROJECT_INFO.VERSION)
+                        action='version', version='%(prog)s ' + importlib.metadata.version('g910-gkeys'))
     args = parser.parse_args()
 
     command = "help"

@@ -2,7 +2,7 @@ If you are not me, you can ignore this file.
 
 Raise the version number in:
     - reboot and try
-    - PROJECT_INFO.py
+    - pyproject.toml
     - PKGBUILD
 
 Update:

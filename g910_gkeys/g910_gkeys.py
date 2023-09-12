@@ -1,5 +1,6 @@
 import argparse
 import fcntl
+import importlib.metadata
 import os
 import signal
 import time
@@ -9,7 +10,6 @@ from g910_gkeys.lib.usb_device import USBDevice
 from g910_gkeys.lib.keyboard import Keyboard
 from g910_gkeys.misc import notify, memory_leds
 from g910_gkeys.misc.logger import Logger
-from g910_gkeys.lib import PROJECT_INFO
 
 config: Config = Config()
 log = Logger().logger(__name__)
@@ -46,13 +46,13 @@ def change_profile(dev: USBDevice, profile: str):
 
 def main():
     global device
-    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
+    parser = argparse.ArgumentParser(description=importlib.metadata.metadata("g910-gkeys")["summary"])
     parser.add_argument("--create-config", help="Creates new config with current keyboard layout",
                         action='store_true', default=False)
     parser.add_argument("-s", "--set-config", help="Set the config file to use",
                         default='', dest="config_file")
     parser.add_argument("-v", "--version", help="Displays the information about the driver",
-                        action='version', version=f"%(prog)s {PROJECT_INFO.VERSION} by {PROJECT_INFO.AUTHOR}")
+                        action='version', version=f"%(prog)s {importlib.metadata.version('g910-gkeys')} by {importlib.metadata.metadata('g910-gkeys')['author-email']}")
     args = parser.parse_args()
     if args.create_config:
         device = USBDevice()  # init usb device and keyboard interface
