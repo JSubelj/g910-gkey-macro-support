@@ -31,6 +31,11 @@ def config_changed_handler(sig, frame):
     config.update_config()
 
 
+def reload_handler(sig, frame):
+    log.info(f"Reload service.")
+    config.update_config()
+
+
 def change_profile(dev: USBDevice, profile: str):
     log.info(f"Change profile to {profile}.")
     config.profile = profile
@@ -70,6 +75,7 @@ def start():
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGQUIT, signal_handler)
     signal.signal(signal.SIGIO, config_changed_handler)
+    signal.signal(signal.SIGUSR1, reload_handler)
 
     if program_running:
         # usb keyboard

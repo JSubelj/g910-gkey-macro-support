@@ -1,4 +1,20 @@
 # Current:
+**v0.4.0:**
+  - driver is installed and executable with user privileges
+
+**v0.3.0:**
+  - now supporting the following keyboards:
+    - LogitechG915
+    - LogitechG910OrionSpectrum
+    - LogitechG910OrionSpark
+    - LogitechG815
+    - LogitechG710p
+    - LogitechG510
+  - added '\n' and '\t' to german keyboard layout
+  - notification on change of macro key profile
+  - change memory key leds native in driver
+  - enable/disable logging in config, set log path and log level
+
 **RELEASE-0.2.5:**
   - Four profiles (Mkeys to switch profiles, up to 28 GKey bindings)
   - New hotkey_type python (execute simple one-line python code on a Gkey press)
