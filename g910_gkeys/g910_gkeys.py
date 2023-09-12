@@ -5,6 +5,7 @@ import os
 import signal
 import time
 import uinput
+from g910_gkeys.misc.helper import Helper
 from g910_gkeys.misc.config import Config
 from g910_gkeys.lib.usb_device import USBDevice
 from g910_gkeys.lib.keyboard import Keyboard
@@ -32,7 +33,7 @@ def config_changed_handler(sig, frame):
 
 
 def reload_handler(sig, frame):
-    log.info(f"Reload service.")
+    log.info(f"Reload g910-gkeys.")
     config.update_config()
 
 
@@ -52,7 +53,7 @@ def main():
     parser.add_argument("-s", "--set-config", help="Set the config file to use",
                         default='', dest="config_file")
     parser.add_argument("-v", "--version", help="Displays the information about the driver",
-                        action='version', version=f"%(prog)s {importlib.metadata.version('g910-gkeys')} by {importlib.metadata.metadata('g910-gkeys')['author-email']}")
+                        action='version', version=f"%(prog)s {Helper.get_version()} by {Helper.get_author()}")
     args = parser.parse_args()
     if args.create_config:
         device = USBDevice()  # init usb device and keyboard interface
