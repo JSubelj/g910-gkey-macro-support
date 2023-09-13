@@ -32,11 +32,8 @@ for p in pip pip3; do
 done
 
 # stops and disable service
-if [[ $DRYRUN = "echo" ]]; then
-    echo "systemctl --user disable --now g910-gkeys &>/dev/null"
-else
-    systemctl --user disable --now g910-gkeys &>/dev/null
-fi
+${DRYRUN} systemctl disable --now g910-gkeys &>/dev/null # <= 0.3.0
+${DRYRUN} systemctl --user disable --now g910-gkeys &>/dev/null # >= 0.4.0
 
 # remove pip package
 if [[ -n "$PIPCMD" ]]; then
@@ -46,8 +43,26 @@ if [[ -n "$PIPCMD" ]]; then
         [[ $DRYRUN = "" ]] && echo "Uninstalled $PIPCMD files"
 fi
 
-# remove service unit
+# remove service unit <= 0.3.0
+if [[ -f /etc/systemd/system/g910-gkeys.service ]]; then
+    ${DRYRUN} rm /etc/systemd/system/g910-gkeys.service &&
+        [[ $DRYRUN = "" ]] && echo "Removed service unit"
+fi
+
+# remove service unit >= 0.4.0
 if [[ -f "$HOME"/.config/systemd/user/g910-gkeys.service ]]; then
     ${DRYRUN} rm "$HOME"/.config/systemd/user/g910-gkeys.service &&
     [[ $DRYRUN = "" ]] && echo "Removed service unit"
+fi
+
+# remove udev rules
+if [[ -f /etc/udev/rules.d/60-g910-gkeys.rules ]]; then
+  ${DRYRUN} sudo rm /etc/udev/rules.d/60-g910-gkeys.rules &&
+  [[ $DRYRUN = "" ]] && echo "Removed udev rules"
+fi
+
+# remove uinput config for kernel
+if [[ -f /etc/modules-load.d/uinput-g910-gkeys.conf ]]; then
+  ${DRYRUN} sudo rm /etc/modules-load.d/uinput-g910-gkeys.conf &&
+  [[ $DRYRUN = "" ]] && echo "Removed uinput enable config"
 fi
