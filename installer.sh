@@ -26,9 +26,10 @@ done
 
 [[ ! " ${SUPPORTED_KEYBOARDS[*]} " =~ ${KEYBOARD} ]] &&
 	echo "Your system default language is $KEYBOARD, but it's not supported." &&
-	echo "You can try to run: sudo python3 cli_entry_point.py -l create" &&
-	echo "You need to add the created mapping to lib.data_mappers.char_uinput_mapper and" &&
-	echo "add your locale to lib.data_mappers.supported_configs, before installing again." &&
+	echo "You can try to run: python3 cli_layout_config_helpers.py --create" &&
+	echo "You need to add the created mapping to g910-gkeys.lib.data_mappers.char_uinput_mapper and" &&
+	echo "add your locale to g910-gkeys.lib.data_mappers.supported_configs, before installing again." &&
+	echo "The locale also have to be added to this installer script 10:SUPPORTED_KEYBOARDS." &&
 	echo "Please open a feature request on github with your language:" &&
 	echo "https://github.com/JSubelj/g910-gkey-macro-support/issues/new/choose" &&
 	exit 1

@@ -7,7 +7,7 @@
 
 PIPCMD=""
 DRYRUN=""
-OPTIONS=$(getopt -l "all,dry-run" -o "ad" -- "$@")
+OPTIONS=$(getopt -l "dry-run" -o "d" -- "$@")
 eval set -- "$OPTIONS"
 
 usage() {
@@ -26,14 +26,21 @@ while true; do
     shift
 done
 
+[[ $DRYRUN = "echo" ]] && ${DRYRUN} Running dry...
+
 # determine if we should use pip or pip3, pip3 being preferred
 for p in pip pip3; do
     type "$p" &>/dev/null && PIPCMD="$p"
 done
 
-# stops and disable service
-${DRYRUN} systemctl disable --now g910-gkeys &>/dev/null # <= 0.3.0
-${DRYRUN} systemctl --user disable --now g910-gkeys &>/dev/null # >= 0.4.0
+# stop and disable service
+if [[ $DRYRUN = "echo" ]]; then
+  ${DRYRUN} sudo systemctl disable --now g910-gkeys # <= 0.3.0
+  ${DRYRUN} systemctl --user disable --now g910-gkeys # >= 0.4.0
+else
+  ${DRYRUN} sudo systemctl disable --now g910-gkeys &>/dev/null # <= 0.3.0
+  ${DRYRUN} systemctl --user disable --now g910-gkeys &>/dev/null # >= 0.4.0
+fi
 
 # remove pip package
 if [[ -n "$PIPCMD" ]]; then
@@ -45,24 +52,24 @@ fi
 
 # remove service unit <= 0.3.0
 if [[ -f /etc/systemd/system/g910-gkeys.service ]]; then
-    ${DRYRUN} rm /etc/systemd/system/g910-gkeys.service &&
-        [[ $DRYRUN = "" ]] && echo "Removed service unit"
+    ${DRYRUN} sudo rm /etc/systemd/system/g910-gkeys.service &&
+    [[ $DRYRUN = "" ]] && echo "Removed service unit /etc/systemd/system/g910-gkeys.service"
 fi
 
 # remove service unit >= 0.4.0
 if [[ -f "$HOME"/.config/systemd/user/g910-gkeys.service ]]; then
     ${DRYRUN} rm "$HOME"/.config/systemd/user/g910-gkeys.service &&
-    [[ $DRYRUN = "" ]] && echo "Removed service unit"
+    [[ $DRYRUN = "" ]] && echo "Removed service unit $HOME/.config/systemd/user/g910-gkeys.service"
 fi
 
 # remove udev rules
 if [[ -f /etc/udev/rules.d/60-g910-gkeys.rules ]]; then
   ${DRYRUN} sudo rm /etc/udev/rules.d/60-g910-gkeys.rules &&
-  [[ $DRYRUN = "" ]] && echo "Removed udev rules"
+  [[ $DRYRUN = "" ]] && echo "Removed udev rules /etc/udev/rules.d/60-g910-gkeys.rules"
 fi
 
 # remove uinput config for kernel
 if [[ -f /etc/modules-load.d/uinput-g910-gkeys.conf ]]; then
   ${DRYRUN} sudo rm /etc/modules-load.d/uinput-g910-gkeys.conf &&
-  [[ $DRYRUN = "" ]] && echo "Removed uinput enable config"
+  [[ $DRYRUN = "" ]] && echo "Removed uinput config /etc/modules-load.d/uinput-g910-gkeys.conf"
 fi
