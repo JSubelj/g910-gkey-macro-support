@@ -24,7 +24,7 @@ classifiers = [
 ]
 dependencies = [
     "python-uinput==0.11.2",
-    "pyusb==1.0.2"
+    "pyusb==1.2.1"
 ]
 
 [project.urls]
