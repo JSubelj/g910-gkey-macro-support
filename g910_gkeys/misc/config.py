@@ -2,9 +2,9 @@ import json
 import os
 import signal
 from json.decoder import JSONDecodeError
-from lib.misc.helper import Helper
-from lib.data_mappers import supported_configs, char_uinput_mapper
-from lib.misc.logger import Logger
+from g910_gkeys.misc.helper import Helper
+from g910_gkeys.data_mappers import supported_configs, char_uinput_mapper
+from g910_gkeys.misc.logger import Logger
 
 
 class ConfigException(Exception):
@@ -17,27 +17,14 @@ class Config:
 
     profile: str = None
 
-    config_dir: str
+    config_dir: str = os.getenv("HOME") + "/.config/g910-gkeys"
 
-    config_path: str
+    config_path: str = config_dir + "/config.json"
 
-    logs_path: str
+    logs_path: str = os.getenv("HOME") + "/g910-gkeys.log"
 
     def __init__(self):
         self.profile = supported_configs.default_profile
-        # set config path
-        if Helper.is_installed():
-            self.config_dir = "/etc/g910-gkeys"
-            self.config_path = self.config_dir + "/config.json"
-        else:
-            main_dir = Helper.get_base_path()
-            self.config_dir = os.path.join(main_dir, "config")
-            self.config_path = self.config_dir + "/config.json"
-        # set log path
-        if os.geteuid() != 0:
-            self.logs_path = "g910-gkeys.log"
-        else:
-            self.logs_path = "/var/log/g910-gkeys.log"
 
     @staticmethod
     def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
@@ -95,8 +82,7 @@ class Config:
         if keyboard_mapping not in supported_configs.keyboard_mappings:
             return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
 
-        return_config["notify"] = config_dic.get("notify", False)
-        return_config["username"] = config_dic.get("username", "")
+        return_config["notify"] = config_dic.get("notify", "False")
 
         profile_start_range = 1
         return_config["profiles"] = {}
@@ -122,6 +108,10 @@ class Config:
                         self.get_key_action(config_dic, profile_index, i)
                 except ConfigException as e:
                     errors += [e]
+
+        return_config["logging"] = config_dic.get("logging", "False")
+        return_config["log_path"] = config_dic.get("log_path", os.getenv("HOME") + "/g910-gkeys.log")
+        return_config["log_level"] = config_dic.get("log_level", "INFO")
 
         if len(errors) > 0:
             raise ConfigException(errors)

@@ -1,18 +1,20 @@
 """
     This file contains functions that can help you get the right config for your layout.
 """
+import argparse
+import importlib.metadata
 import signal
 import sys
 import tty
 import termios
 import uinput  # used to eval keys
-import lib.data_mappers.char_uinput_mapper as uinput_mapper
-from lib.data_mappers.char_uinput_mapper import keys as locale_key_mapping
-from lib.usb_device import USBDevice
-from lib.keyboard import Keyboard, KeyInputTimeoutException
-from lib.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
-from lib.misc.helper import Helper
-from lib.misc.config import Config
+import g910_gkeys.data_mappers.char_uinput_mapper as uinput_mapper
+from g910_gkeys.data_mappers.char_uinput_mapper import keys as locale_key_mapping
+from g910_gkeys.lib.usb_device import USBDevice
+from g910_gkeys.lib.keyboard import Keyboard, KeyInputTimeoutException
+from g910_gkeys.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
+from g910_gkeys.misc.helper import Helper
+from g910_gkeys.misc.config import Config
 
 
 class LayoutHelper:
@@ -286,11 +288,8 @@ class LayoutHelper:
             pass  # pass if no uinput device was initialized
 
 
-if __name__ == "__main__":
-    import argparse
-    from lib import PROJECT_INFO
-
-    parser = argparse.ArgumentParser(description=PROJECT_INFO.DESCRIPTION)
+def main():
+    parser = argparse.ArgumentParser(description=f'{importlib.metadata.metadata("g910-gkeys")["summary"]} - Layout config helpers')
     parser.add_argument("--read0", help="Read the raw bytes from interface 0 (default keys)",
                         action='store_true', default=False)
     parser.add_argument("--read1", help="Read the raw bytes from interface 1 (macro- and media-keys)",
@@ -302,7 +301,7 @@ if __name__ == "__main__":
     parser.add_argument("-u", "--uinput", help="Get uinput key from key press",
                         action='store_true', default=False)
     parser.add_argument("-v", "--version", help="Displays version of the driver",
-                        action='version', version='%(prog)s ' + PROJECT_INFO.VERSION)
+                        action='version', version=f"%(prog)s {Helper.get_version()} by {Helper.get_author()}")
     args = parser.parse_args()
 
     command = "help"
@@ -318,3 +317,7 @@ if __name__ == "__main__":
         command = "uinput"
 
     LayoutHelper(command)
+
+
+if __name__ == "__main__":
+    main()

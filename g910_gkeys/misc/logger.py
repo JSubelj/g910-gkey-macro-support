@@ -16,11 +16,13 @@ class Logger:
     }
 
     def __init__(self, log_level: int = logging.DEBUG):
-        from lib.misc.config import Config
+        from g910_gkeys.misc.config import Config
         config = Config()
-        log_level = config.load().get('log_level', 'INFO')
+        config_dict = config.load()
+        log_level = config_dict.get('log_level', 'INFO')
         self.log_level = self.log_level_map[log_level]
-        self.log_to_file(config.logs_path, self.log_level)
+        if config_dict.get('logging', "False") != "False":
+            self.log_to_file(config_dict.get('log_path', config.logs_path), self.log_level)
 
     def logger(self, name=None):
         log = logging.getLogger(name)
@@ -45,3 +47,7 @@ class Logger:
                 os.rename(filename, filename + ".old")
         except:
             pass
+
+    def set_log_level(self, log_level):
+        self.log_level = self.log_level_map[log_level]
+        self.file_handler.setLevel(self.log_level)

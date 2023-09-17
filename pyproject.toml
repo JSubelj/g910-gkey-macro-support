@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g910-gkeys"
+version = "0.4.0"
+authors = [
+    { name="Jan Šubelj", email="jan.subelj010@gmail.com" },
+    { name="Marcel Grolms", email="support@suabo.de" }
+]
+description = "Support for Logitech G910 GKeys on GNU/Linux"
+keywords = ["logitech", "keyboard", "gkey", "G910", "G915", "G815", "G710", "G510"]
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8"
+]
+dependencies = [
+    "python-uinput==0.11.2",
+    "pyusb==1.2.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/JSubelj/g910-gkey-macro-support"
+"Bug Tracker" = "https://github.com/JSubelj/g910-gkey-macro-support/issues"
+
+[project.scripts]
+g910-gkeys = "g910_gkeys.g910_gkeys:main"
+
+[tool.setuptools.packages.find]
+# All the following settings are optional:
+where = ["."]
+include = ["g910_gkeys*"]
+exclude = ["g910_gkeys.tests*"]

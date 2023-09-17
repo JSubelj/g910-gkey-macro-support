@@ -3,5 +3,6 @@ SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c33f", TAG+="uacc
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c33e", TAG+="uaccess"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c32b", TAG+="uaccess"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c24d", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c22d", TAG+="uaccess"
 
 KERNEL=="uinput", TAG+="uaccess"

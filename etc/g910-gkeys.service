@@ -3,9 +3,13 @@ Description=Support for Logitech g910 keyboard gkeys
 Documentation=https://github.com/JSubelj/g910-gkey-macro-support/wiki
 
 [Service]
+Type=simple
 ExecStart=/usr/bin/env g910-gkeys
-TimeoutStopSec=3
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+TimeoutStopSec=5
+Restart=on-failure
+RestartSec=10
 
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

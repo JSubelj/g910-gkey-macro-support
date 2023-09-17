@@ -1,13 +1,16 @@
+import argparse
 import fcntl
+import importlib.metadata
 import os
 import signal
 import time
 import uinput
-from lib.misc.config import Config
-from lib.usb_device import USBDevice
-from lib.keyboard import Keyboard
-from lib.misc import notify, memory_leds
-from lib.misc.logger import Logger
+from g910_gkeys.misc.helper import Helper
+from g910_gkeys.misc.config import Config
+from g910_gkeys.lib.usb_device import USBDevice
+from g910_gkeys.lib.keyboard import Keyboard
+from g910_gkeys.misc import notify, memory_leds
+from g910_gkeys.misc.logger import Logger
 
 config: Config = Config()
 log = Logger().logger(__name__)
@@ -29,6 +32,11 @@ def config_changed_handler(sig, frame):
     config.update_config()
 
 
+def reload_handler(sig, frame):
+    log.info(f"Reload g910-gkeys.")
+    config.update_config()
+
+
 def change_profile(dev: USBDevice, profile: str):
     log.info(f"Change profile to {profile}.")
     config.profile = profile
@@ -38,6 +46,27 @@ def change_profile(dev: USBDevice, profile: str):
 
 
 def main():
+    global device
+    parser = argparse.ArgumentParser(description=importlib.metadata.metadata("g910-gkeys")["summary"])
+    parser.add_argument("--create-config", help="Creates new config with current keyboard layout",
+                        action='store_true', default=False)
+    parser.add_argument("-s", "--set-config", help="Set the config file to use",
+                        default='', dest="config_file")
+    parser.add_argument("-v", "--version", help="Displays the information about the driver",
+                        action='version', version=f"%(prog)s {Helper.get_version()} by {Helper.get_author()}")
+    args = parser.parse_args()
+    if args.create_config:
+        device = USBDevice()  # init usb device and keyboard interface
+        config.create(device.keyboard)  # create config with keyboard interface
+        device.__exit__()  # clean up usb connection
+    elif args.config_file != "":
+        config.config_path = args.config_file
+        start()
+    else:
+        start()
+
+
+def start():
     global program_running, device, keyboard
     log.info("--------------------------------------------------------------------------------")
     log.info(f"----------------------STARTED g910-keys-pid:{str(os.getpid())}------------------------------")
@@ -47,6 +76,7 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGQUIT, signal_handler)
     signal.signal(signal.SIGIO, config_changed_handler)
+    signal.signal(signal.SIGUSR1, reload_handler)
 
     if program_running:
         # usb keyboard
