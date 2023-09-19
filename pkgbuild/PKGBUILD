@@ -10,19 +10,22 @@ url='https://github.com/JSubelj/g910-gkey-macro-support'
 arch=('any')
 license=('GPL3')
 depends=('python-pyusb' 'python-uinput')
+makedepends=('git' 'systemd')
 #source=('git://github.com/JSubelj/g910-gkey-macro-support.git#branch=development')
 source=('git://github.com/JSubelj/g910-gkey-macro-support.git')
 install=${pkgname}.install
-backup=("etc/${_appname}/config.json" "usr/lib/systemd/system/g910-gkeys.service")
+backup=("{$HOME}/.config/g910-gkeys/config.json" "{$HOME}/.config/systemd/user/g910-gkeys.service" "etc/udev/rules.d/60-g910-gkeys.rules" "etc/modules-load.d/uinput-g910-gkeys.conf")
 md5sums=('SKIP')
 
 build() {
     cd ${srcdir}/${_gitname}
-    python setup.py build
+    python -m build
 }
 
 package() {
-  cd ${srcdir}/${_gitname}
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-  install -Dm 644 -t $pkgdir/usr/lib/systemd/system g910-gkeys.service
+    cd ${srcdir}/${_gitname}
+    pip install dist/${_appname}-${pkgver}.tar.gz
+
+    install -Dm 644 -t "$pkgdir"/etc/udev/rules.d/60-g910-gkeys.rules etc/60-g910-gkeys.rules
+    install -Dm 644 -t "$pkgdir"/etc/modules-load.d/uinput-g910-gkeys.conf etc/uinput-g910-gkeys.conf
 }
