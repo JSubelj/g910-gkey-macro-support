@@ -11,6 +11,7 @@ Everything is described in great depth (and actually much better) on [WIKI](http
 
 To use this project you need:
  - Python >=3.7
+ - pyusb & python-uinput
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  
 #### Note: 
