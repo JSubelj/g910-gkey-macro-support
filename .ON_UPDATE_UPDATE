@@ -4,6 +4,7 @@ Raise the version number in:
     - reboot and try
     - pyproject.toml
     - PKGBUILD
+    - install_prebuild
 
 Update:
     - Documentation on wiki/readme + changelog
@@ -13,3 +14,6 @@ Before release:
     - Check PKG-INFO (generated with python setup.py build) for correct version numbers
     - Check g910-gkeys --version
     - Check pacman for correct version numbers
+
+After release:
+    - create version tag

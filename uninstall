@@ -7,6 +7,7 @@
 
 PIPCMD=""
 DRYRUN=""
+UNIT_DIR=$(pkg-config systemd --variable=systemduserunitdir)
 OPTIONS=$(getopt -l "dry-run" -o "d" -- "$@")
 eval set -- "$OPTIONS"
 
@@ -60,6 +61,12 @@ fi
 if [[ -f "$HOME"/.config/systemd/user/g910-gkeys.service ]]; then
     ${DRYRUN} rm "$HOME"/.config/systemd/user/g910-gkeys.service &&
     [[ $DRYRUN = "" ]] && echo "Removed service unit $HOME/.config/systemd/user/g910-gkeys.service"
+fi
+
+# remove service unit >= 0.4.1
+if [[ -f "$UNIT_DIR"/g910-gkeys.service ]]; then
+    ${DRYRUN} rm "$UNIT_DIR"/g910-gkeys.service &&
+    [[ $DRYRUN = "" ]] && echo "Removed service unit $UNIT_DIR/g910-gkeys.service"
 fi
 
 # remove udev rules

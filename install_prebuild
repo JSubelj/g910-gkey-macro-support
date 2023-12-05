@@ -1,41 +1,24 @@
 #!/usr/bin/env bash
 #
-# installs g910-gkeys.
+# installs g910-gkeys from pypi.org
 #
-# options:
-#  -n: DO NOT enable and start systemd service.
-
-# get system unit directory
-START_SERVICE=y
+VERSION=0.4.1
 SUPPORTED_KEYBOARDS=(de en fr si)
+UNIT_DIR=$(pkg-config systemd --variable=systemduserunitdir)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
-
-usage() {
-    echo "usage: ${0##*/} [-n]"
-}
-
-while getopts nl: opt ; do
-    case "$opt" in
-        n) START_SERVICE=n
-           ;;
-        *) usage
-           exit 1
-           ;;
-    esac
-done
 
 [[ ! " ${SUPPORTED_KEYBOARDS[*]} " =~ ${KEYBOARD} ]] &&
 	echo "Your system default language is $KEYBOARD, but it's not supported." &&
 	echo "You can try to run: python3 cli_layout_config_helpers.py --create" &&
 	echo "You need to add the created mapping to g910-gkeys.lib.data_mappers.char_uinput_mapper and" &&
 	echo "add your locale to g910-gkeys.lib.data_mappers.supported_configs, before installing again." &&
-	echo "The locale also have to be added to this installer script 10:SUPPORTED_KEYBOARDS." &&
+	echo "The locale also have to be added to this install script 10:SUPPORTED_KEYBOARDS." &&
 	echo "Please open a feature request on github with your language:" &&
 	echo "https://github.com/JSubelj/g910-gkey-macro-support/issues/new/choose" &&
 	exit 1
 
 # install via pip
-pip install -e ./
+pip install g910-gkeys=="$VERSION"
 
 # make config dir
 if [[ ! -d "$HOME"/.config/g910-gkeys ]]; then
@@ -50,33 +33,31 @@ if [[ ! -f "$HOME"/.config/g910-gkeys/config.json ]]; then
     sudo chown "$USER":"$USER" "$HOME"/.config/g910-gkeys/config.json
   else
     # if not copy default config to config dir
-    cp ./etc/config.json "$HOME"/.config/g910-gkeys/config.json
+    wget https://raw.githubusercontent.com/JSubelj/g910-gkey-macro-support/"$VERSION"/etc/config.json
+    mv ./config.json "$HOME"/.config/g910-gkeys/config.json
   fi
 fi
 
-# copy service unit to user home
-if [[ -d "$HOME"/.config/systemd/user ]]; then
-  cp ./etc/g910-gkeys.service "$HOME"/.config/systemd/user/g910-gkeys.service
+# copy service unit to systemd user unit dir
+if [[ -d "$UNIT_DIR" ]]; then
+  wget https://raw.githubusercontent.com/JSubelj/g910-gkey-macro-support/"$VERSION"/etc/g910-gkeys.service
+  sudo mv ./g910-gkeys.service "$UNIT_DIR"/g910-gkeys.service
 fi
 
 # copy udev rules
 if [[ ! -f /etc/udev/rules.d/60-g910-gkeys.rules ]]; then
- sudo cp ./etc/60-g910-gkeys.rules /etc/udev/rules.d/60-g910-gkeys.rules
+  wget https://raw.githubusercontent.com/JSubelj/g910-gkey-macro-support/"$VERSION"/etc/60-g910-gkeys.rules
+ sudo mv ./60-g910-gkeys.rules /etc/udev/rules.d/60-g910-gkeys.rules
 fi
 
 # enable uinput in kernel
 if [[ ! -f /etc/modules-load.d/uinput-g910-gkeys.conf ]]; then
-  sudo cp ./etc/uinput-g910-gkeys.conf /etc/modules-load.d/uinput-g910-gkeys.conf
+  wget https://raw.githubusercontent.com/JSubelj/g910-gkey-macro-support/"$VERSION"/etc/uinput-g910-gkeys.conf
+  sudo mv ./uinput-g910-gkeys.conf /etc/modules-load.d/uinput-g910-gkeys.conf
 fi
 
 # reload daemon
 systemctl --user daemon-reload
 
 # enable and start service if necessary
-if [[ $START_SERVICE = y ]]; then
-    systemctl --user enable --now g910-gkeys.service
-else
-    echo "g910-gkeys service was not started."
-    echo "You can enable/start it with this command: "
-    echo "  systemctl --user enable --now g910-gkeys.service"
-fi
+systemctl --user enable --now g910-gkeys.service

@@ -1,5 +1,4 @@
-# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.4.0)
-
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.4.1)
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
 in [g910-gkey-uinput](https://github.com/CReimer/g910-gkey-uinput) project. I expanded the code, so that it is more 
@@ -18,7 +17,14 @@ To use this project you need:
 From version 0.2.0 onwards the g810-led controller is no longer required because G-key to F-key mapping is disabled inside the driver.
 
 ## Installation \[[AUR](https://aur.archlinux.org/packages/g910-gkeys-git/)\]
- - load uinput kernel module: `modprobe uinput` (on Manjaro is loaded by default afaik) 
+Be sure uinput kernel module is loaded: `modprobe uinput` (on Manjaro is loaded by default afaik) 
+
+### Install script (recommended)
+```bash
+wget https://raw.githubusercontent.com/JSubelj/g910-gkey-macro-support/master/install_prebuild; chmod +x install_prebuild; ./install_prebuild
+```
+
+### Installation from source
  - clone repo:  
    ```
    git clone https://github.com/JSubelj/g910-gkey-macro-support.git
@@ -28,14 +34,14 @@ From version 0.2.0 onwards the g810-led controller is no longer required because
    wget https://github.com/JSubelj/g910-gkey-macro-support/archive/refs/heads/master.zip; unzip master.zip
    ```
  - move to driver directory: `cd g910-gkey-macro-support`
- - run the installer script: `chmod +x installer.sh; ./installer.sh`
- - This will install the module, set a command `g910-gkeys`, add a service file to `$HOME/.config/systemd/user/g910-gkeys.service` or similar, install a default configuration file in `$HOME/.config/g910-gkeys/config.json` if none exists, and finally enable and start this service.
+ - run the installer script: `chmod +x install; ./install`
+ - This will install the module, set a command `g910-gkeys`, add a service file to `/usr/lib/systemd/user/g910-gkeys.service` or similar, install a default configuration file in `$HOME/.config/g910-gkeys/config.json` if none exists, and finally enable and start this service.
 
-If you do not want to enable g910-gkeys automatically, use the `-n` switch: `./installer.sh -n`. If you want to enable it later you can use: `systemctl --user enable --now g910-gkeys.service`. To just start the service till next reboot use: `systemctl --user start g910-gkeys`
+If you do not want to enable g910-gkeys automatically, use the `-n` switch: `./install -n`. If you want to enable it later you can use: `systemctl --user enable --now g910-gkeys.service`. To just start the service till next reboot use: `systemctl --user start g910-gkeys`
  
 ## Update
 ### <= v0.3.0
-If you use the installer your old config will be moved to the new location automatically. On manual installations you need to move your old config file to the new location and set the permissions to your username.
+If you use the installer your old config will be moved to the new location automatically. On pip and manual installations you need to move your old config file to the new location and set the permissions to your username.
 ```
 sudo mv /etc/g910-gkeys/config.json "$HOME"/.config/g910-gkeys/config.json
 sudo chown "$USER":"$USER" "$HOME"/.config/g910-gkeys/config.json
@@ -49,8 +55,8 @@ You can delete the old log file `sudo rm /var/log/g910-gkeys.log`.
 
 ## Uninstalling
 ### By script (recommended)
-Run the uninstalling script: `chmod +x uninstall.sh; ./uninstall.sh`  
-Run `./uninstall.sh -d` to perform a dry-run (no actual removal will be done, actions will only be displayed).
+Run the uninstalling script: `chmod +x uninstall; ./uninstall`  
+Run `./uninstall -d` to perform a dry-run (no actual removal will be done, actions will only be displayed).
 
 ### Manual uninstall
 If you prefer to do it manually, these are the commands :
@@ -63,7 +69,7 @@ If you prefer to do it manually, these are the commands :
 
 ## Configuration
 Configuration should be located in `/home/[username]/.config/g910-gkeys/config.json` and should be syntactically correct. Example 
-configuration can be found in docs folder: [ex_config](docs/ex_config/ex_config.json). 
+configuration can be found in etc/ folder: [config.json](etc/config.json). 
 
 ### Supported languages:
  * `"de"` - german

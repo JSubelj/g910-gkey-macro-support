@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "g910-gkeys"
-version = "0.4.0"
+version = "0.4.1"
 authors = [
     { name="Jan Šubelj", email="jan.subelj010@gmail.com" },
     { name="Marcel Grolms", email="support@suabo.de" }
