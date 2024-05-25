@@ -50,9 +50,9 @@ class LogitechG910EventInterface(DeviceEventInterface):
 
     mediaKeys = {
         b'\x02\x08': "KEY_PLAYPAUSE",
-        b'\x02\x04': "KEY_STOP",
-        b'\x02\x02': "KEY_PREVIOUS",
-        b'\x02\x01': "KEY_NEXT",
+        b'\x02\x04': "KEY_STOPCD",
+        b'\x02\x02': "KEY_PREVIOUSSONG",
+        b'\x02\x01': "KEY_NEXTSONG",
         b'\x02\x40': "KEY_MUTE",
         b'\x02\x10': "KEY_VOLUMEUP",
         b'\x02\x20': "KEY_VOLUMEDOWN"
@@ -115,9 +115,9 @@ class LogitechG815EventInterface(DeviceEventInterface):
 
     mediaKeys = {
         b'\x03\x08': "KEY_PLAYPAUSE",
-        b'\x03\x04': "KEY_STOP",
-        b'\x03\x02': "KEY_PREVIOUS",
-        b'\x03\x01': "KEY_NEXT",
+        b'\x03\x04': "KEY_STOPCD",
+        b'\x03\x02': "KEY_PREVIOUSSONG",
+        b'\x03\x01': "KEY_NEXTSONG",
         b'\x03\x10': "KEY_VOLUMEUP",
         b'\x03\x20': "KEY_VOLUMEDOWN",
         b'\x03\x40': "KEY_MUTE"
@@ -208,9 +208,9 @@ class LogitechG710EventInterface(DeviceEventInterface):
 
     mediaKeys = {
         b'\x02\x08': "KEY_PLAYPAUSE",
-        b'\x02\x04': "KEY_STOP",
-        b'\x02\x02': "KEY_PREVIOUS",
-        b'\x02\x01': "KEY_NEXT",
+        b'\x02\x04': "KEY_STOPCD",
+        b'\x02\x02': "KEY_PREVIOUSSONG",
+        b'\x02\x01': "KEY_NEXTSONG",
         b'\x02\x40': "KEY_MUTE",
         b'\x02\x10': "KEY_VOLUMEUP",
         b'\x02\x20': "KEY_VOLUMEDOWN"
@@ -258,9 +258,9 @@ class LogitechG510EventInterface(DeviceEventInterface):
 
     mediaKeys = {
         b'\x02\x08': "KEY_PLAYPAUSE",
-        b'\x02\x04': "KEY_STOP",
-        b'\x02\x02': "KEY_PREVIOUS",
-        b'\x02\x01': "KEY_NEXT",
+        b'\x02\x04': "KEY_STOPCD",
+        b'\x02\x02': "KEY_PREVIOUSSONG",
+        b'\x02\x01': "KEY_NEXTSONG",
         b'\x02\x10': "KEY_MUTE",  # not 100% sure about those last 3
         b'\x02\x20': "KEY_VOLUMEDOWN",
         b'\x02\x40': "KEY_VOLUMEUP"
