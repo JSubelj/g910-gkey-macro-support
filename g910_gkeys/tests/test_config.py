@@ -1,8 +1,8 @@
 import os
-from lib.data_mappers import supported_configs
-from lib.data_mappers.config_reader import ConfigException, Config
-from lib.misc.helper import Helper
-from lib.usb_device import USBDevice
+from g910_gkeys.data_mappers import supported_configs
+from g910_gkeys.misc.config import ConfigException, Config
+from g910_gkeys.misc.helper import Helper
+from g910_gkeys.lib.hid_device import HIDDevice
 
 config: Config
 
@@ -59,7 +59,7 @@ class TestConfig:
         """
         global config
         # usb keyboard
-        device = USBDevice()
+        device = HIDDevice()
         config.create(device.keyboard)
         assert config is not None and os.path.exists(config.config_path)
 

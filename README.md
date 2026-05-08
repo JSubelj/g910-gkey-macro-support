@@ -10,7 +10,7 @@ Everything is described in great depth (and actually much better) on [WIKI](http
 
 To use this project you need:
  - Python >=3.7
- - pyusb & python-uinput
+ - pyhidapi & python-uinput
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  
 #### Note: 
@@ -80,7 +80,7 @@ configuration can be found in etc/ folder: [config.json](etc/config.json).
 Even if your language is not supported you can still use the driver with hotkey_type run. Other types won't work as expected with the wrong language configured.
 
 ### Hotkey types
-The mapper supports five types of hotkeys (also described in [hotkey_types.txt](docs/hotkey_types.txt)):
+The mapper supports five types of hotkeys:
  * `"typeout"` - Type out (ex. clicking on GKey types out a string)
  * `"shortcut"` - Shortcuts (ex. clicking on GKey presses shift+f4)
  * `"run"` - Starting a program (anything you can start from shell)
@@ -96,16 +96,13 @@ To add a hotkey add to `config.json` the following code:
 }
 ```
 
-Depending on the hotkey command, the syntax for "do" is different (supported characters for typeout and 
-hotkeys are listed in [supported_keys.txt](docs/supported_keys.txt)):
+Depending on the hotkey command, the syntax for "do" is different:
  * `"typeout"` - Type out syntax is same as you would type text out (ex. "tyPe Me Out!")
  * `"shortcut"` - Shortcuts are separated by a plus sign and a comma (ex. "ctrl+c,ctrl+v")
  * `"nothing"` - If `hotkey_type` is set to `"nothing"` then "do" key need not exist or can be anything.
  * `"run"` - Run has the same syntax as you would type a cli program in command line (ex. "systemctl daemon-reload")
  * `"python"` - A Python one-line script. If output is desired, the script should define a global variable named `output_string` and set it to the string to be output.
  * `"uinput"` - A key defined by python3-uinput to emit (ex. KEY_F13 or KEY_KATAKANA)
-
-**Important: Commands and python code is executed as root**
 
 ### Profiles
 There are four profiles you can use and set up different gkey macros in config. Select the profile with M[1-3|R] key on your keyboard.
@@ -176,6 +173,7 @@ journalctl --user --user-unit=g910-gkeys
 
 The code is tested on Logitech G910 keyboard with
 - OS: Ubuntu 20.04.6 LTS, Linux 5.4.0-159-generic, GNOME: 3.36.9
+- OS: Ubuntu 22.04.04 LTS, Linux 5.15.0-107-generic, GNOME: 42.9
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 

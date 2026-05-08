@@ -43,6 +43,9 @@ else
   ${DRYRUN} systemctl --user disable --now g910-gkeys &>/dev/null # >= 0.4.0
 fi
 
+# remove from local path
+${DRYRUN} rm "$HOME"/.local/bin/g910-gkeys
+
 # remove pip package
 if [[ -n "$PIPCMD" ]]; then
     PIPLST=$($PIPCMD list | grep 'g910-gkeys' | cut -d " " -f 1)
@@ -65,7 +68,7 @@ fi
 
 # remove service unit >= 0.4.1
 if [[ -f "$UNIT_DIR"/g910-gkeys.service ]]; then
-    ${DRYRUN} rm "$UNIT_DIR"/g910-gkeys.service &&
+    ${DRYRUN} sudo rm "$UNIT_DIR"/g910-gkeys.service &&
     [[ $DRYRUN = "" ]] && echo "Removed service unit $UNIT_DIR/g910-gkeys.service"
 fi
 

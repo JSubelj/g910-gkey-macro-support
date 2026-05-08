@@ -2,6 +2,8 @@ import json
 import os
 import signal
 from json.decoder import JSONDecodeError
+from typing import Any
+
 from g910_gkeys.misc.helper import Helper
 from g910_gkeys.data_mappers import supported_configs, char_uinput_mapper
 from g910_gkeys.misc.logger import Logger
@@ -15,16 +17,21 @@ class Config:
 
     config: dict = None
 
-    profile: str = None
+    profile: str
 
-    config_dir: str = os.getenv("HOME") + "/.config/g910-gkeys"
+    config_dir: str
 
-    config_path: str = config_dir + "/config.json"
+    config_path: str
 
-    logs_path: str = os.getenv("HOME") + "/g910-gkeys.log"
+    logs_path: str
 
     def __init__(self):
         self.profile = supported_configs.default_profile
+        home = os.getenv("HOME")
+        if home is not None:
+            self.config_dir = home + "/.config/g910-gkeys"
+            self.config_path = self.config_dir + "/config.json"
+            self.logs_path = home + "/g910-gkeys.log"
 
     @staticmethod
     def validate_hotkey_action(do, hotkey_action, keyboard_mapping):
@@ -70,17 +77,16 @@ class Config:
                             char_uinput_mapper.keys["control"][key_string]
                         except KeyError:
                             error["shortcut"] += "Control key "+key_string+" on position "+str(i)+" does not exist! "
-            if error["shortcut"] == "":
-                return None
-            else:
+            if error["shortcut"] != "":
                 return error
+        return None
 
     def validate_config(self, config_dic: dict):
         errors = []
         keyboard_mapping = config_dic.get("keyboard_mapping", supported_configs.default_keyboard_mapping)
-        return_config = {"keyboard_mapping": keyboard_mapping}
+        return_config: dict[str, Any] = {"keyboard_mapping": keyboard_mapping}
         if keyboard_mapping not in supported_configs.keyboard_mappings:
-            return {"keyboard_mapping": keyboard_mapping+" does not exist!"}, None
+            return {"keyboard_mapping": keyboard_mapping+" does not exist!"}
 
         return_config["notify"] = config_dic.get("notify", "False")
 
@@ -105,12 +111,12 @@ class Config:
             for i in range(1, 10):
                 try:
                     return_config["profiles"][f"MEMORY_{str(profile_index)}"][f"MACRO_{str(i)}"] = \
-                        self.get_key_action(config_dic, profile_index, i)
+                        self.get_key_action(config_dic, str(profile_index), i)
                 except ConfigException as e:
                     errors += [e]
 
         return_config["logging"] = config_dic.get("logging", "False")
-        return_config["log_path"] = config_dic.get("log_path", os.getenv("HOME") + "/g910-gkeys.log")
+        return_config["log_path"] = config_dic.get("log_path", "./g910-gkeys.log")
         return_config["log_level"] = config_dic.get("log_level", "INFO")
 
         if len(errors) > 0:
@@ -148,7 +154,7 @@ class Config:
     def update_config(self):
         self.config = self.read()
 
-    def read(self):
+    def read(self) -> dict:
         log = Logger().logger(__name__)
         if self.config:
             return self.config
@@ -168,6 +174,7 @@ class Config:
         except Exception as e:
             log.exception(e)
         signal.raise_signal(signal.SIGQUIT)
+        return dict()
 
     def load(self):
         with open(self.config_path, "r") as f:
@@ -195,8 +202,7 @@ class Config:
         config = {
             "keyboard_mapping": user_lang,
             "notify": "False",
-            "username": "",
-            "profiles": {}
+            "profiles": {},
         }
         for profile in keyboard.events.memoryKeys.values():
             config["profiles"].update({profile: {}})

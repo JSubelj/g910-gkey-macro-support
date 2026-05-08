@@ -3,18 +3,18 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class DeviceEventInterface:
-    macroKeys: dict  # dict[bytes, str]
-    memoryKeys: dict  # dict[bytes, str]
-    memoryKeysLEDs = dict()  # dict[str, bytes]
-    mediaKeys: dict  # dict[bytes, str] | only in use when in libUSB mode (kernel driver unloaded)
-    releaseEvents: dict  # dict[str, bytes]
+    macroKeys: dict[bytes, str]
+    memoryKeys: dict[bytes, str]
+    memoryKeysLEDs = dict[str, bytes]
+    mediaKeys: dict[bytes, str]  # dict[bytes, str] | only in use when in libUSB mode (kernel driver unloaded)
+    releaseEvents: dict[bytes, str]
 
     # Following is sent to disable the default G keys mapping
-    disableGKeys = list()  # list[bytes]
-    disableGKeysResponse = list()  # list[bytes]
+    disableGKeys = list[bytes]
+    disableGKeysResponse = list[bytes]
     # enable the g-key to f-key mapping
-    enableGKeys = list()  # list[bytes]
-    enableGKeysResponse = list()  # list[bytes]
+    enableGKeys = list[bytes]
+    enableGKeysResponse = list[bytes]
 
 
 @dataclass(frozen=True)
@@ -136,7 +136,7 @@ class LogitechG815EventInterface(DeviceEventInterface):
         b'\x11\xff\x11\x1a\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
         # enable G-keys
         b'\x11\xff\x0a\x2a\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
-        # enable LED manual control (not 100% sure but without this package the following
+        # enable LED manual control (not 100% sure, but without this package the following
         # two packages will not do anything)
         b'\x11\xff\x0f\x5a\x01\x03\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00',
         # enable GLogo light
@@ -286,7 +286,7 @@ class KeyboardInterface:
     usbVendor: int
     usbProduct: int
     usbConfiguration: int
-    usbInterface: tuple  # tuple[int, int] | (index of interface, index of alternate setting)
+    usbInterface: tuple[int, int]  # index of interface, index of alternate setting
     usbEndpoint: int
 
     numMacroKeys: int

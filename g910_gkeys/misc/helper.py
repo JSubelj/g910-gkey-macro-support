@@ -36,3 +36,4 @@ class Helper:
 
         for address in em['to'].addresses:
             return address.display_name
+        return None

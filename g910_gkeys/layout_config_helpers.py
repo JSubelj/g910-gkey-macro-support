@@ -7,10 +7,9 @@ import signal
 import sys
 import tty
 import termios
-import uinput  # used to eval keys
 import g910_gkeys.data_mappers.char_uinput_mapper as uinput_mapper
 from g910_gkeys.data_mappers.char_uinput_mapper import keys as locale_key_mapping
-from g910_gkeys.lib.usb_device import USBDevice
+from g910_gkeys.lib.hid_device import HIDDevice
 from g910_gkeys.lib.keyboard import Keyboard, KeyInputTimeoutException
 from g910_gkeys.data_mappers.bytearrays import keys as uinput_key_map, commands as uinput_if1
 from g910_gkeys.misc.helper import Helper
@@ -18,7 +17,7 @@ from g910_gkeys.misc.config import Config
 
 
 class LayoutHelper:
-    device: USBDevice = None
+    device: HIDDevice = None
     keyboard: Keyboard = None
 
     WRAPPING_CLICK: int = 0  # only use key click
@@ -73,7 +72,7 @@ class LayoutHelper:
         Read raw bytes send over usb from keyboard and try to get matching command or key from command_bytearray
         :param interface: 0 for all normal keys, 1 for g-, m- and media-keys
         """
-        self.device = USBDevice(interface)
+        self.device = HIDDevice(interface)
         if interface == 0:
             byte_map = uinput_key_map
         else:
@@ -92,7 +91,7 @@ class LayoutHelper:
         """
         Get uinput key by pressing a key on the keyboard
         """
-        self.device = USBDevice(0)  # init keyboard interface 0 to read default keys
+        self.device = HIDDevice(0)  # init keyboard interface 0 to read default keys
         write_config = ''
         print(f"Press a key you want to get the uinput key definition:")
         user_input = False
@@ -153,7 +152,7 @@ class LayoutHelper:
 
     def get_emitted_char(self, event: list):
         """
-        Get character written down to stdout on emit of given key
+        Get character written down to stdout on emitting of given key
         :param event: uinput event
         :return: character written down in stdout on key emit
         :rtype: str
@@ -172,7 +171,7 @@ class LayoutHelper:
             event += event
         self.keyboard.execute_events(event)
         try:
-            char = sys.stdin.read(1)[0]  # read the char which gets writen by uinput keyboard
+            char = sys.stdin.read(1)[0]  # read the char which gets written by uinput keyboard
             signal.alarm(0)  # remove the alarm signal
         except KeyInputTimeoutException:
             # if we capture an alarm, we set an empty character to remove from mapping later
@@ -185,7 +184,7 @@ class LayoutHelper:
     def get_other_keys():
         """
         Get none alphanumeric keys
-        :return: Return a list of keys with a string interpretation of uinput key (ex. ["uinput.KEY_COMMA", ...])
+        :return: Return a list of keys with a string interpretation of an uinput key (ex. ["uinput.KEY_COMMA", ...])
         :rtype: list
         """
         keys = [
@@ -226,7 +225,7 @@ class LayoutHelper:
         Get key configuration by given uinput key
         :param key: uinput key as string (ex. uinput.KEY_0)
         :param wrapping: one of WRAPPING_CLICK | WRAPPING_SHIFT | WRAPPING_ALTGR
-        :return: list entry/ies for key for use in the driver
+        :return: list entry/ies for a key for use in the driver
         :rtype: list
         """
         locale_keys = []
@@ -246,9 +245,9 @@ class LayoutHelper:
 
     def test(self):
         """
-        Test the char to uinput map with current locale
+        Test the char to uinput-map with the current locale
         A virtual keyboard is initialized and all keys from the map will be emitted.
-        After each key is emitted the written char gets checked against the key map.
+        After each key is emitted, the written char gets checked against the key map.
         """
         user_lang = Helper.get_locale()
         config = Config()

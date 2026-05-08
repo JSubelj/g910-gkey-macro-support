@@ -79,6 +79,7 @@ class Keyboard:
         else:
             # only nothing key config remains
             self.log.info(f"{key} pressed, doing nothing!")
+        return None
 
     def execute_events(self, events):
         for event in events:

@@ -1,15 +1,15 @@
-from lib.data_mappers.supported_devices import KeyboardInterface
-from lib.usb_device import USBDevice
+from g910_gkeys.data_mappers.supported_devices import KeyboardInterface
+from g910_gkeys.lib.hid_device import HIDDevice
 
-device = None
+device: HIDDevice|None = None
 
 
-class TestUSB:
+class TestHID:
 
     def test_usb(self):
         global device
         # usb keyboard
-        device = USBDevice()
+        device = HIDDevice()
         assert issubclass(device.keyboard, KeyboardInterface)
 
     def test_gkeymode(self):

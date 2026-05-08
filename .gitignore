@@ -1,5 +1,6 @@
 __pycache__/
 venv/
+.venv/
 .idea/
 dist/
 g910_gkey_macro*/

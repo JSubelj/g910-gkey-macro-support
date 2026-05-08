@@ -5,10 +5,10 @@
 # options:
 #  -n: DO NOT enable and start systemd service.
 
-# get system unit directory
 START_SERVICE=y
 SUPPORTED_KEYBOARDS=(de en fr si)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
+# get system unit directory
 UNIT_DIR=$(pkg-config systemd --variable=systemduserunitdir)
 
 usage() {
@@ -35,8 +35,20 @@ done
 	echo "https://github.com/JSubelj/g910-gkey-macro-support/issues/new/choose" &&
 	exit 1
 
-# install via pip
+# create venv
+python3 -m venv .venv
+
+# activate venv
+source .venv/bin/activate
+
+# build and install
 pip install --log ./install.log -e ./
+
+# deactivate venv
+deactivate
+
+# copy binary to local binary path
+cp .venv/bin/g910-gkeys "$HOME"/.local/bin/g910-gkeys
 
 # make config dir
 if [[ ! -d "$HOME"/.config/g910-gkeys ]]; then

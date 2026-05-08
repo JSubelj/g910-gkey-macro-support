@@ -1,6 +1,6 @@
-from lib.keyboard import Keyboard
+from g910_gkeys.lib.keyboard import Keyboard
 # from lib.usb_device import USBDevice
-from lib.data_mappers.config_reader import Config
+from g910_gkeys.misc.config import Config
 
 class TestUInput:
 
