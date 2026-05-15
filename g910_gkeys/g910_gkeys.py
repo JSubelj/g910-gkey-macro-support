@@ -100,6 +100,7 @@ def start():
         loop()
 
     try:
+        device.enable_fkey_to_gkey_binding()
         keyboard.__exit__()
         device.__exit__()
     except AttributeError:
@@ -142,7 +143,7 @@ def loop():
     except Exception as e:
         log.exception(e)
         signal.raise_signal(signal.SIGQUIT)
-
+    time.sleep(0.1)
 
 if __name__ == "__main__":
     main()

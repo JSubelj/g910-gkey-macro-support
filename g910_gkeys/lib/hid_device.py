@@ -1,7 +1,8 @@
+import errno
 import logging
 import time
 import signal
-import hid
+import hidraw
 from g910_gkeys.data_mappers.supported_devices import KeyboardInterface, SUPPORTED_DEVICES
 from g910_gkeys.misc.logger import Logger
 
@@ -9,10 +10,10 @@ from g910_gkeys.misc.logger import Logger
 class HIDDevice:
     log: logging.Logger = None
     keyboard: KeyboardInterface = None
-    dev: hid.device = None
+    dev: hidraw.device = None
 
     interface: int = 1  # Interface
-    timeout: int = 1000  # Timeout in MS
+    timeout: int = 300  # Timeout in MS
 
     def __init__(self, interface: int = 1):
         self.log = Logger().logger(__name__)
@@ -38,7 +39,7 @@ class HIDDevice:
         self.log.debug(f"hid dev: {self.dev.get_serial_number_string()}")
 
     def open_specific_interface(self, vid, pid, target_interface):
-        device_info_list = hid.enumerate(vid, pid)
+        device_info_list = hidraw.enumerate(vid, pid)
 
         target_path = None
         for info in device_info_list:
@@ -47,9 +48,9 @@ class HIDDevice:
                 break
 
         if target_path:
-            self.dev = hid.device()
+            self.dev = hidraw.device()
             self.dev.open_path(target_path)
-            self.dev.set_nonblocking(False)
+            self.dev.set_nonblocking(True)
 
     def disable_fkey_to_gkey_binding(self):
         time.sleep(0.5)
@@ -86,15 +87,52 @@ class HIDDevice:
                 time.sleep(0.2)
         return True
 
+    def enable_fkey_to_gkey_binding(self):
+        self.log.info("Trying to enable f-key to g-key binding")
+        if self.keyboard.disableGKeysInterface:
+            for packet in self.keyboard.events.enableGKeys:
+                self.log.debug(f"Sending HID feature report to keyboard {str(packet)}...")
+                if self.keyboard.disableGKeysUseWrite:
+                    byte_written = self.dev.write(packet)
+                    self.log.debug(f"Completed (sent {byte_written} byte)")
+                else:
+                    pass
+
+                response_count = len(self.keyboard.events.enableGKeysResponse)
+                while response_count:
+                    try:
+                        confirmation_bytes = self.read()
+                        if confirmation_bytes is None:
+                            response_count = response_count - 1
+                            continue
+
+                        if bytes(confirmation_bytes) in self.keyboard.events.enableGKeysResponse:
+                            self.log.debug(f"G-key-mode - response: {str(confirmation_bytes)}")
+                            if bytes(confirmation_bytes) == packet:
+                                self.log.info("G-key-mode - Enabled successfully")
+                        else:
+                            self.log.warning(f"Warning - G-key-mode - Unknown response: {str(confirmation_bytes)}")
+                            return False
+                        response_count = response_count - 1
+                    except OSError as e:
+                        self.log.debug(str(e))
+
+                time.sleep(0.2)
+        return True
+
     def read(self):
         try:
             if self.dev and self.keyboard:
                 data = self.dev.read(64, timeout_ms=self.timeout)
                 return data or None
         except OSError as e:
-            self.log.error(f"HID read error: {e}")
-            time.sleep(0.5)
-            self.init_hid_device()
+            # If it's a generic "read error" string while non-blocking,
+            # it almost always means the buffer was empty during a state change.
+            if "read error" in str(e):
+                return None
+
+            # Log actual critical hardware errors (like device unplugged)
+            self.log.error(f"Critical HID read error: {e}")
         except Exception as e:
             self.log.exception(e)
             signal.raise_signal(signal.SIGQUIT)
