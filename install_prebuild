@@ -2,7 +2,7 @@
 #
 # installs g910-gkeys from pypi.org
 #
-VERSION=0.5.0
+VERSION=0.5.1
 SUPPORTED_KEYBOARDS=(de en fr si)
 UNIT_DIR=$(pkg-config systemd --variable=systemduserunitdir)
 KEYBOARD=$(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)

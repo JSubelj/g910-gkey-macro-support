@@ -1,4 +1,4 @@
-# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.4.2)
+# Logitech G910 keyboard gkey support for GNU/Linux (Project version: v0.5.1)
 Because I didn't find any GKey support for Logitech G910 keyboard I decided to create this GKey mapper.
 Code is based on an [issue](https://github.com/CReimer/g910-gkey-uinput/issues/3)
 in [g910-gkey-uinput](https://github.com/CReimer/g910-gkey-uinput) project. I expanded the code, so that it is more 
@@ -9,7 +9,7 @@ Everything is described in great depth (and actually much better) on [WIKI](http
 ## Requirements
 
 To use this project you need:
- - Python >=3.7
+ - Python >=3.12
  - pyhidapi & python-uinput
  - uinput kernel module (more on this [here](http://tjjr.fi/sw/python-uinput/#Usage))
  
@@ -172,8 +172,7 @@ journalctl --user --user-unit=g910-gkeys
 ```
 
 The code is tested on Logitech G910 keyboard with
-- OS: Ubuntu 20.04.6 LTS, Linux 5.4.0-159-generic, GNOME: 3.36.9
-- OS: Ubuntu 22.04.04 LTS, Linux 5.15.0-107-generic, GNOME: 42.9
+- OS: Ubuntu 24.04.4 LTS, Linux 6.8.0-111-generic, GNOME: 46.0
 
 ### Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
